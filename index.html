@@ -442,6 +442,7 @@ function errText(e){
   if(e && (e.status===401||e.status===403)) return "Gemini nekade nyckeln ("+e.status+")";
   if(e && e.status===404) return "Modellen finns inte för den här nyckeln (404)";
   if(e && e.status===429) return "Googles gräns är nådd just nu (429)";
+  if(e && e.status===402) return "Gemini-kontots förbetalda krediter är slut (402). Fyll på under Billing i Google AI Studio";
   if(e && e.message==="timeout") return "Gemini svarade inte i tid";
   return "Gemini fungerade inte: " + (e && e.message || "okänt fel");
 }
