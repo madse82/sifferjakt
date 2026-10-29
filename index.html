@@ -486,7 +486,14 @@ async function clipFor(parts){
   return getClip(parts.map(p=>/[.!?]$/.test(p) ? p : p+".").join(" "));
 }
 /* only when "Läs upp texterna automatiskt" is on; otherwise the speaker buttons do it */
-function autoSpeak(parts){ if(settings.auto) speak(parts); }
+function autoSpeak(parts){ if(settings.auto) speak(parts); else prefetch(parts); }
+/* start fetching in the background so the speaker button plays at once */
+function prefetch(parts){
+  if(!useGemini() || !settings.tts) return;
+  if(!Array.isArray(parts)) parts = [parts];
+  parts = parts.filter(Boolean).map(sayable).filter(Boolean);
+  if(parts.length) clipFor(parts).catch(()=>{});
+}
 async function speak(parts, force){
   if(!Array.isArray(parts)) parts = [parts];
   parts = parts.filter(Boolean).map(sayable).filter(Boolean);
@@ -939,6 +946,8 @@ document.getElementById("s_voice").onchange = e=>{ settings.voice = e.target.val
 document.getElementById("s_gvoice").onchange = e=>{ settings.gvoice = e.target.value; saveSettings(); };
 document.getElementById("s_gmodel").onchange = e=>{ settings.gmodel = e.target.value; saveSettings(); };
 document.getElementById("s_gkey").onchange = e=>{ store.set("sj_gkey", e.target.value.trim()); setVoiceInfo(e.target.value.trim() ? "Nyckel sparad. Tryck på Testa rösten." : ""); };
+function kickPrep(){ if(useGemini() && store.get("sj_prepped")!==settings.gmodel+"|"+settings.gvoice) setTimeout(()=>prepAll(true), 3000); }
+["s_gkey","s_voice","s_gvoice","s_gmodel"].forEach(id=>document.getElementById(id).addEventListener("change", kickPrep));
 document.getElementById("gTest").onclick = ()=>{ setVoiceInfo("Hämtar ljud från Gemini …"); speak(["Hej! Så här låter jag.", "Summan är svaret när man plussar.", "8 + 5 = 13."], true); };
 
 function fixedPhrases(){
@@ -949,20 +958,25 @@ function fixedPhrases(){
   return [...new Set(out.map(sayable))];
 }
 let prepping = false;
-document.getElementById("gPrep").onclick = async ()=>{
-  if(prepping) return;
-  if(!useGemini()){ setVoiceInfo("Välj Google Gemini och klistra in nyckeln först."); return; }
+/* fetch all fixed phrases once; quiet = in the background without status text */
+async function prepAll(quiet){
+  if(prepping || !useGemini()) return;
   prepping = true;
   const list = fixedPhrases(); let doneN = 0;
   for(const t of list){
     if(await cached(t)){ doneN++; continue; }
-    setVoiceInfo(`Förbereder ${doneN+1} av ${list.length} …`);
+    if(!quiet) setVoiceInfo(`Förbereder ${doneN+1} av ${list.length} …`);
     try{ await getClip(t); doneN++; }
-    catch(e){ setVoiceInfo(errText(e) + `. ${doneN} av ${list.length} klara, försök igen senare.`); prepping = false; return; }
-    await new Promise(r=>setTimeout(r, 1500));
+    catch(e){ if(!quiet) setVoiceInfo(errText(e) + `. ${doneN} av ${list.length} klara, försök igen senare.`); prepping = false; return; }
+    await new Promise(r=>setTimeout(r, quiet ? 2500 : 1500));
   }
-  setVoiceInfo(`Klart: ${list.length} fasta fraser sparade på enheten.`);
+  store.set("sj_prepped", settings.gmodel+"|"+settings.gvoice);
+  if(!quiet) setVoiceInfo(`Klart: ${list.length} fasta fraser sparade på enheten.`);
   prepping = false;
+}
+document.getElementById("gPrep").onclick = ()=>{
+  if(!useGemini()){ setVoiceInfo("Välj Google Gemini och klistra in nyckeln först."); return; }
+  prepAll(false);
 };
 
 const cbT = document.getElementById("cbToggle");
@@ -998,6 +1012,7 @@ applySettings();
 const firstTime = store.get("sj_seenHelp")!=="1";
 if(firstTime) open("helpOv");
 newGame();
+if(useGemini() && store.get("sj_prepped")!==settings.gmodel+"|"+settings.gvoice) setTimeout(()=>prepAll(true), 4000);
 </script>
 </body>
 </html>
