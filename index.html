@@ -943,7 +943,8 @@ function buildHelp(){
 }
 document.getElementById("helpBtn").onclick=()=>open("helpOv");
 document.getElementById("helpClose").onclick=()=>done("helpOv");
-function helpParts(){ return [document.getElementById("helpP").textContent, ...[...document.querySelectorAll("#exList div")].map(d=>d.textContent)]; }
+/* read only the sentence, not the example tile in front of it (that made "4 finns" into "44 finns") */
+function helpParts(){ return [document.getElementById("helpP").textContent, ...[...document.querySelectorAll("#exList div")].map(d=>[...d.childNodes].filter(n=>n.nodeType===3).map(n=>n.textContent).join("").trim())]; }
 document.getElementById("helpSay").onclick=()=>speak(helpParts(), true);
 
 /* ---------- settings sheet ---------- */
