@@ -72,7 +72,10 @@
   .tile.g{background:var(--g);border-color:var(--g);color:var(--gfg)}
   .tile.y{background:var(--y);border-color:var(--y);color:var(--yfg)}
   .tile.x{background:var(--x);border-color:var(--x);color:var(--xfg)}
-  .tile svg{position:absolute;top:3px;right:3px;width:13px;height:13px}
+  /* status icon as a small badge on the corner, outside the digit */
+  .tile svg{position:absolute;top:-7px;right:-7px;width:20px;height:20px;padding:3px;border-radius:50%;
+    background:inherit;border:2px solid var(--bg);box-sizing:border-box}
+  #board.l2 .tile svg,body.knownOn #board .tile svg{top:-6px;right:-6px;width:18px;height:18px}
   .tile.flip{animation:flip .45s ease}
   @keyframes flip{0%{transform:rotateX(0)}50%{transform:rotateX(90deg)}100%{transform:rotateX(0)}}
   .row.shake{animation:shake .4s}
