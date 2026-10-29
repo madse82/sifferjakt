@@ -485,6 +485,8 @@ async function clipFor(parts){
   }
   return getClip(parts.map(p=>/[.!?]$/.test(p) ? p : p+".").join(" "));
 }
+/* only when "Läs upp texterna automatiskt" is on; otherwise the speaker buttons do it */
+function autoSpeak(parts){ if(settings.auto) speak(parts); }
 async function speak(parts, force){
   if(!Array.isArray(parts)) parts = [parts];
   parts = parts.filter(Boolean).map(sayable).filter(Boolean);
@@ -649,7 +651,7 @@ function msg(t, err){
   lastMsg = t;
   document.getElementById("msgT").textContent = t;
   document.getElementById("msg").classList.toggle("err", !!err);
-  if(settings.auto) speak(t);
+  autoSpeak(t);
 }
 document.getElementById("msgSay").onclick = ()=>speak(lastMsg, true);
 
@@ -774,13 +776,13 @@ function showReflect(next){
     b.className = "ropt"; b.innerHTML = icon + `<span>${REF_LABELS[id]}</span>`;
     b.onclick = ()=>{
       reflect[id] = (reflect[id]||0) + 1; store.set("sj_reflect", JSON.stringify(reflect)); updateStats();
-      fb.hidden = false; speak("Bra att veta!");
+      fb.hidden = false; autoSpeak("Bra att veta!");
       setTimeout(()=>done("refOv"), 700);
     };
     grid.appendChild(b);
   });
   openStep("refOv", next);
-  speak(["Vad hjälpte dig mest?", ...opts.map(o=>REF_LABELS[o[0]])]);
+  autoSpeak(["Vad hjälpte dig mest?", ...opts.map(o=>REF_LABELS[o[0]])]);
 }
 document.getElementById("refSay").onclick = ()=>speak(["Vad hjälpte dig mest?", ...[...document.querySelectorAll("#refGrid .ropt span:last-child")].map(s=>s.textContent)], true);
 document.getElementById("refSkip").onclick = ()=>done("refOv");
@@ -825,7 +827,7 @@ function showWord(next){
   document.getElementById("wDef").textContent = T.def;
   wordParts = [term, sentence, T.def];
   openStep("wordOv", next);
-  speak(wordParts);
+  autoSpeak(wordParts);
 }
 document.getElementById("wSay").onclick = ()=>speak(wordParts, true);
 document.getElementById("wDone").onclick = ()=>done("wordOv");
@@ -858,13 +860,14 @@ function maybeQuiz(){
       else { b.classList.add("no"); v.step = 0; text = `Det heter ${term}. ${T.def}`; sp = [`Det heter ${term}.`, T.def]; }
       v.due = addDays(t, INTERVALS[v.step]); saveVocab();
       fb.textContent = text; fb.hidden = false; doneBtn.hidden = false; document.getElementById("qSkip").hidden = true;
-      speak(sp);
+      quizParts = sp;  /* the speaker button now reads the answer */
+      autoSpeak(sp);
     };
     grid.appendChild(b);
   });
   quizParts = [T.q, ...choices];
   openStep("quizOv", null);
-  speak(quizParts);
+  autoSpeak(quizParts);
 }
 document.getElementById("qSay").onclick = ()=>speak(quizParts, true);
 document.getElementById("qDone").onclick = ()=>done("quizOv");
