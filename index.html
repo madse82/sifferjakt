@@ -405,28 +405,50 @@ async function getClip(text){
   return p;
 }
 
-let actx = null, curSrc = null, speakToken = 0;
-function audio(){
-  if(!actx){ const AC = window.AudioContext||window.webkitAudioContext; if(!AC) throw new Error("ingen ljudmotor"); actx = new AC(); }
-  if(actx.state==="suspended") actx.resume();
-  return actx;
+let speakToken = 0, curStop = null, curUrl = null, silentUrl = null;
+/* An <audio> element, not Web Audio: on iPhone it plays even in silent mode and can be unlocked by a tap */
+const player = new Audio(); player.preload = "auto"; player.setAttribute("playsinline","");
+function wavBlob(bytes, rate){
+  const h = new ArrayBuffer(44), v = new DataView(h);
+  const w = (o,str)=>{ for(let i=0;i<str.length;i++) v.setUint8(o+i, str.charCodeAt(i)); };
+  w(0,"RIFF"); v.setUint32(4, 36+bytes.length, true); w(8,"WAVE"); w(12,"fmt ");
+  v.setUint32(16,16,true); v.setUint16(20,1,true); v.setUint16(22,1,true);
+  v.setUint32(24,rate,true); v.setUint32(28,rate*2,true); v.setUint16(32,2,true); v.setUint16(34,16,true);
+  w(36,"data"); v.setUint32(40, bytes.length, true);
+  return new Blob([h, bytes], {type:"audio/wav"});
 }
-document.addEventListener("pointerdown", ()=>{ try{ audio(); }catch(e){} }, {passive:true});
+/* must run inside the tap, before any await */
+function unlockPlayer(){
+  try{
+    if(!silentUrl) silentUrl = URL.createObjectURL(wavBlob(new Uint8Array(2400), 24000));
+    player.src = silentUrl;
+    const p = player.play(); if(p) p.catch(()=>{});
+  }catch(e){}
+}
 function playPcm(c){
-  return new Promise(res=>{
-    const ctx = audio(), bin = atob(c.d), n = bin.length>>1;
-    const buf = ctx.createBuffer(1, n, c.rate||24000), ch = buf.getChannelData(0);
-    for(let i=0;i<n;i++){ let v = bin.charCodeAt(2*i) | (bin.charCodeAt(2*i+1)<<8); if(v & 0x8000) v -= 0x10000; ch[i] = v/32768; }
-    const src = ctx.createBufferSource(); src.buffer = buf; src.connect(ctx.destination);
-    src.onended = ()=>{ if(curSrc===src) curSrc=null; res(); };
-    curSrc = src; src.start();
+  return new Promise((res, rej)=>{
+    const bin = atob(c.d), bytes = new Uint8Array(bin.length);
+    for(let i=0;i<bin.length;i++) bytes[i] = bin.charCodeAt(i);
+    const rate = c.rate || 24000, dur = bytes.length/2/rate;
+    if(curUrl) URL.revokeObjectURL(curUrl);
+    curUrl = URL.createObjectURL(wavBlob(bytes, rate));
+    let finished = false;
+    const fin = (ok, err)=>{ if(finished) return; finished = true; clearTimeout(t); player.onended = null; player.onerror = null; curStop = null; ok ? res() : rej(err); };
+    const t = setTimeout(()=>fin(true), (dur+4)*1000);
+    player.onended = ()=>fin(true);
+    player.onerror = ()=>fin(false, new Error("ljudet kunde inte spelas"));
+    curStop = ()=>fin(true);
+    player.src = curUrl;
+    const p = player.play();
+    if(p) p.catch(e=>fin(false, new Error("uppspelningen blockerades ("+(e && e.name || "fel")+")")));
   });
 }
 function setBusy(on){ document.querySelectorAll(".say").forEach(b=>b.classList.toggle("busy", on)); }
 function stopSpeech(){
   speakToken++;
   if(ttsOK) speechSynthesis.cancel();
-  if(curSrc){ try{ curSrc.stop(); }catch(e){} curSrc = null; }
+  try{ player.pause(); }catch(e){}
+  if(curStop) curStop();
   setBusy(false);
 }
 function deviceSpeak(text){
@@ -455,11 +477,12 @@ async function speak(parts, force){
   stopSpeech();
   const token = speakToken;
   if(useGemini()){
+    unlockPlayer();
     setBusy(true);
     const ps = parts.map(p=>getClip(p)); ps.forEach(p=>p.catch(()=>{}));
     let i = 0;
     try{
-      const first = await Promise.race([ps[0], new Promise((_,rej)=>setTimeout(()=>rej(new Error("timeout")), 8000))]);
+      const first = await Promise.race([ps[0], new Promise((_,rej)=>setTimeout(()=>rej(new Error("timeout")), 10000))]);
       for(; i<parts.length; i++){
         const c = i===0 ? first : await ps[i];
         if(token!==speakToken) return;
