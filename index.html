@@ -242,6 +242,7 @@
           </div>
           <div class="btns"><button class="big sec" id="gTest">Testa rösten</button><button class="big sec" id="gPrep">Förbered fraser</button></div>
           <p class="small" id="gStatus"></p>
+          <p class="small" id="libInfo"></p>
           <p class="small">Nyckeln sparas bara på den här enheten. Ljud som redan hämtats sparas och fungerar sedan utan nät. Om Gemini inte svarar inom några sekunder läser enhetens röst i stället.</p>
         </div>
       </div>
@@ -473,6 +474,29 @@ function errText(e){
 /* parts: a string or a list of strings; each part is cached on its own so fixed phrases are reused */
 /* One clip per speak: cached phrases are glued together, anything new is fetched as one request.
    One request avoids rate limits; one playback avoids iPhone blocking the 2nd, 3rd ... clip. */
+function joinParts(parts){ return parts.length===1 ? parts[0] : parts.map(p=>/[.!?]$/.test(p) ? p : p+".").join(" "); }
+/* ---------- audio library: pre-made clips in audio/ (made once on the Mac, see tools/) ---------- */
+function phraseId(t){ let h=0x811c9dc5; for(const ch of t){ h ^= ch.codePointAt(0); h = Math.imul(h, 0x01000193) >>> 0; } return h.toString(16).padStart(8,"0"); }
+const LIB = {voice:null, ids:new Set(), ext:"m4a"};
+fetch("audio/index.json", {cache:"no-cache"}).then(r=>r.ok ? r.json() : null).then(j=>{
+  if(!j) return; LIB.voice = j.voice; LIB.ext = j.ext || "m4a"; (j.ids||[]).forEach(id=>LIB.ids.add(id)); updateLibInfo();
+}).catch(()=>{});
+function libReady(){ return settings.voice==="gemini" && LIB.ids.size>0 && settings.gvoice===LIB.voice; }
+function inLib(text){ return libReady() && LIB.ids.has(phraseId(text)); }
+function updateLibInfo(){ const el=document.getElementById("libInfo"); if(el) el.textContent = LIB.ids.size ? `Ljudbibliotek: ${LIB.ids.size} färdiga fraser med rösten ${LIB.voice} (fungerar utan nyckel).` : ""; }
+function playUrl(url){
+  return new Promise((res, rej)=>{
+    let finished = false;
+    const fin = (ok, err)=>{ if(finished) return; finished = true; clearTimeout(t); player.onended = null; player.onerror = null; curStop = null; ok ? res() : rej(err); };
+    const t = setTimeout(()=>fin(true), 30000);
+    player.onended = ()=>fin(true);
+    player.onerror = ()=>fin(false, new Error("biblioteksljudet kunde inte laddas"));
+    curStop = ()=>fin(true);
+    player.src = url;
+    const p = player.play();
+    if(p) p.catch(e=>fin(false, new Error("uppspelningen blockerades ("+(e && e.name || "fel")+")")));
+  });
+}
 function b64bytes(d){ const bin=atob(d), u=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) u[i]=bin.charCodeAt(i); return u; }
 async function clipFor(parts){
   const cs = await Promise.all(parts.map(cached));
@@ -483,7 +507,7 @@ async function clipFor(parts){
     const out = new Uint8Array(chunks.reduce((n,c)=>n+c.length,0)); let o=0; chunks.forEach(c=>{ out.set(c,o); o+=c.length; });
     return {bytes:out, rate};
   }
-  return getClip(parts.map(p=>/[.!?]$/.test(p) ? p : p+".").join(" "));
+  return getClip(joinParts(parts));
 }
 /* only when "Läs upp texterna automatiskt" is on; otherwise the speaker buttons do it */
 function autoSpeak(parts){ if(settings.auto) speak(parts); else prefetch(parts); }
@@ -492,7 +516,8 @@ function prefetch(parts){
   if(!useGemini() || !settings.tts) return;
   if(!Array.isArray(parts)) parts = [parts];
   parts = parts.filter(Boolean).map(sayable).filter(Boolean);
-  if(parts.length) clipFor(parts).catch(()=>{});
+  if(!parts.length || inLib(joinParts(parts))) return;
+  clipFor(parts).catch(()=>{});
 }
 async function speak(parts, force){
   if(!Array.isArray(parts)) parts = [parts];
@@ -501,6 +526,17 @@ async function speak(parts, force){
   if(!settings.tts && !force) return;
   stopSpeech();
   const token = speakToken;
+  const joined = joinParts(parts);
+  if(inLib(joined)){
+    unlockPlayer();
+    setBusy(true);
+    try{
+      await playUrl(`audio/${phraseId(joined)}.${LIB.ext}`);
+      if(token!==speakToken) return;
+      setBusy(false); setVoiceInfo("Spelade från ljudbiblioteket.");
+      return;
+    }catch(e){ if(token!==speakToken) return; setBusy(false); setVoiceInfo(e.message); }
+  }
   if(useGemini()){
     unlockPlayer();
     setBusy(true);
@@ -851,7 +887,7 @@ function maybeQuiz(){
   if(!due.length) return;
   const term = due[Math.floor(Math.random()*due.length)], T = TERMS[term], v = vocab[term];
   const others = Object.keys(TERMS).filter(k=>k!==term).sort(()=>Math.random()-.5).slice(0,2);
-  const choices = [term, ...others].sort(()=>Math.random()-.5);
+  const choices = [term, ...others].sort((x,y)=>x.localeCompare(y,"sv"));
   store.set("sj_quizDay", t);
   document.getElementById("qQ").textContent = T.q;
   const fb = document.getElementById("qFb"), doneBtn = document.getElementById("qDone"), grid = document.getElementById("qGrid");
@@ -921,7 +957,8 @@ function applySettings(){
   document.getElementById("s_gvoice").value = settings.gvoice;
   document.getElementById("s_gmodel").value = settings.gmodel;
   document.getElementById("s_gkey").value = gkey();
-  if(settings.voice==="gemini" && !gkey()) setVoiceInfo("Klistra in din Gemini-nyckel (samma som i Aloud).");
+  if(settings.voice==="gemini" && !gkey()) setVoiceInfo(LIB.ids.size ? "Utan nyckel spelas biblioteket. Övrigt läses med enhetens röst." : "Klistra in din Gemini-nyckel (samma som i Aloud).");
+  updateLibInfo();
   renderKnown(); updateStats();
 }
 function setCalm(on){
@@ -964,7 +1001,7 @@ async function prepAll(quiet){
   prepping = true;
   const list = fixedPhrases(); let doneN = 0;
   for(const t of list){
-    if(await cached(t)){ doneN++; continue; }
+    if(inLib(t) || await cached(t)){ doneN++; continue; }
     if(!quiet) setVoiceInfo(`Förbereder ${doneN+1} av ${list.length} …`);
     try{ await getClip(t); doneN++; }
     catch(e){ if(!quiet) setVoiceInfo(errText(e) + `. ${doneN} av ${list.length} klara, försök igen senare.`); prepping = false; return; }

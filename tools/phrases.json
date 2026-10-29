@@ -1,0 +1,3117 @@
+{
+ "voice": "Zephyr",
+ "model": "gemini-2.5-flash-preview-tts",
+ "style": "Läs upp följande på svenska, lugnt och tydligt, för ett barn på nio år: ",
+ "phrases": [
+  {
+   "id": "bd78afe2",
+   "kind": "fixed",
+   "text": "Gissa en uträkning!"
+  },
+  {
+   "id": "437f3d14",
+   "kind": "fixed",
+   "text": "Fyll alla rutor först!"
+  },
+  {
+   "id": "474c5e15",
+   "kind": "fixed",
+   "text": "Glöm inte likamedtecknet!"
+  },
+  {
+   "id": "b59ec42a",
+   "kind": "fixed",
+   "text": "Det måste vara en uträkning, till exempel tre plus fyra är lika med sju"
+  },
+  {
+   "id": "24c0e529",
+   "kind": "fixed",
+   "text": "Bra! De gröna sitter rätt. Testa nya siffror."
+  },
+  {
+   "id": "1bb92dc8",
+   "kind": "fixed",
+   "text": "Inget av det finns. Testa helt andra siffror!"
+  },
+  {
+   "id": "8d7409c6",
+   "kind": "fixed",
+   "text": "Superbra!"
+  },
+  {
+   "id": "52fd6c26",
+   "kind": "fixed",
+   "text": "Snyggt räknat!"
+  },
+  {
+   "id": "b20618e2",
+   "kind": "fixed",
+   "text": "Du är ett mattegeni!"
+  },
+  {
+   "id": "bda8088e",
+   "kind": "fixed",
+   "text": "Bra att veta!"
+  },
+  {
+   "id": "7ac66cd7",
+   "kind": "fixed",
+   "text": "Vad hjälpte dig mest?"
+  },
+  {
+   "id": "01f2620f",
+   "kind": "fixed",
+   "text": "Ja!"
+  },
+  {
+   "id": "b48cfd07",
+   "kind": "fixed",
+   "text": "Hitta den hemliga uträkningen. Du har sex försök. Varje försök måste vara en riktig uträkning."
+  },
+  {
+   "id": "119c7f9a",
+   "kind": "fixed",
+   "text": "fyrtiofyra finns och sitter på rätt plats."
+  },
+  {
+   "id": "5e25d2d3",
+   "kind": "fixed",
+   "text": "trettiotre finns, men på en annan plats."
+  },
+  {
+   "id": "8fbaa26c",
+   "kind": "fixed",
+   "text": "åttioåtta finns inte i svaret."
+  },
+  {
+   "id": "3100b4a9",
+   "kind": "fixed",
+   "text": "De gröna rutorna"
+  },
+  {
+   "id": "13a13636",
+   "kind": "fixed",
+   "text": "De gula rutorna"
+  },
+  {
+   "id": "ee48ee1b",
+   "kind": "fixed",
+   "text": "Tangenterna med färg"
+  },
+  {
+   "id": "511cee82",
+   "kind": "fixed",
+   "text": "Raden Det du vet"
+  },
+  {
+   "id": "1fa2925a",
+   "kind": "fixed",
+   "text": "summa"
+  },
+  {
+   "id": "32c3e7d7",
+   "kind": "fixed",
+   "text": "Summan är svaret när man plussar."
+  },
+  {
+   "id": "add4324c",
+   "kind": "fixed",
+   "text": "Vad heter svaret när man plussar?"
+  },
+  {
+   "id": "9f074e9d",
+   "kind": "fixed",
+   "text": "Det heter summa."
+  },
+  {
+   "id": "085962c3",
+   "kind": "fixed",
+   "text": "differens"
+  },
+  {
+   "id": "da32a4f7",
+   "kind": "fixed",
+   "text": "Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "b9c7997b",
+   "kind": "fixed",
+   "text": "Vad heter svaret när man tar minus?"
+  },
+  {
+   "id": "8ca2c056",
+   "kind": "fixed",
+   "text": "Det heter differens."
+  },
+  {
+   "id": "f55be214",
+   "kind": "fixed",
+   "text": "produkt"
+  },
+  {
+   "id": "6c8951e8",
+   "kind": "fixed",
+   "text": "Produkten är svaret när man gångrar."
+  },
+  {
+   "id": "1ec44ad2",
+   "kind": "fixed",
+   "text": "Vad heter svaret när man gångrar?"
+  },
+  {
+   "id": "b8bb9333",
+   "kind": "fixed",
+   "text": "Det heter produkt."
+  },
+  {
+   "id": "221824d1",
+   "kind": "fixed",
+   "text": "dubbelt"
+  },
+  {
+   "id": "4887dcc8",
+   "kind": "fixed",
+   "text": "Dubbelt betyder två gånger så mycket."
+  },
+  {
+   "id": "b5ca922a",
+   "kind": "fixed",
+   "text": "Vad säger man när något är två gånger så mycket, som sex plus sex?"
+  },
+  {
+   "id": "11eec69c",
+   "kind": "fixed",
+   "text": "Det heter dubbelt."
+  },
+  {
+   "id": "45fd8412",
+   "kind": "fixed",
+   "text": "hälften"
+  },
+  {
+   "id": "5b85a2b5",
+   "kind": "fixed",
+   "text": "Hälften är en av två lika stora delar."
+  },
+  {
+   "id": "126979d8",
+   "kind": "fixed",
+   "text": "Vad heter en av två lika stora delar?"
+  },
+  {
+   "id": "dbeafd8d",
+   "kind": "fixed",
+   "text": "Det heter hälften."
+  },
+  {
+   "id": "24495a21",
+   "kind": "help",
+   "text": "Hitta den hemliga uträkningen. Du har sex försök. Varje försök måste vara en riktig uträkning. fyrtiofyra finns och sitter på rätt plats. trettiotre finns, men på en annan plats. åttioåtta finns inte i svaret."
+  },
+  {
+   "id": "1f9d3e7c",
+   "kind": "test",
+   "text": "Hej! Så här låter jag. Summan är svaret när man plussar. åtta plus fem är lika med tretton."
+  },
+  {
+   "id": "8e3cab6a",
+   "kind": "reflect",
+   "text": "Vad hjälpte dig mest? De gröna rutorna. De gula rutorna. Tangenterna med färg."
+  },
+  {
+   "id": "99faa4a9",
+   "kind": "reflect",
+   "text": "Vad hjälpte dig mest? De gröna rutorna. De gula rutorna. Tangenterna med färg. Raden Det du vet."
+  },
+  {
+   "id": "cd5bfbb2",
+   "kind": "quiz",
+   "text": "Vad heter svaret när man plussar? differens. produkt. summa."
+  },
+  {
+   "id": "1e8af2c7",
+   "kind": "quiz",
+   "text": "Vad heter svaret när man plussar? differens. dubbelt. summa."
+  },
+  {
+   "id": "c1d815bc",
+   "kind": "quiz",
+   "text": "Vad heter svaret när man plussar? differens. hälften. summa."
+  },
+  {
+   "id": "6d02f000",
+   "kind": "quiz",
+   "text": "Vad heter svaret när man plussar? dubbelt. produkt. summa."
+  },
+  {
+   "id": "eb1624f1",
+   "kind": "quiz",
+   "text": "Vad heter svaret när man plussar? hälften. produkt. summa."
+  },
+  {
+   "id": "9f50cbde",
+   "kind": "quiz",
+   "text": "Vad heter svaret när man plussar? dubbelt. hälften. summa."
+  },
+  {
+   "id": "99d6073b",
+   "kind": "quiz",
+   "text": "Vad heter svaret när man tar minus? differens. produkt. summa."
+  },
+  {
+   "id": "1abbb9d2",
+   "kind": "quiz",
+   "text": "Vad heter svaret när man tar minus? differens. dubbelt. summa."
+  },
+  {
+   "id": "2238967d",
+   "kind": "quiz",
+   "text": "Vad heter svaret när man tar minus? differens. hälften. summa."
+  },
+  {
+   "id": "aa36ecfc",
+   "kind": "quiz",
+   "text": "Vad heter svaret när man tar minus? differens. dubbelt. produkt."
+  },
+  {
+   "id": "04bfce93",
+   "kind": "quiz",
+   "text": "Vad heter svaret när man tar minus? differens. hälften. produkt."
+  },
+  {
+   "id": "69f83a4e",
+   "kind": "quiz",
+   "text": "Vad heter svaret när man tar minus? differens. dubbelt. hälften."
+  },
+  {
+   "id": "3ce79764",
+   "kind": "quiz",
+   "text": "Vad heter svaret när man gångrar? differens. produkt. summa."
+  },
+  {
+   "id": "3cda8d5e",
+   "kind": "quiz",
+   "text": "Vad heter svaret när man gångrar? dubbelt. produkt. summa."
+  },
+  {
+   "id": "e987aad7",
+   "kind": "quiz",
+   "text": "Vad heter svaret när man gångrar? hälften. produkt. summa."
+  },
+  {
+   "id": "d79751fb",
+   "kind": "quiz",
+   "text": "Vad heter svaret när man gångrar? differens. dubbelt. produkt."
+  },
+  {
+   "id": "d2e408cc",
+   "kind": "quiz",
+   "text": "Vad heter svaret när man gångrar? differens. hälften. produkt."
+  },
+  {
+   "id": "f7d6bfd2",
+   "kind": "quiz",
+   "text": "Vad heter svaret när man gångrar? dubbelt. hälften. produkt."
+  },
+  {
+   "id": "18a2c06d",
+   "kind": "quiz",
+   "text": "Vad säger man när något är två gånger så mycket, som sex plus sex? differens. dubbelt. summa."
+  },
+  {
+   "id": "fa693526",
+   "kind": "quiz",
+   "text": "Vad säger man när något är två gånger så mycket, som sex plus sex? dubbelt. produkt. summa."
+  },
+  {
+   "id": "c4e136b0",
+   "kind": "quiz",
+   "text": "Vad säger man när något är två gånger så mycket, som sex plus sex? dubbelt. hälften. summa."
+  },
+  {
+   "id": "46bea183",
+   "kind": "quiz",
+   "text": "Vad säger man när något är två gånger så mycket, som sex plus sex? differens. dubbelt. produkt."
+  },
+  {
+   "id": "6915e1bd",
+   "kind": "quiz",
+   "text": "Vad säger man när något är två gånger så mycket, som sex plus sex? differens. dubbelt. hälften."
+  },
+  {
+   "id": "aca7254a",
+   "kind": "quiz",
+   "text": "Vad säger man när något är två gånger så mycket, som sex plus sex? dubbelt. hälften. produkt."
+  },
+  {
+   "id": "b037b8c0",
+   "kind": "quiz",
+   "text": "Vad heter en av två lika stora delar? differens. hälften. summa."
+  },
+  {
+   "id": "dfc63165",
+   "kind": "quiz",
+   "text": "Vad heter en av två lika stora delar? hälften. produkt. summa."
+  },
+  {
+   "id": "c89c1bca",
+   "kind": "quiz",
+   "text": "Vad heter en av två lika stora delar? dubbelt. hälften. summa."
+  },
+  {
+   "id": "35052cda",
+   "kind": "quiz",
+   "text": "Vad heter en av två lika stora delar? differens. hälften. produkt."
+  },
+  {
+   "id": "87bc9af7",
+   "kind": "quiz",
+   "text": "Vad heter en av två lika stora delar? differens. dubbelt. hälften."
+  },
+  {
+   "id": "100f7854",
+   "kind": "quiz",
+   "text": "Vad heter en av två lika stora delar? dubbelt. hälften. produkt."
+  },
+  {
+   "id": "2609913f",
+   "kind": "quiz-answer",
+   "text": "Ja! Summan är svaret när man plussar."
+  },
+  {
+   "id": "a5778619",
+   "kind": "quiz-answer",
+   "text": "Det heter summa. Summan är svaret när man plussar."
+  },
+  {
+   "id": "b2e500af",
+   "kind": "quiz-answer",
+   "text": "Ja! Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "886b395e",
+   "kind": "quiz-answer",
+   "text": "Det heter differens. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "ec2e4120",
+   "kind": "quiz-answer",
+   "text": "Ja! Produkten är svaret när man gångrar."
+  },
+  {
+   "id": "d7f0f114",
+   "kind": "quiz-answer",
+   "text": "Det heter produkt. Produkten är svaret när man gångrar."
+  },
+  {
+   "id": "b9557200",
+   "kind": "quiz-answer",
+   "text": "Ja! Dubbelt betyder två gånger så mycket."
+  },
+  {
+   "id": "d88e556f",
+   "kind": "quiz-answer",
+   "text": "Det heter dubbelt. Dubbelt betyder två gånger så mycket."
+  },
+  {
+   "id": "2c0eec6d",
+   "kind": "quiz-answer",
+   "text": "Ja! Hälften är en av två lika stora delar."
+  },
+  {
+   "id": "49ce22b7",
+   "kind": "quiz-answer",
+   "text": "Det heter hälften. Hälften är en av två lika stora delar."
+  },
+  {
+   "id": "6e6d76ec",
+   "kind": "word-card",
+   "text": "summa. ett plus ett är lika med två. Summan är två. Summan är svaret när man plussar."
+  },
+  {
+   "id": "e2aaa96e",
+   "kind": "word-card",
+   "text": "dubbelt. ett plus ett är lika med två. två är dubbelt så mycket som ett. Dubbelt betyder två gånger så mycket."
+  },
+  {
+   "id": "d220e3a8",
+   "kind": "word-card",
+   "text": "hälften. ett plus ett är lika med två. ett är hälften av två. Hälften är en av två lika stora delar."
+  },
+  {
+   "id": "0f4a3409",
+   "kind": "word-card",
+   "text": "differens. ett minus ett är lika med noll. Differensen är noll. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "69d27f36",
+   "kind": "word-card",
+   "text": "summa. ett plus två är lika med tre. Summan är tre. Summan är svaret när man plussar."
+  },
+  {
+   "id": "3267a182",
+   "kind": "word-card",
+   "text": "summa. ett plus tre är lika med fyra. Summan är fyra. Summan är svaret när man plussar."
+  },
+  {
+   "id": "2543a687",
+   "kind": "word-card",
+   "text": "summa. ett plus fyra är lika med fem. Summan är fem. Summan är svaret när man plussar."
+  },
+  {
+   "id": "601f078d",
+   "kind": "word-card",
+   "text": "summa. ett plus fem är lika med sex. Summan är sex. Summan är svaret när man plussar."
+  },
+  {
+   "id": "b3e60609",
+   "kind": "word-card",
+   "text": "summa. ett plus sex är lika med sju. Summan är sju. Summan är svaret när man plussar."
+  },
+  {
+   "id": "3d36868b",
+   "kind": "word-card",
+   "text": "summa. ett plus sju är lika med åtta. Summan är åtta. Summan är svaret när man plussar."
+  },
+  {
+   "id": "47bc42f5",
+   "kind": "word-card",
+   "text": "summa. ett plus åtta är lika med nio. Summan är nio. Summan är svaret när man plussar."
+  },
+  {
+   "id": "aede7e06",
+   "kind": "word-card",
+   "text": "summa. två plus ett är lika med tre. Summan är tre. Summan är svaret när man plussar."
+  },
+  {
+   "id": "8b2fdc6f",
+   "kind": "word-card",
+   "text": "differens. två minus ett är lika med ett. Differensen är ett. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "be48d86a",
+   "kind": "word-card",
+   "text": "hälften. två minus ett är lika med ett. ett är hälften av två. Hälften är en av två lika stora delar."
+  },
+  {
+   "id": "7e9bffcc",
+   "kind": "word-card",
+   "text": "summa. två plus två är lika med fyra. Summan är fyra. Summan är svaret när man plussar."
+  },
+  {
+   "id": "a564dd8e",
+   "kind": "word-card",
+   "text": "dubbelt. två plus två är lika med fyra. fyra är dubbelt så mycket som två. Dubbelt betyder två gånger så mycket."
+  },
+  {
+   "id": "1605570a",
+   "kind": "word-card",
+   "text": "hälften. två plus två är lika med fyra. två är hälften av fyra. Hälften är en av två lika stora delar."
+  },
+  {
+   "id": "99817ec5",
+   "kind": "word-card",
+   "text": "differens. två minus två är lika med noll. Differensen är noll. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "edda0d8a",
+   "kind": "word-card",
+   "text": "summa. två plus tre är lika med fem. Summan är fem. Summan är svaret när man plussar."
+  },
+  {
+   "id": "7335885d",
+   "kind": "word-card",
+   "text": "summa. två plus fyra är lika med sex. Summan är sex. Summan är svaret när man plussar."
+  },
+  {
+   "id": "bbac236b",
+   "kind": "word-card",
+   "text": "summa. två plus fem är lika med sju. Summan är sju. Summan är svaret när man plussar."
+  },
+  {
+   "id": "2d20b2dd",
+   "kind": "word-card",
+   "text": "summa. två plus sex är lika med åtta. Summan är åtta. Summan är svaret när man plussar."
+  },
+  {
+   "id": "9ee177df",
+   "kind": "word-card",
+   "text": "summa. två plus sju är lika med nio. Summan är nio. Summan är svaret när man plussar."
+  },
+  {
+   "id": "4218577a",
+   "kind": "word-card",
+   "text": "summa. tre plus ett är lika med fyra. Summan är fyra. Summan är svaret när man plussar."
+  },
+  {
+   "id": "4c48ba27",
+   "kind": "word-card",
+   "text": "differens. tre minus ett är lika med två. Differensen är två. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "b968f7b2",
+   "kind": "word-card",
+   "text": "summa. tre plus två är lika med fem. Summan är fem. Summan är svaret när man plussar."
+  },
+  {
+   "id": "a0555825",
+   "kind": "word-card",
+   "text": "differens. tre minus två är lika med ett. Differensen är ett. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "8a885d26",
+   "kind": "word-card",
+   "text": "summa. tre plus tre är lika med sex. Summan är sex. Summan är svaret när man plussar."
+  },
+  {
+   "id": "63a8c502",
+   "kind": "word-card",
+   "text": "dubbelt. tre plus tre är lika med sex. sex är dubbelt så mycket som tre. Dubbelt betyder två gånger så mycket."
+  },
+  {
+   "id": "b39b1420",
+   "kind": "word-card",
+   "text": "hälften. tre plus tre är lika med sex. tre är hälften av sex. Hälften är en av två lika stora delar."
+  },
+  {
+   "id": "045ffce5",
+   "kind": "word-card",
+   "text": "differens. tre minus tre är lika med noll. Differensen är noll. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "1675eb49",
+   "kind": "word-card",
+   "text": "summa. tre plus fyra är lika med sju. Summan är sju. Summan är svaret när man plussar."
+  },
+  {
+   "id": "48240865",
+   "kind": "word-card",
+   "text": "summa. tre plus fem är lika med åtta. Summan är åtta. Summan är svaret när man plussar."
+  },
+  {
+   "id": "ebf7215b",
+   "kind": "word-card",
+   "text": "summa. tre plus sex är lika med nio. Summan är nio. Summan är svaret när man plussar."
+  },
+  {
+   "id": "0e28362f",
+   "kind": "word-card",
+   "text": "summa. fyra plus ett är lika med fem. Summan är fem. Summan är svaret när man plussar."
+  },
+  {
+   "id": "edf7ff26",
+   "kind": "word-card",
+   "text": "differens. fyra minus ett är lika med tre. Differensen är tre. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "ee312009",
+   "kind": "word-card",
+   "text": "summa. fyra plus två är lika med sex. Summan är sex. Summan är svaret när man plussar."
+  },
+  {
+   "id": "dbd71c74",
+   "kind": "word-card",
+   "text": "differens. fyra minus två är lika med två. Differensen är två. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "399dfbfa",
+   "kind": "word-card",
+   "text": "hälften. fyra minus två är lika med två. två är hälften av fyra. Hälften är en av två lika stora delar."
+  },
+  {
+   "id": "5872087d",
+   "kind": "word-card",
+   "text": "summa. fyra plus tre är lika med sju. Summan är sju. Summan är svaret när man plussar."
+  },
+  {
+   "id": "1d74ee4c",
+   "kind": "word-card",
+   "text": "differens. fyra minus tre är lika med ett. Differensen är ett. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "a66ee38e",
+   "kind": "word-card",
+   "text": "summa. fyra plus fyra är lika med åtta. Summan är åtta. Summan är svaret när man plussar."
+  },
+  {
+   "id": "65cae3af",
+   "kind": "word-card",
+   "text": "dubbelt. fyra plus fyra är lika med åtta. åtta är dubbelt så mycket som fyra. Dubbelt betyder två gånger så mycket."
+  },
+  {
+   "id": "aed512f9",
+   "kind": "word-card",
+   "text": "hälften. fyra plus fyra är lika med åtta. fyra är hälften av åtta. Hälften är en av två lika stora delar."
+  },
+  {
+   "id": "d0f86ad1",
+   "kind": "word-card",
+   "text": "differens. fyra minus fyra är lika med noll. Differensen är noll. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "fa16f194",
+   "kind": "word-card",
+   "text": "summa. fyra plus fem är lika med nio. Summan är nio. Summan är svaret när man plussar."
+  },
+  {
+   "id": "11ae7f3f",
+   "kind": "word-card",
+   "text": "summa. fem plus ett är lika med sex. Summan är sex. Summan är svaret när man plussar."
+  },
+  {
+   "id": "27b2f91a",
+   "kind": "word-card",
+   "text": "differens. fem minus ett är lika med fyra. Differensen är fyra. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "5ff22919",
+   "kind": "word-card",
+   "text": "summa. fem plus två är lika med sju. Summan är sju. Summan är svaret när man plussar."
+  },
+  {
+   "id": "a8179aa2",
+   "kind": "word-card",
+   "text": "differens. fem minus två är lika med tre. Differensen är tre. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "e74b71a3",
+   "kind": "word-card",
+   "text": "summa. fem plus tre är lika med åtta. Summan är åtta. Summan är svaret när man plussar."
+  },
+  {
+   "id": "b06d3156",
+   "kind": "word-card",
+   "text": "differens. fem minus tre är lika med två. Differensen är två. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "ef0bb7b4",
+   "kind": "word-card",
+   "text": "summa. fem plus fyra är lika med nio. Summan är nio. Summan är svaret när man plussar."
+  },
+  {
+   "id": "fe44dde3",
+   "kind": "word-card",
+   "text": "differens. fem minus fyra är lika med ett. Differensen är ett. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "de45bd01",
+   "kind": "word-card",
+   "text": "differens. fem minus fem är lika med noll. Differensen är noll. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "d6b22833",
+   "kind": "word-card",
+   "text": "summa. sex plus ett är lika med sju. Summan är sju. Summan är svaret när man plussar."
+  },
+  {
+   "id": "ad0636b4",
+   "kind": "word-card",
+   "text": "differens. sex minus ett är lika med fem. Differensen är fem. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "6058942b",
+   "kind": "word-card",
+   "text": "summa. sex plus två är lika med åtta. Summan är åtta. Summan är svaret när man plussar."
+  },
+  {
+   "id": "5c1b2f58",
+   "kind": "word-card",
+   "text": "differens. sex minus två är lika med fyra. Differensen är fyra. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "20bdb441",
+   "kind": "word-card",
+   "text": "summa. sex plus tre är lika med nio. Summan är nio. Summan är svaret när man plussar."
+  },
+  {
+   "id": "61637b62",
+   "kind": "word-card",
+   "text": "differens. sex minus tre är lika med tre. Differensen är tre. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "ebad0ede",
+   "kind": "word-card",
+   "text": "hälften. sex minus tre är lika med tre. tre är hälften av sex. Hälften är en av två lika stora delar."
+  },
+  {
+   "id": "a19a168b",
+   "kind": "word-card",
+   "text": "differens. sex minus fyra är lika med två. Differensen är två. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "9b509e09",
+   "kind": "word-card",
+   "text": "differens. sex minus fem är lika med ett. Differensen är ett. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "753bc1b9",
+   "kind": "word-card",
+   "text": "differens. sex minus sex är lika med noll. Differensen är noll. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "a92b48b1",
+   "kind": "word-card",
+   "text": "summa. sju plus ett är lika med åtta. Summan är åtta. Summan är svaret när man plussar."
+  },
+  {
+   "id": "fa1ebe34",
+   "kind": "word-card",
+   "text": "differens. sju minus ett är lika med sex. Differensen är sex. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "074863ed",
+   "kind": "word-card",
+   "text": "summa. sju plus två är lika med nio. Summan är nio. Summan är svaret när man plussar."
+  },
+  {
+   "id": "50f01046",
+   "kind": "word-card",
+   "text": "differens. sju minus två är lika med fem. Differensen är fem. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "3a279bac",
+   "kind": "word-card",
+   "text": "differens. sju minus tre är lika med fyra. Differensen är fyra. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "e425d513",
+   "kind": "word-card",
+   "text": "differens. sju minus fyra är lika med tre. Differensen är tre. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "57776705",
+   "kind": "word-card",
+   "text": "differens. sju minus fem är lika med två. Differensen är två. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "211befc5",
+   "kind": "word-card",
+   "text": "differens. sju minus sex är lika med ett. Differensen är ett. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "c7bbce39",
+   "kind": "word-card",
+   "text": "differens. sju minus sju är lika med noll. Differensen är noll. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "17b75b71",
+   "kind": "word-card",
+   "text": "summa. åtta plus ett är lika med nio. Summan är nio. Summan är svaret när man plussar."
+  },
+  {
+   "id": "b28136bc",
+   "kind": "word-card",
+   "text": "differens. åtta minus ett är lika med sju. Differensen är sju. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "e9f7842a",
+   "kind": "word-card",
+   "text": "differens. åtta minus två är lika med sex. Differensen är sex. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "46253336",
+   "kind": "word-card",
+   "text": "differens. åtta minus tre är lika med fem. Differensen är fem. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "2494b5cd",
+   "kind": "word-card",
+   "text": "differens. åtta minus fyra är lika med fyra. Differensen är fyra. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "04ae868d",
+   "kind": "word-card",
+   "text": "hälften. åtta minus fyra är lika med fyra. fyra är hälften av åtta. Hälften är en av två lika stora delar."
+  },
+  {
+   "id": "fc62ec39",
+   "kind": "word-card",
+   "text": "differens. åtta minus fem är lika med tre. Differensen är tre. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "4c1182a5",
+   "kind": "word-card",
+   "text": "differens. åtta minus sex är lika med två. Differensen är två. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "0ffdc5e9",
+   "kind": "word-card",
+   "text": "differens. åtta minus sju är lika med ett. Differensen är ett. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "e34e2f49",
+   "kind": "word-card",
+   "text": "differens. åtta minus åtta är lika med noll. Differensen är noll. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "382c0b0c",
+   "kind": "word-card",
+   "text": "differens. nio minus ett är lika med åtta. Differensen är åtta. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "86fc7828",
+   "kind": "word-card",
+   "text": "differens. nio minus två är lika med sju. Differensen är sju. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "0be93488",
+   "kind": "word-card",
+   "text": "differens. nio minus tre är lika med sex. Differensen är sex. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "c6d51c09",
+   "kind": "word-card",
+   "text": "differens. nio minus fyra är lika med fem. Differensen är fem. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "ab672e29",
+   "kind": "word-card",
+   "text": "differens. nio minus fem är lika med fyra. Differensen är fyra. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "06dc0e37",
+   "kind": "word-card",
+   "text": "differens. nio minus sex är lika med tre. Differensen är tre. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "9af3e26b",
+   "kind": "word-card",
+   "text": "differens. nio minus sju är lika med två. Differensen är två. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "63654b37",
+   "kind": "word-card",
+   "text": "differens. nio minus åtta är lika med ett. Differensen är ett. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "93e1c1ad",
+   "kind": "word-card",
+   "text": "differens. nio minus nio är lika med noll. Differensen är noll. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "2b7b4aab",
+   "kind": "word-card",
+   "text": "summa. ett plus nio är lika med tio. Summan är tio. Summan är svaret när man plussar."
+  },
+  {
+   "id": "efec841b",
+   "kind": "word-card",
+   "text": "summa. två plus åtta är lika med tio. Summan är tio. Summan är svaret när man plussar."
+  },
+  {
+   "id": "8d64e827",
+   "kind": "word-card",
+   "text": "summa. två plus nio är lika med elva. Summan är elva. Summan är svaret när man plussar."
+  },
+  {
+   "id": "11b61b13",
+   "kind": "word-card",
+   "text": "summa. tre plus sju är lika med tio. Summan är tio. Summan är svaret när man plussar."
+  },
+  {
+   "id": "261e59e1",
+   "kind": "word-card",
+   "text": "summa. tre plus åtta är lika med elva. Summan är elva. Summan är svaret när man plussar."
+  },
+  {
+   "id": "839fccf7",
+   "kind": "word-card",
+   "text": "summa. tre plus nio är lika med tolv. Summan är tolv. Summan är svaret när man plussar."
+  },
+  {
+   "id": "32322724",
+   "kind": "word-card",
+   "text": "summa. fyra plus sex är lika med tio. Summan är tio. Summan är svaret när man plussar."
+  },
+  {
+   "id": "14611b36",
+   "kind": "word-card",
+   "text": "summa. fyra plus sju är lika med elva. Summan är elva. Summan är svaret när man plussar."
+  },
+  {
+   "id": "c8847a98",
+   "kind": "word-card",
+   "text": "summa. fyra plus åtta är lika med tolv. Summan är tolv. Summan är svaret när man plussar."
+  },
+  {
+   "id": "0346a1b2",
+   "kind": "word-card",
+   "text": "summa. fyra plus nio är lika med tretton. Summan är tretton. Summan är svaret när man plussar."
+  },
+  {
+   "id": "3dfc32c8",
+   "kind": "word-card",
+   "text": "summa. fem plus fem är lika med tio. Summan är tio. Summan är svaret när man plussar."
+  },
+  {
+   "id": "db6d31ff",
+   "kind": "word-card",
+   "text": "dubbelt. fem plus fem är lika med tio. tio är dubbelt så mycket som fem. Dubbelt betyder två gånger så mycket."
+  },
+  {
+   "id": "a72dbbcf",
+   "kind": "word-card",
+   "text": "hälften. fem plus fem är lika med tio. fem är hälften av tio. Hälften är en av två lika stora delar."
+  },
+  {
+   "id": "eb8ff17e",
+   "kind": "word-card",
+   "text": "summa. fem plus sex är lika med elva. Summan är elva. Summan är svaret när man plussar."
+  },
+  {
+   "id": "3fdb1882",
+   "kind": "word-card",
+   "text": "summa. fem plus sju är lika med tolv. Summan är tolv. Summan är svaret när man plussar."
+  },
+  {
+   "id": "b78708b2",
+   "kind": "word-card",
+   "text": "summa. fem plus åtta är lika med tretton. Summan är tretton. Summan är svaret när man plussar."
+  },
+  {
+   "id": "f1514b32",
+   "kind": "word-card",
+   "text": "summa. fem plus nio är lika med fjorton. Summan är fjorton. Summan är svaret när man plussar."
+  },
+  {
+   "id": "225921cc",
+   "kind": "word-card",
+   "text": "summa. sex plus fyra är lika med tio. Summan är tio. Summan är svaret när man plussar."
+  },
+  {
+   "id": "16f7abfe",
+   "kind": "word-card",
+   "text": "summa. sex plus fem är lika med elva. Summan är elva. Summan är svaret när man plussar."
+  },
+  {
+   "id": "0c5e8f36",
+   "kind": "word-card",
+   "text": "summa. sex plus sex är lika med tolv. Summan är tolv. Summan är svaret när man plussar."
+  },
+  {
+   "id": "c3173547",
+   "kind": "word-card",
+   "text": "dubbelt. sex plus sex är lika med tolv. tolv är dubbelt så mycket som sex. Dubbelt betyder två gånger så mycket."
+  },
+  {
+   "id": "260c3f27",
+   "kind": "word-card",
+   "text": "hälften. sex plus sex är lika med tolv. sex är hälften av tolv. Hälften är en av två lika stora delar."
+  },
+  {
+   "id": "fce7f178",
+   "kind": "word-card",
+   "text": "summa. sex plus sju är lika med tretton. Summan är tretton. Summan är svaret när man plussar."
+  },
+  {
+   "id": "4fcc54b6",
+   "kind": "word-card",
+   "text": "summa. sex plus åtta är lika med fjorton. Summan är fjorton. Summan är svaret när man plussar."
+  },
+  {
+   "id": "13b7ca28",
+   "kind": "word-card",
+   "text": "summa. sex plus nio är lika med femton. Summan är femton. Summan är svaret när man plussar."
+  },
+  {
+   "id": "d9251659",
+   "kind": "word-card",
+   "text": "summa. sju plus tre är lika med tio. Summan är tio. Summan är svaret när man plussar."
+  },
+  {
+   "id": "7e9f18de",
+   "kind": "word-card",
+   "text": "summa. sju plus fyra är lika med elva. Summan är elva. Summan är svaret när man plussar."
+  },
+  {
+   "id": "6e6474e2",
+   "kind": "word-card",
+   "text": "summa. sju plus fem är lika med tolv. Summan är tolv. Summan är svaret när man plussar."
+  },
+  {
+   "id": "909da838",
+   "kind": "word-card",
+   "text": "summa. sju plus sex är lika med tretton. Summan är tretton. Summan är svaret när man plussar."
+  },
+  {
+   "id": "fa417ec0",
+   "kind": "word-card",
+   "text": "summa. sju plus sju är lika med fjorton. Summan är fjorton. Summan är svaret när man plussar."
+  },
+  {
+   "id": "bf625243",
+   "kind": "word-card",
+   "text": "dubbelt. sju plus sju är lika med fjorton. fjorton är dubbelt så mycket som sju. Dubbelt betyder två gånger så mycket."
+  },
+  {
+   "id": "ce131d43",
+   "kind": "word-card",
+   "text": "hälften. sju plus sju är lika med fjorton. sju är hälften av fjorton. Hälften är en av två lika stora delar."
+  },
+  {
+   "id": "9ad76460",
+   "kind": "word-card",
+   "text": "summa. sju plus åtta är lika med femton. Summan är femton. Summan är svaret när man plussar."
+  },
+  {
+   "id": "185f97e0",
+   "kind": "word-card",
+   "text": "summa. sju plus nio är lika med sexton. Summan är sexton. Summan är svaret när man plussar."
+  },
+  {
+   "id": "ebe45127",
+   "kind": "word-card",
+   "text": "summa. åtta plus två är lika med tio. Summan är tio. Summan är svaret när man plussar."
+  },
+  {
+   "id": "2186d235",
+   "kind": "word-card",
+   "text": "summa. åtta plus tre är lika med elva. Summan är elva. Summan är svaret när man plussar."
+  },
+  {
+   "id": "b871043c",
+   "kind": "word-card",
+   "text": "summa. åtta plus fyra är lika med tolv. Summan är tolv. Summan är svaret när man plussar."
+  },
+  {
+   "id": "13a0d6ae",
+   "kind": "word-card",
+   "text": "summa. åtta plus fem är lika med tretton. Summan är tretton. Summan är svaret när man plussar."
+  },
+  {
+   "id": "5a1b656a",
+   "kind": "word-card",
+   "text": "summa. åtta plus sex är lika med fjorton. Summan är fjorton. Summan är svaret när man plussar."
+  },
+  {
+   "id": "3a841f88",
+   "kind": "word-card",
+   "text": "summa. åtta plus sju är lika med femton. Summan är femton. Summan är svaret när man plussar."
+  },
+  {
+   "id": "c4b697ba",
+   "kind": "word-card",
+   "text": "summa. åtta plus åtta är lika med sexton. Summan är sexton. Summan är svaret när man plussar."
+  },
+  {
+   "id": "c6860571",
+   "kind": "word-card",
+   "text": "dubbelt. åtta plus åtta är lika med sexton. sexton är dubbelt så mycket som åtta. Dubbelt betyder två gånger så mycket."
+  },
+  {
+   "id": "f4b87ce1",
+   "kind": "word-card",
+   "text": "hälften. åtta plus åtta är lika med sexton. åtta är hälften av sexton. Hälften är en av två lika stora delar."
+  },
+  {
+   "id": "d0be5ea6",
+   "kind": "word-card",
+   "text": "summa. åtta plus nio är lika med sjutton. Summan är sjutton. Summan är svaret när man plussar."
+  },
+  {
+   "id": "8e092951",
+   "kind": "word-card",
+   "text": "summa. nio plus ett är lika med tio. Summan är tio. Summan är svaret när man plussar."
+  },
+  {
+   "id": "41cb2d71",
+   "kind": "word-card",
+   "text": "summa. nio plus två är lika med elva. Summan är elva. Summan är svaret när man plussar."
+  },
+  {
+   "id": "35a54a99",
+   "kind": "word-card",
+   "text": "summa. nio plus tre är lika med tolv. Summan är tolv. Summan är svaret när man plussar."
+  },
+  {
+   "id": "a282a626",
+   "kind": "word-card",
+   "text": "summa. nio plus fyra är lika med tretton. Summan är tretton. Summan är svaret när man plussar."
+  },
+  {
+   "id": "6fe7155e",
+   "kind": "word-card",
+   "text": "summa. nio plus fem är lika med fjorton. Summan är fjorton. Summan är svaret när man plussar."
+  },
+  {
+   "id": "a210189c",
+   "kind": "word-card",
+   "text": "summa. nio plus sex är lika med femton. Summan är femton. Summan är svaret när man plussar."
+  },
+  {
+   "id": "f8e98638",
+   "kind": "word-card",
+   "text": "summa. nio plus sju är lika med sexton. Summan är sexton. Summan är svaret när man plussar."
+  },
+  {
+   "id": "2dc8caea",
+   "kind": "word-card",
+   "text": "summa. nio plus åtta är lika med sjutton. Summan är sjutton. Summan är svaret när man plussar."
+  },
+  {
+   "id": "3e11d4ec",
+   "kind": "word-card",
+   "text": "summa. nio plus nio är lika med arton. Summan är arton. Summan är svaret när man plussar."
+  },
+  {
+   "id": "3d156c99",
+   "kind": "word-card",
+   "text": "dubbelt. nio plus nio är lika med arton. arton är dubbelt så mycket som nio. Dubbelt betyder två gånger så mycket."
+  },
+  {
+   "id": "9676dc6d",
+   "kind": "word-card",
+   "text": "hälften. nio plus nio är lika med arton. nio är hälften av arton. Hälften är en av två lika stora delar."
+  },
+  {
+   "id": "940b0d60",
+   "kind": "word-card",
+   "text": "differens. tio minus ett är lika med nio. Differensen är nio. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "bb3169b0",
+   "kind": "word-card",
+   "text": "differens. tio minus två är lika med åtta. Differensen är åtta. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "a870941a",
+   "kind": "word-card",
+   "text": "differens. tio minus tre är lika med sju. Differensen är sju. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "1540e6ff",
+   "kind": "word-card",
+   "text": "differens. tio minus fyra är lika med sex. Differensen är sex. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "1bc8dc61",
+   "kind": "word-card",
+   "text": "differens. tio minus fem är lika med fem. Differensen är fem. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "bc88e46f",
+   "kind": "word-card",
+   "text": "hälften. tio minus fem är lika med fem. fem är hälften av tio. Hälften är en av två lika stora delar."
+  },
+  {
+   "id": "d463fa0b",
+   "kind": "word-card",
+   "text": "differens. tio minus sex är lika med fyra. Differensen är fyra. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "9279657d",
+   "kind": "word-card",
+   "text": "differens. tio minus sju är lika med tre. Differensen är tre. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "00a86089",
+   "kind": "word-card",
+   "text": "differens. tio minus åtta är lika med två. Differensen är två. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "1aaf2b1b",
+   "kind": "word-card",
+   "text": "differens. tio minus nio är lika med ett. Differensen är ett. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "ef7aa6b4",
+   "kind": "word-card",
+   "text": "differens. elva minus två är lika med nio. Differensen är nio. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "2f7872e6",
+   "kind": "word-card",
+   "text": "differens. elva minus tre är lika med åtta. Differensen är åtta. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "961f37bd",
+   "kind": "word-card",
+   "text": "differens. elva minus fyra är lika med sju. Differensen är sju. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "29735b43",
+   "kind": "word-card",
+   "text": "differens. elva minus fem är lika med sex. Differensen är sex. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "461a81ff",
+   "kind": "word-card",
+   "text": "differens. elva minus sex är lika med fem. Differensen är fem. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "bbd979e1",
+   "kind": "word-card",
+   "text": "differens. elva minus sju är lika med fyra. Differensen är fyra. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "db052403",
+   "kind": "word-card",
+   "text": "differens. elva minus åtta är lika med tre. Differensen är tre. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "4c95e7a5",
+   "kind": "word-card",
+   "text": "differens. elva minus nio är lika med två. Differensen är två. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "94e563a5",
+   "kind": "word-card",
+   "text": "differens. tolv minus tre är lika med nio. Differensen är nio. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "d8d03bd4",
+   "kind": "word-card",
+   "text": "differens. tolv minus fyra är lika med åtta. Differensen är åtta. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "6208443a",
+   "kind": "word-card",
+   "text": "differens. tolv minus fem är lika med sju. Differensen är sju. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "db462e6a",
+   "kind": "word-card",
+   "text": "differens. tolv minus sex är lika med sex. Differensen är sex. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "70c0ea79",
+   "kind": "word-card",
+   "text": "hälften. tolv minus sex är lika med sex. sex är hälften av tolv. Hälften är en av två lika stora delar."
+  },
+  {
+   "id": "6badb156",
+   "kind": "word-card",
+   "text": "differens. tolv minus sju är lika med fem. Differensen är fem. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "d5421cb6",
+   "kind": "word-card",
+   "text": "differens. tolv minus åtta är lika med fyra. Differensen är fyra. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "39fc9c80",
+   "kind": "word-card",
+   "text": "differens. tolv minus nio är lika med tre. Differensen är tre. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "405e96cf",
+   "kind": "word-card",
+   "text": "differens. tretton minus fyra är lika med nio. Differensen är nio. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "89da267b",
+   "kind": "word-card",
+   "text": "differens. tretton minus fem är lika med åtta. Differensen är åtta. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "0dcfad79",
+   "kind": "word-card",
+   "text": "differens. tretton minus sex är lika med sju. Differensen är sju. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "60d3f995",
+   "kind": "word-card",
+   "text": "differens. tretton minus sju är lika med sex. Differensen är sex. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "09cf97c1",
+   "kind": "word-card",
+   "text": "differens. tretton minus åtta är lika med fem. Differensen är fem. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "7da8323d",
+   "kind": "word-card",
+   "text": "differens. tretton minus nio är lika med fyra. Differensen är fyra. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "bac3cf0b",
+   "kind": "word-card",
+   "text": "differens. fjorton minus fem är lika med nio. Differensen är nio. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "30592049",
+   "kind": "word-card",
+   "text": "differens. fjorton minus sex är lika med åtta. Differensen är åtta. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "c633ea07",
+   "kind": "word-card",
+   "text": "differens. fjorton minus sju är lika med sju. Differensen är sju. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "47d6b90f",
+   "kind": "word-card",
+   "text": "hälften. fjorton minus sju är lika med sju. sju är hälften av fjorton. Hälften är en av två lika stora delar."
+  },
+  {
+   "id": "63eeaceb",
+   "kind": "word-card",
+   "text": "differens. fjorton minus åtta är lika med sex. Differensen är sex. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "c7be3ff5",
+   "kind": "word-card",
+   "text": "differens. fjorton minus nio är lika med fem. Differensen är fem. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "2c4ad8d8",
+   "kind": "word-card",
+   "text": "differens. femton minus sex är lika med nio. Differensen är nio. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "2d5ab996",
+   "kind": "word-card",
+   "text": "differens. femton minus sju är lika med åtta. Differensen är åtta. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "7f5ebb46",
+   "kind": "word-card",
+   "text": "differens. femton minus åtta är lika med sju. Differensen är sju. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "bae0d7a2",
+   "kind": "word-card",
+   "text": "differens. femton minus nio är lika med sex. Differensen är sex. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "cdc5d764",
+   "kind": "word-card",
+   "text": "differens. sexton minus sju är lika med nio. Differensen är nio. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "dc91ab5c",
+   "kind": "word-card",
+   "text": "differens. sexton minus åtta är lika med åtta. Differensen är åtta. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "edb67565",
+   "kind": "word-card",
+   "text": "hälften. sexton minus åtta är lika med åtta. åtta är hälften av sexton. Hälften är en av två lika stora delar."
+  },
+  {
+   "id": "3f537262",
+   "kind": "word-card",
+   "text": "differens. sexton minus nio är lika med sju. Differensen är sju. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "d98bfcbc",
+   "kind": "word-card",
+   "text": "differens. sjutton minus åtta är lika med nio. Differensen är nio. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "8687cd26",
+   "kind": "word-card",
+   "text": "differens. sjutton minus nio är lika med åtta. Differensen är åtta. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "4fdfdb17",
+   "kind": "word-card",
+   "text": "differens. arton minus nio är lika med nio. Differensen är nio. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
+   "id": "f21adb85",
+   "kind": "word-card",
+   "text": "hälften. arton minus nio är lika med nio. nio är hälften av arton. Hälften är en av två lika stora delar."
+  },
+  {
+   "id": "34432bf1",
+   "kind": "answer",
+   "text": "Svaret var ett plus ett är lika med två. Försök igen!"
+  },
+  {
+   "id": "5c920243",
+   "kind": "answer",
+   "text": "Svaret var ett minus ett är lika med noll. Försök igen!"
+  },
+  {
+   "id": "cb3117d7",
+   "kind": "answer",
+   "text": "Svaret var ett plus två är lika med tre. Försök igen!"
+  },
+  {
+   "id": "3d3835de",
+   "kind": "answer",
+   "text": "Svaret var ett plus tre är lika med fyra. Försök igen!"
+  },
+  {
+   "id": "a611a85f",
+   "kind": "answer",
+   "text": "Svaret var ett plus fyra är lika med fem. Försök igen!"
+  },
+  {
+   "id": "0315a4b3",
+   "kind": "answer",
+   "text": "Svaret var ett plus fem är lika med sex. Försök igen!"
+  },
+  {
+   "id": "8e854187",
+   "kind": "answer",
+   "text": "Svaret var ett plus sex är lika med sju. Försök igen!"
+  },
+  {
+   "id": "c83d1913",
+   "kind": "answer",
+   "text": "Svaret var ett plus sju är lika med åtta. Försök igen!"
+  },
+  {
+   "id": "39f3ef5b",
+   "kind": "answer",
+   "text": "Svaret var ett plus åtta är lika med nio. Försök igen!"
+  },
+  {
+   "id": "e0dbda7b",
+   "kind": "answer",
+   "text": "Svaret var två plus ett är lika med tre. Försök igen!"
+  },
+  {
+   "id": "dd8b37cd",
+   "kind": "answer",
+   "text": "Svaret var två minus ett är lika med ett. Försök igen!"
+  },
+  {
+   "id": "9470ea64",
+   "kind": "answer",
+   "text": "Svaret var två plus två är lika med fyra. Försök igen!"
+  },
+  {
+   "id": "a6e87687",
+   "kind": "answer",
+   "text": "Svaret var två minus två är lika med noll. Försök igen!"
+  },
+  {
+   "id": "64116190",
+   "kind": "answer",
+   "text": "Svaret var två plus tre är lika med fem. Försök igen!"
+  },
+  {
+   "id": "dd1a2e9d",
+   "kind": "answer",
+   "text": "Svaret var två plus fyra är lika med sex. Försök igen!"
+  },
+  {
+   "id": "9befc481",
+   "kind": "answer",
+   "text": "Svaret var två plus fem är lika med sju. Försök igen!"
+  },
+  {
+   "id": "2be4b2ed",
+   "kind": "answer",
+   "text": "Svaret var två plus sex är lika med åtta. Försök igen!"
+  },
+  {
+   "id": "3b149b6b",
+   "kind": "answer",
+   "text": "Svaret var två plus sju är lika med nio. Försök igen!"
+  },
+  {
+   "id": "26b6390a",
+   "kind": "answer",
+   "text": "Svaret var tre plus ett är lika med fyra. Försök igen!"
+  },
+  {
+   "id": "68deba0b",
+   "kind": "answer",
+   "text": "Svaret var tre minus ett är lika med två. Försök igen!"
+  },
+  {
+   "id": "1de0bf00",
+   "kind": "answer",
+   "text": "Svaret var tre plus två är lika med fem. Försök igen!"
+  },
+  {
+   "id": "efd97633",
+   "kind": "answer",
+   "text": "Svaret var tre minus två är lika med ett. Försök igen!"
+  },
+  {
+   "id": "afd34ad8",
+   "kind": "answer",
+   "text": "Svaret var tre plus tre är lika med sex. Försök igen!"
+  },
+  {
+   "id": "7f031727",
+   "kind": "answer",
+   "text": "Svaret var tre minus tre är lika med noll. Försök igen!"
+  },
+  {
+   "id": "e5eb0f15",
+   "kind": "answer",
+   "text": "Svaret var tre plus fyra är lika med sju. Försök igen!"
+  },
+  {
+   "id": "e1a19e35",
+   "kind": "answer",
+   "text": "Svaret var tre plus fem är lika med åtta. Försök igen!"
+  },
+  {
+   "id": "1d3eb993",
+   "kind": "answer",
+   "text": "Svaret var tre plus sex är lika med nio. Försök igen!"
+  },
+  {
+   "id": "f65f6873",
+   "kind": "answer",
+   "text": "Svaret var fyra plus ett är lika med fem. Försök igen!"
+  },
+  {
+   "id": "98fd4ab4",
+   "kind": "answer",
+   "text": "Svaret var fyra minus ett är lika med tre. Försök igen!"
+  },
+  {
+   "id": "13d9e625",
+   "kind": "answer",
+   "text": "Svaret var fyra plus två är lika med sex. Försök igen!"
+  },
+  {
+   "id": "766b8afa",
+   "kind": "answer",
+   "text": "Svaret var fyra minus två är lika med två. Försök igen!"
+  },
+  {
+   "id": "ff61f5dd",
+   "kind": "answer",
+   "text": "Svaret var fyra plus tre är lika med sju. Försök igen!"
+  },
+  {
+   "id": "f4c9153c",
+   "kind": "answer",
+   "text": "Svaret var fyra minus tre är lika med ett. Försök igen!"
+  },
+  {
+   "id": "aa803ce0",
+   "kind": "answer",
+   "text": "Svaret var fyra plus fyra är lika med åtta. Försök igen!"
+  },
+  {
+   "id": "6639580b",
+   "kind": "answer",
+   "text": "Svaret var fyra minus fyra är lika med noll. Försök igen!"
+  },
+  {
+   "id": "e24eafb6",
+   "kind": "answer",
+   "text": "Svaret var fyra plus fem är lika med nio. Försök igen!"
+  },
+  {
+   "id": "d09ff765",
+   "kind": "answer",
+   "text": "Svaret var fem plus ett är lika med sex. Försök igen!"
+  },
+  {
+   "id": "83d1a999",
+   "kind": "answer",
+   "text": "Svaret var fem minus ett är lika med fyra. Försök igen!"
+  },
+  {
+   "id": "9e3bfd4f",
+   "kind": "answer",
+   "text": "Svaret var fem plus två är lika med sju. Försök igen!"
+  },
+  {
+   "id": "1c46fa80",
+   "kind": "answer",
+   "text": "Svaret var fem minus två är lika med tre. Försök igen!"
+  },
+  {
+   "id": "e9cf7ab7",
+   "kind": "answer",
+   "text": "Svaret var fem plus tre är lika med åtta. Försök igen!"
+  },
+  {
+   "id": "4098aad8",
+   "kind": "answer",
+   "text": "Svaret var fem minus tre är lika med två. Försök igen!"
+  },
+  {
+   "id": "a0c2b35a",
+   "kind": "answer",
+   "text": "Svaret var fem plus fyra är lika med nio. Försök igen!"
+  },
+  {
+   "id": "3ee7f3a9",
+   "kind": "answer",
+   "text": "Svaret var fem minus fyra är lika med ett. Försök igen!"
+  },
+  {
+   "id": "f332d07b",
+   "kind": "answer",
+   "text": "Svaret var fem minus fem är lika med noll. Försök igen!"
+  },
+  {
+   "id": "8bcaf31d",
+   "kind": "answer",
+   "text": "Svaret var sex plus ett är lika med sju. Försök igen!"
+  },
+  {
+   "id": "17c45e3f",
+   "kind": "answer",
+   "text": "Svaret var sex minus ett är lika med fem. Försök igen!"
+  },
+  {
+   "id": "80a5f227",
+   "kind": "answer",
+   "text": "Svaret var sex plus två är lika med åtta. Försök igen!"
+  },
+  {
+   "id": "ac4ed69b",
+   "kind": "answer",
+   "text": "Svaret var sex minus två är lika med fyra. Försök igen!"
+  },
+  {
+   "id": "fe9b33c9",
+   "kind": "answer",
+   "text": "Svaret var sex plus tre är lika med nio. Försök igen!"
+  },
+  {
+   "id": "7c157fc0",
+   "kind": "answer",
+   "text": "Svaret var sex minus tre är lika med tre. Försök igen!"
+  },
+  {
+   "id": "bb726b37",
+   "kind": "answer",
+   "text": "Svaret var sex minus fyra är lika med två. Försök igen!"
+  },
+  {
+   "id": "f5aac8cf",
+   "kind": "answer",
+   "text": "Svaret var sex minus fem är lika med ett. Försök igen!"
+  },
+  {
+   "id": "b150acf3",
+   "kind": "answer",
+   "text": "Svaret var sex minus sex är lika med noll. Försök igen!"
+  },
+  {
+   "id": "c6cb21d5",
+   "kind": "answer",
+   "text": "Svaret var sju plus ett är lika med åtta. Försök igen!"
+  },
+  {
+   "id": "56b9a413",
+   "kind": "answer",
+   "text": "Svaret var sju minus ett är lika med sex. Försök igen!"
+  },
+  {
+   "id": "c89b9955",
+   "kind": "answer",
+   "text": "Svaret var sju plus två är lika med nio. Försök igen!"
+  },
+  {
+   "id": "0cd9df5d",
+   "kind": "answer",
+   "text": "Svaret var sju minus två är lika med fem. Försök igen!"
+  },
+  {
+   "id": "59b8f30f",
+   "kind": "answer",
+   "text": "Svaret var sju minus tre är lika med fyra. Försök igen!"
+  },
+  {
+   "id": "a7c0c18b",
+   "kind": "answer",
+   "text": "Svaret var sju minus fyra är lika med tre. Försök igen!"
+  },
+  {
+   "id": "704e2d85",
+   "kind": "answer",
+   "text": "Svaret var sju minus fem är lika med två. Försök igen!"
+  },
+  {
+   "id": "b3a8ecd3",
+   "kind": "answer",
+   "text": "Svaret var sju minus sex är lika med ett. Försök igen!"
+  },
+  {
+   "id": "1ffc1f73",
+   "kind": "answer",
+   "text": "Svaret var sju minus sju är lika med noll. Försök igen!"
+  },
+  {
+   "id": "3517fb6b",
+   "kind": "answer",
+   "text": "Svaret var åtta plus ett är lika med nio. Försök igen!"
+  },
+  {
+   "id": "3f7dba6f",
+   "kind": "answer",
+   "text": "Svaret var åtta minus ett är lika med sju. Försök igen!"
+  },
+  {
+   "id": "3a90aa3d",
+   "kind": "answer",
+   "text": "Svaret var åtta minus två är lika med sex. Försök igen!"
+  },
+  {
+   "id": "92ad816d",
+   "kind": "answer",
+   "text": "Svaret var åtta minus tre är lika med fem. Försök igen!"
+  },
+  {
+   "id": "6f3951b2",
+   "kind": "answer",
+   "text": "Svaret var åtta minus fyra är lika med fyra. Försök igen!"
+  },
+  {
+   "id": "9a4f641d",
+   "kind": "answer",
+   "text": "Svaret var åtta minus fem är lika med tre. Försök igen!"
+  },
+  {
+   "id": "46a4ee25",
+   "kind": "answer",
+   "text": "Svaret var åtta minus sex är lika med två. Försök igen!"
+  },
+  {
+   "id": "2973acaf",
+   "kind": "answer",
+   "text": "Svaret var åtta minus sju är lika med ett. Försök igen!"
+  },
+  {
+   "id": "b44eb883",
+   "kind": "answer",
+   "text": "Svaret var åtta minus åtta är lika med noll. Försök igen!"
+  },
+  {
+   "id": "de20a8e5",
+   "kind": "answer",
+   "text": "Svaret var nio minus ett är lika med åtta. Försök igen!"
+  },
+  {
+   "id": "d16db2a3",
+   "kind": "answer",
+   "text": "Svaret var nio minus två är lika med sju. Försök igen!"
+  },
+  {
+   "id": "e441e5cf",
+   "kind": "answer",
+   "text": "Svaret var nio minus tre är lika med sex. Försök igen!"
+  },
+  {
+   "id": "47a7b3b0",
+   "kind": "answer",
+   "text": "Svaret var nio minus fyra är lika med fem. Försök igen!"
+  },
+  {
+   "id": "023bccce",
+   "kind": "answer",
+   "text": "Svaret var nio minus fem är lika med fyra. Försök igen!"
+  },
+  {
+   "id": "a6fcd31f",
+   "kind": "answer",
+   "text": "Svaret var nio minus sex är lika med tre. Försök igen!"
+  },
+  {
+   "id": "3c6b4797",
+   "kind": "answer",
+   "text": "Svaret var nio minus sju är lika med två. Försök igen!"
+  },
+  {
+   "id": "012a8405",
+   "kind": "answer",
+   "text": "Svaret var nio minus åtta är lika med ett. Försök igen!"
+  },
+  {
+   "id": "b04eff8f",
+   "kind": "answer",
+   "text": "Svaret var nio minus nio är lika med noll. Försök igen!"
+  },
+  {
+   "id": "fbe23649",
+   "kind": "answer",
+   "text": "Svaret var ett plus nio är lika med tio. Försök igen!"
+  },
+  {
+   "id": "d2071da3",
+   "kind": "answer",
+   "text": "Svaret var två plus åtta är lika med tio. Försök igen!"
+  },
+  {
+   "id": "beb19095",
+   "kind": "answer",
+   "text": "Svaret var två plus nio är lika med elva. Försök igen!"
+  },
+  {
+   "id": "e8882da5",
+   "kind": "answer",
+   "text": "Svaret var tre plus sju är lika med tio. Försök igen!"
+  },
+  {
+   "id": "b07131f5",
+   "kind": "answer",
+   "text": "Svaret var tre plus åtta är lika med elva. Försök igen!"
+  },
+  {
+   "id": "a22c3562",
+   "kind": "answer",
+   "text": "Svaret var tre plus nio är lika med tolv. Försök igen!"
+  },
+  {
+   "id": "993edf64",
+   "kind": "answer",
+   "text": "Svaret var fyra plus sex är lika med tio. Försök igen!"
+  },
+  {
+   "id": "d130de90",
+   "kind": "answer",
+   "text": "Svaret var fyra plus sju är lika med elva. Försök igen!"
+  },
+  {
+   "id": "6b13089f",
+   "kind": "answer",
+   "text": "Svaret var fyra plus åtta är lika med tolv. Försök igen!"
+  },
+  {
+   "id": "7c1a04d2",
+   "kind": "answer",
+   "text": "Svaret var fyra plus nio är lika med tretton. Försök igen!"
+  },
+  {
+   "id": "845ec74a",
+   "kind": "answer",
+   "text": "Svaret var fem plus fem är lika med tio. Försök igen!"
+  },
+  {
+   "id": "6234b30e",
+   "kind": "answer",
+   "text": "Svaret var fem plus sex är lika med elva. Försök igen!"
+  },
+  {
+   "id": "e1ad9b41",
+   "kind": "answer",
+   "text": "Svaret var fem plus sju är lika med tolv. Försök igen!"
+  },
+  {
+   "id": "8bca03ca",
+   "kind": "answer",
+   "text": "Svaret var fem plus åtta är lika med tretton. Försök igen!"
+  },
+  {
+   "id": "b0c4b812",
+   "kind": "answer",
+   "text": "Svaret var fem plus nio är lika med fjorton. Försök igen!"
+  },
+  {
+   "id": "a60a22d0",
+   "kind": "answer",
+   "text": "Svaret var sex plus fyra är lika med tio. Försök igen!"
+  },
+  {
+   "id": "fabb19fe",
+   "kind": "answer",
+   "text": "Svaret var sex plus fem är lika med elva. Försök igen!"
+  },
+  {
+   "id": "c80a6ec1",
+   "kind": "answer",
+   "text": "Svaret var sex plus sex är lika med tolv. Försök igen!"
+  },
+  {
+   "id": "8871355e",
+   "kind": "answer",
+   "text": "Svaret var sex plus sju är lika med tretton. Försök igen!"
+  },
+  {
+   "id": "7a942604",
+   "kind": "answer",
+   "text": "Svaret var sex plus åtta är lika med fjorton. Försök igen!"
+  },
+  {
+   "id": "ad0fd609",
+   "kind": "answer",
+   "text": "Svaret var sex plus nio är lika med femton. Försök igen!"
+  },
+  {
+   "id": "11ec97c3",
+   "kind": "answer",
+   "text": "Svaret var sju plus tre är lika med tio. Försök igen!"
+  },
+  {
+   "id": "82d8536c",
+   "kind": "answer",
+   "text": "Svaret var sju plus fyra är lika med elva. Försök igen!"
+  },
+  {
+   "id": "5c153dad",
+   "kind": "answer",
+   "text": "Svaret var sju plus fem är lika med tolv. Försök igen!"
+  },
+  {
+   "id": "6d129592",
+   "kind": "answer",
+   "text": "Svaret var sju plus sex är lika med tretton. Försök igen!"
+  },
+  {
+   "id": "021be024",
+   "kind": "answer",
+   "text": "Svaret var sju plus sju är lika med fjorton. Försök igen!"
+  },
+  {
+   "id": "8a6dadf7",
+   "kind": "answer",
+   "text": "Svaret var sju plus åtta är lika med femton. Försök igen!"
+  },
+  {
+   "id": "4fedf68d",
+   "kind": "answer",
+   "text": "Svaret var sju plus nio är lika med sexton. Försök igen!"
+  },
+  {
+   "id": "c9d16d83",
+   "kind": "answer",
+   "text": "Svaret var åtta plus två är lika med tio. Försök igen!"
+  },
+  {
+   "id": "d5a35eb5",
+   "kind": "answer",
+   "text": "Svaret var åtta plus tre är lika med elva. Försök igen!"
+  },
+  {
+   "id": "1eca8e93",
+   "kind": "answer",
+   "text": "Svaret var åtta plus fyra är lika med tolv. Försök igen!"
+  },
+  {
+   "id": "faaebbba",
+   "kind": "answer",
+   "text": "Svaret var åtta plus fem är lika med tretton. Försök igen!"
+  },
+  {
+   "id": "e446c84c",
+   "kind": "answer",
+   "text": "Svaret var åtta plus sex är lika med fjorton. Försök igen!"
+  },
+  {
+   "id": "3d8d91b3",
+   "kind": "answer",
+   "text": "Svaret var åtta plus sju är lika med femton. Försök igen!"
+  },
+  {
+   "id": "57a20a8f",
+   "kind": "answer",
+   "text": "Svaret var åtta plus åtta är lika med sexton. Försök igen!"
+  },
+  {
+   "id": "4387bed5",
+   "kind": "answer",
+   "text": "Svaret var åtta plus nio är lika med sjutton. Försök igen!"
+  },
+  {
+   "id": "5138adeb",
+   "kind": "answer",
+   "text": "Svaret var nio plus ett är lika med tio. Försök igen!"
+  },
+  {
+   "id": "e9cb2c5b",
+   "kind": "answer",
+   "text": "Svaret var nio plus två är lika med elva. Försök igen!"
+  },
+  {
+   "id": "7ec84734",
+   "kind": "answer",
+   "text": "Svaret var nio plus tre är lika med tolv. Försök igen!"
+  },
+  {
+   "id": "a972b012",
+   "kind": "answer",
+   "text": "Svaret var nio plus fyra är lika med tretton. Försök igen!"
+  },
+  {
+   "id": "6fd61af2",
+   "kind": "answer",
+   "text": "Svaret var nio plus fem är lika med fjorton. Försök igen!"
+  },
+  {
+   "id": "00675751",
+   "kind": "answer",
+   "text": "Svaret var nio plus sex är lika med femton. Försök igen!"
+  },
+  {
+   "id": "fde3ced5",
+   "kind": "answer",
+   "text": "Svaret var nio plus sju är lika med sexton. Försök igen!"
+  },
+  {
+   "id": "d1626c9d",
+   "kind": "answer",
+   "text": "Svaret var nio plus åtta är lika med sjutton. Försök igen!"
+  },
+  {
+   "id": "0c9e7c92",
+   "kind": "answer",
+   "text": "Svaret var nio plus nio är lika med arton. Försök igen!"
+  },
+  {
+   "id": "787b9d61",
+   "kind": "answer",
+   "text": "Svaret var tio minus ett är lika med nio. Försök igen!"
+  },
+  {
+   "id": "b2fff8c9",
+   "kind": "answer",
+   "text": "Svaret var tio minus två är lika med åtta. Försök igen!"
+  },
+  {
+   "id": "c634adfd",
+   "kind": "answer",
+   "text": "Svaret var tio minus tre är lika med sju. Försök igen!"
+  },
+  {
+   "id": "2775fc3e",
+   "kind": "answer",
+   "text": "Svaret var tio minus fyra är lika med sex. Försök igen!"
+  },
+  {
+   "id": "c2df9968",
+   "kind": "answer",
+   "text": "Svaret var tio minus fem är lika med fem. Försök igen!"
+  },
+  {
+   "id": "dda786ac",
+   "kind": "answer",
+   "text": "Svaret var tio minus sex är lika med fyra. Försök igen!"
+  },
+  {
+   "id": "6e061671",
+   "kind": "answer",
+   "text": "Svaret var tio minus sju är lika med tre. Försök igen!"
+  },
+  {
+   "id": "2d652a31",
+   "kind": "answer",
+   "text": "Svaret var tio minus åtta är lika med två. Försök igen!"
+  },
+  {
+   "id": "090593f1",
+   "kind": "answer",
+   "text": "Svaret var tio minus nio är lika med ett. Försök igen!"
+  },
+  {
+   "id": "f9152055",
+   "kind": "answer",
+   "text": "Svaret var elva minus två är lika med nio. Försök igen!"
+  },
+  {
+   "id": "eb8eaf0b",
+   "kind": "answer",
+   "text": "Svaret var elva minus tre är lika med åtta. Försök igen!"
+  },
+  {
+   "id": "c004f794",
+   "kind": "answer",
+   "text": "Svaret var elva minus fyra är lika med sju. Försök igen!"
+  },
+  {
+   "id": "5d04848a",
+   "kind": "answer",
+   "text": "Svaret var elva minus fem är lika med sex. Försök igen!"
+  },
+  {
+   "id": "d9ef96fa",
+   "kind": "answer",
+   "text": "Svaret var elva minus sex är lika med fem. Försök igen!"
+  },
+  {
+   "id": "386cdd36",
+   "kind": "answer",
+   "text": "Svaret var elva minus sju är lika med fyra. Försök igen!"
+  },
+  {
+   "id": "5fc1cc9b",
+   "kind": "answer",
+   "text": "Svaret var elva minus åtta är lika med tre. Försök igen!"
+  },
+  {
+   "id": "b8106ca5",
+   "kind": "answer",
+   "text": "Svaret var elva minus nio är lika med två. Försök igen!"
+  },
+  {
+   "id": "232aea4a",
+   "kind": "answer",
+   "text": "Svaret var tolv minus tre är lika med nio. Försök igen!"
+  },
+  {
+   "id": "84918c4d",
+   "kind": "answer",
+   "text": "Svaret var tolv minus fyra är lika med åtta. Försök igen!"
+  },
+  {
+   "id": "d0fa599d",
+   "kind": "answer",
+   "text": "Svaret var tolv minus fem är lika med sju. Försök igen!"
+  },
+  {
+   "id": "5cdb35fd",
+   "kind": "answer",
+   "text": "Svaret var tolv minus sex är lika med sex. Försök igen!"
+  },
+  {
+   "id": "1697c68d",
+   "kind": "answer",
+   "text": "Svaret var tolv minus sju är lika med fem. Försök igen!"
+  },
+  {
+   "id": "cda487f5",
+   "kind": "answer",
+   "text": "Svaret var tolv minus åtta är lika med fyra. Försök igen!"
+  },
+  {
+   "id": "cbd989da",
+   "kind": "answer",
+   "text": "Svaret var tolv minus nio är lika med tre. Försök igen!"
+  },
+  {
+   "id": "c616a8bc",
+   "kind": "answer",
+   "text": "Svaret var tretton minus fyra är lika med nio. Försök igen!"
+  },
+  {
+   "id": "cab2a3e6",
+   "kind": "answer",
+   "text": "Svaret var tretton minus fem är lika med åtta. Försök igen!"
+  },
+  {
+   "id": "99ffe9a8",
+   "kind": "answer",
+   "text": "Svaret var tretton minus sex är lika med sju. Försök igen!"
+  },
+  {
+   "id": "299a4c68",
+   "kind": "answer",
+   "text": "Svaret var tretton minus sju är lika med sex. Försök igen!"
+  },
+  {
+   "id": "cca69ac8",
+   "kind": "answer",
+   "text": "Svaret var tretton minus åtta är lika med fem. Försök igen!"
+  },
+  {
+   "id": "1ec5a262",
+   "kind": "answer",
+   "text": "Svaret var tretton minus nio är lika med fyra. Försök igen!"
+  },
+  {
+   "id": "3b458218",
+   "kind": "answer",
+   "text": "Svaret var fjorton minus fem är lika med nio. Försök igen!"
+  },
+  {
+   "id": "55e80be0",
+   "kind": "answer",
+   "text": "Svaret var fjorton minus sex är lika med åtta. Försök igen!"
+  },
+  {
+   "id": "7e896b76",
+   "kind": "answer",
+   "text": "Svaret var fjorton minus sju är lika med sju. Försök igen!"
+  },
+  {
+   "id": "c58d83d2",
+   "kind": "answer",
+   "text": "Svaret var fjorton minus åtta är lika med sex. Försök igen!"
+  },
+  {
+   "id": "58d33394",
+   "kind": "answer",
+   "text": "Svaret var fjorton minus nio är lika med fem. Försök igen!"
+  },
+  {
+   "id": "3532cb59",
+   "kind": "answer",
+   "text": "Svaret var femton minus sex är lika med nio. Försök igen!"
+  },
+  {
+   "id": "f4aed5fb",
+   "kind": "answer",
+   "text": "Svaret var femton minus sju är lika med åtta. Försök igen!"
+  },
+  {
+   "id": "d7b2f051",
+   "kind": "answer",
+   "text": "Svaret var femton minus åtta är lika med sju. Försök igen!"
+  },
+  {
+   "id": "8b0aa475",
+   "kind": "answer",
+   "text": "Svaret var femton minus nio är lika med sex. Försök igen!"
+  },
+  {
+   "id": "6ebadf65",
+   "kind": "answer",
+   "text": "Svaret var sexton minus sju är lika med nio. Försök igen!"
+  },
+  {
+   "id": "783835f5",
+   "kind": "answer",
+   "text": "Svaret var sexton minus åtta är lika med åtta. Försök igen!"
+  },
+  {
+   "id": "35143a05",
+   "kind": "answer",
+   "text": "Svaret var sexton minus nio är lika med sju. Försök igen!"
+  },
+  {
+   "id": "2501769d",
+   "kind": "answer",
+   "text": "Svaret var sjutton minus åtta är lika med nio. Försök igen!"
+  },
+  {
+   "id": "b67cb44b",
+   "kind": "answer",
+   "text": "Svaret var sjutton minus nio är lika med åtta. Försök igen!"
+  },
+  {
+   "id": "d70760e4",
+   "kind": "answer",
+   "text": "Svaret var arton minus nio är lika med nio. Försök igen!"
+  },
+  {
+   "id": "bd4400c5",
+   "kind": "hint",
+   "text": "Nästan! noll finns, men på fel plats."
+  },
+  {
+   "id": "05693eb2",
+   "kind": "hint",
+   "text": "Nästan! noll och ett finns, men på fel plats."
+  },
+  {
+   "id": "aaf4afc4",
+   "kind": "hint",
+   "text": "Nästan! noll och två finns, men på fel plats."
+  },
+  {
+   "id": "52bfca68",
+   "kind": "hint",
+   "text": "Nästan! noll och tre finns, men på fel plats."
+  },
+  {
+   "id": "ed350729",
+   "kind": "hint",
+   "text": "Nästan! noll och fyra finns, men på fel plats."
+  },
+  {
+   "id": "69b4243b",
+   "kind": "hint",
+   "text": "Nästan! noll och fem finns, men på fel plats."
+  },
+  {
+   "id": "3c7dbb5f",
+   "kind": "hint",
+   "text": "Nästan! noll och sex finns, men på fel plats."
+  },
+  {
+   "id": "f227f44f",
+   "kind": "hint",
+   "text": "Nästan! noll och sju finns, men på fel plats."
+  },
+  {
+   "id": "492862d3",
+   "kind": "hint",
+   "text": "Nästan! noll och åtta finns, men på fel plats."
+  },
+  {
+   "id": "73562799",
+   "kind": "hint",
+   "text": "Nästan! noll och nio finns, men på fel plats."
+  },
+  {
+   "id": "e0c5f291",
+   "kind": "hint",
+   "text": "Nästan! noll och plus finns, men på fel plats."
+  },
+  {
+   "id": "6f663a17",
+   "kind": "hint",
+   "text": "Nästan! noll och minus finns, men på fel plats."
+  },
+  {
+   "id": "c86ca96e",
+   "kind": "hint",
+   "text": "Nästan! noll och är lika med finns, men på fel plats."
+  },
+  {
+   "id": "f289c7f1",
+   "kind": "hint",
+   "text": "Nästan! ett finns, men på fel plats."
+  },
+  {
+   "id": "75fb3e34",
+   "kind": "hint",
+   "text": "Nästan! ett och noll finns, men på fel plats."
+  },
+  {
+   "id": "824aabd0",
+   "kind": "hint",
+   "text": "Nästan! ett och två finns, men på fel plats."
+  },
+  {
+   "id": "695201ec",
+   "kind": "hint",
+   "text": "Nästan! ett och tre finns, men på fel plats."
+  },
+  {
+   "id": "39f443fd",
+   "kind": "hint",
+   "text": "Nästan! ett och fyra finns, men på fel plats."
+  },
+  {
+   "id": "1ffbce67",
+   "kind": "hint",
+   "text": "Nästan! ett och fem finns, men på fel plats."
+  },
+  {
+   "id": "fedcb39b",
+   "kind": "hint",
+   "text": "Nästan! ett och sex finns, men på fel plats."
+  },
+  {
+   "id": "145f2bcb",
+   "kind": "hint",
+   "text": "Nästan! ett och sju finns, men på fel plats."
+  },
+  {
+   "id": "67a06907",
+   "kind": "hint",
+   "text": "Nästan! ett och åtta finns, men på fel plats."
+  },
+  {
+   "id": "ab89231d",
+   "kind": "hint",
+   "text": "Nästan! ett och nio finns, men på fel plats."
+  },
+  {
+   "id": "427d6e9d",
+   "kind": "hint",
+   "text": "Nästan! ett och plus finns, men på fel plats."
+  },
+  {
+   "id": "d3ffcfc3",
+   "kind": "hint",
+   "text": "Nästan! ett och minus finns, men på fel plats."
+  },
+  {
+   "id": "f62abb8a",
+   "kind": "hint",
+   "text": "Nästan! ett och är lika med finns, men på fel plats."
+  },
+  {
+   "id": "79173e4b",
+   "kind": "hint",
+   "text": "Nästan! två finns, men på fel plats."
+  },
+  {
+   "id": "2bf39902",
+   "kind": "hint",
+   "text": "Nästan! två och noll finns, men på fel plats."
+  },
+  {
+   "id": "572c7118",
+   "kind": "hint",
+   "text": "Nästan! två och ett finns, men på fel plats."
+  },
+  {
+   "id": "bfe8aeba",
+   "kind": "hint",
+   "text": "Nästan! två och tre finns, men på fel plats."
+  },
+  {
+   "id": "446689a3",
+   "kind": "hint",
+   "text": "Nästan! två och fyra finns, men på fel plats."
+  },
+  {
+   "id": "ff043e55",
+   "kind": "hint",
+   "text": "Nästan! två och fem finns, men på fel plats."
+  },
+  {
+   "id": "fd89eeb9",
+   "kind": "hint",
+   "text": "Nästan! två och sex finns, men på fel plats."
+  },
+  {
+   "id": "9c89a28d",
+   "kind": "hint",
+   "text": "Nästan! två och sju finns, men på fel plats."
+  },
+  {
+   "id": "66e58efd",
+   "kind": "hint",
+   "text": "Nästan! två och åtta finns, men på fel plats."
+  },
+  {
+   "id": "6869ec77",
+   "kind": "hint",
+   "text": "Nästan! två och nio finns, men på fel plats."
+  },
+  {
+   "id": "8f0ef417",
+   "kind": "hint",
+   "text": "Nästan! två och plus finns, men på fel plats."
+  },
+  {
+   "id": "62a34135",
+   "kind": "hint",
+   "text": "Nästan! två och minus finns, men på fel plats."
+  },
+  {
+   "id": "49c79494",
+   "kind": "hint",
+   "text": "Nästan! två och är lika med finns, men på fel plats."
+  },
+  {
+   "id": "dcc2ba8f",
+   "kind": "hint",
+   "text": "Nästan! tre finns, men på fel plats."
+  },
+  {
+   "id": "2ac0e016",
+   "kind": "hint",
+   "text": "Nästan! tre och noll finns, men på fel plats."
+  },
+  {
+   "id": "ce93a92c",
+   "kind": "hint",
+   "text": "Nästan! tre och ett finns, men på fel plats."
+  },
+  {
+   "id": "08777682",
+   "kind": "hint",
+   "text": "Nästan! tre och två finns, men på fel plats."
+  },
+  {
+   "id": "f98612af",
+   "kind": "hint",
+   "text": "Nästan! tre och fyra finns, men på fel plats."
+  },
+  {
+   "id": "a1fad819",
+   "kind": "hint",
+   "text": "Nästan! tre och fem finns, men på fel plats."
+  },
+  {
+   "id": "4089e34d",
+   "kind": "hint",
+   "text": "Nästan! tre och sex finns, men på fel plats."
+  },
+  {
+   "id": "2b0a25c1",
+   "kind": "hint",
+   "text": "Nästan! tre och sju finns, men på fel plats."
+  },
+  {
+   "id": "91f330a9",
+   "kind": "hint",
+   "text": "Nästan! tre och åtta finns, men på fel plats."
+  },
+  {
+   "id": "5a980fa3",
+   "kind": "hint",
+   "text": "Nästan! tre och nio finns, men på fel plats."
+  },
+  {
+   "id": "97a49adb",
+   "kind": "hint",
+   "text": "Nästan! tre och plus finns, men på fel plats."
+  },
+  {
+   "id": "2bb12a69",
+   "kind": "hint",
+   "text": "Nästan! tre och minus finns, men på fel plats."
+  },
+  {
+   "id": "99eece88",
+   "kind": "hint",
+   "text": "Nästan! tre och är lika med finns, men på fel plats."
+  },
+  {
+   "id": "adbbffb8",
+   "kind": "hint",
+   "text": "Nästan! fyra finns, men på fel plats."
+  },
+  {
+   "id": "0e3f676f",
+   "kind": "hint",
+   "text": "Nästan! fyra och noll finns, men på fel plats."
+  },
+  {
+   "id": "8f37837f",
+   "kind": "hint",
+   "text": "Nästan! fyra och ett finns, men på fel plats."
+  },
+  {
+   "id": "67051f9d",
+   "kind": "hint",
+   "text": "Nästan! fyra och två finns, men på fel plats."
+  },
+  {
+   "id": "b8872649",
+   "kind": "hint",
+   "text": "Nästan! fyra och tre finns, men på fel plats."
+  },
+  {
+   "id": "24e8545a",
+   "kind": "hint",
+   "text": "Nästan! fyra och fem finns, men på fel plats."
+  },
+  {
+   "id": "8d09f38e",
+   "kind": "hint",
+   "text": "Nästan! fyra och sex finns, men på fel plats."
+  },
+  {
+   "id": "06082bbe",
+   "kind": "hint",
+   "text": "Nästan! fyra och sju finns, men på fel plats."
+  },
+  {
+   "id": "8233a7c8",
+   "kind": "hint",
+   "text": "Nästan! fyra och åtta finns, men på fel plats."
+  },
+  {
+   "id": "8f88a1f0",
+   "kind": "hint",
+   "text": "Nästan! fyra och nio finns, men på fel plats."
+  },
+  {
+   "id": "bf6a2892",
+   "kind": "hint",
+   "text": "Nästan! fyra och plus finns, men på fel plats."
+  },
+  {
+   "id": "c6ab9b0a",
+   "kind": "hint",
+   "text": "Nästan! fyra och minus finns, men på fel plats."
+  },
+  {
+   "id": "51aa5a8b",
+   "kind": "hint",
+   "text": "Nästan! fyra och är lika med finns, men på fel plats."
+  },
+  {
+   "id": "f76609f0",
+   "kind": "hint",
+   "text": "Nästan! fem finns, men på fel plats."
+  },
+  {
+   "id": "946e07f7",
+   "kind": "hint",
+   "text": "Nästan! fem och noll finns, men på fel plats."
+  },
+  {
+   "id": "8f195477",
+   "kind": "hint",
+   "text": "Nästan! fem och ett finns, men på fel plats."
+  },
+  {
+   "id": "d1344b55",
+   "kind": "hint",
+   "text": "Nästan! fem och två finns, men på fel plats."
+  },
+  {
+   "id": "d1bedba1",
+   "kind": "hint",
+   "text": "Nästan! fem och tre finns, men på fel plats."
+  },
+  {
+   "id": "0ced3f4a",
+   "kind": "hint",
+   "text": "Nästan! fem och fyra finns, men på fel plats."
+  },
+  {
+   "id": "6257b936",
+   "kind": "hint",
+   "text": "Nästan! fem och sex finns, men på fel plats."
+  },
+  {
+   "id": "b0e49e46",
+   "kind": "hint",
+   "text": "Nästan! fem och sju finns, men på fel plats."
+  },
+  {
+   "id": "0de0b350",
+   "kind": "hint",
+   "text": "Nästan! fem och åtta finns, men på fel plats."
+  },
+  {
+   "id": "b86449f8",
+   "kind": "hint",
+   "text": "Nästan! fem och nio finns, men på fel plats."
+  },
+  {
+   "id": "11c68bea",
+   "kind": "hint",
+   "text": "Nästan! fem och plus finns, men på fel plats."
+  },
+  {
+   "id": "613ef692",
+   "kind": "hint",
+   "text": "Nästan! fem och minus finns, men på fel plats."
+  },
+  {
+   "id": "da799543",
+   "kind": "hint",
+   "text": "Nästan! fem och är lika med finns, men på fel plats."
+  },
+  {
+   "id": "18bfda14",
+   "kind": "hint",
+   "text": "Nästan! sex finns, men på fel plats."
+  },
+  {
+   "id": "94f79d2b",
+   "kind": "hint",
+   "text": "Nästan! sex och noll finns, men på fel plats."
+  },
+  {
+   "id": "20d59ccb",
+   "kind": "hint",
+   "text": "Nästan! sex och ett finns, men på fel plats."
+  },
+  {
+   "id": "fed595f9",
+   "kind": "hint",
+   "text": "Nästan! sex och två finns, men på fel plats."
+  },
+  {
+   "id": "09c75a8d",
+   "kind": "hint",
+   "text": "Nästan! sex och tre finns, men på fel plats."
+  },
+  {
+   "id": "e1c3d636",
+   "kind": "hint",
+   "text": "Nästan! sex och fyra finns, men på fel plats."
+  },
+  {
+   "id": "772badb6",
+   "kind": "hint",
+   "text": "Nästan! sex och fem finns, men på fel plats."
+  },
+  {
+   "id": "bbe1315a",
+   "kind": "hint",
+   "text": "Nästan! sex och sju finns, men på fel plats."
+  },
+  {
+   "id": "dfeb8e3c",
+   "kind": "hint",
+   "text": "Nästan! sex och åtta finns, men på fel plats."
+  },
+  {
+   "id": "0c123404",
+   "kind": "hint",
+   "text": "Nästan! sex och nio finns, men på fel plats."
+  },
+  {
+   "id": "3be158ae",
+   "kind": "hint",
+   "text": "Nästan! sex och plus finns, men på fel plats."
+  },
+  {
+   "id": "f9a5ff76",
+   "kind": "hint",
+   "text": "Nästan! sex och minus finns, men på fel plats."
+  },
+  {
+   "id": "044e5f77",
+   "kind": "hint",
+   "text": "Nästan! sex och är lika med finns, men på fel plats."
+  },
+  {
+   "id": "29da12d8",
+   "kind": "hint",
+   "text": "Nästan! sju finns, men på fel plats."
+  },
+  {
+   "id": "7a7bd38f",
+   "kind": "hint",
+   "text": "Nästan! sju och noll finns, men på fel plats."
+  },
+  {
+   "id": "ae18d21f",
+   "kind": "hint",
+   "text": "Nästan! sju och ett finns, men på fel plats."
+  },
+  {
+   "id": "596f0cbd",
+   "kind": "hint",
+   "text": "Nästan! sju och två finns, men på fel plats."
+  },
+  {
+   "id": "e5027be9",
+   "kind": "hint",
+   "text": "Nästan! sju och tre finns, men på fel plats."
+  },
+  {
+   "id": "d48b98f2",
+   "kind": "hint",
+   "text": "Nästan! sju och fyra finns, men på fel plats."
+  },
+  {
+   "id": "caf9fe7a",
+   "kind": "hint",
+   "text": "Nästan! sju och fem finns, men på fel plats."
+  },
+  {
+   "id": "9c7e5eae",
+   "kind": "hint",
+   "text": "Nästan! sju och sex finns, men på fel plats."
+  },
+  {
+   "id": "919b8c68",
+   "kind": "hint",
+   "text": "Nästan! sju och åtta finns, men på fel plats."
+  },
+  {
+   "id": "89093a90",
+   "kind": "hint",
+   "text": "Nästan! sju och nio finns, men på fel plats."
+  },
+  {
+   "id": "cc38b3b2",
+   "kind": "hint",
+   "text": "Nästan! sju och plus finns, men på fel plats."
+  },
+  {
+   "id": "6c86afaa",
+   "kind": "hint",
+   "text": "Nästan! sju och minus finns, men på fel plats."
+  },
+  {
+   "id": "ab0c1f2b",
+   "kind": "hint",
+   "text": "Nästan! sju och är lika med finns, men på fel plats."
+  },
+  {
+   "id": "893e7156",
+   "kind": "hint",
+   "text": "Nästan! åtta finns, men på fel plats."
+  },
+  {
+   "id": "f8374f41",
+   "kind": "hint",
+   "text": "Nästan! åtta och noll finns, men på fel plats."
+  },
+  {
+   "id": "eba5908d",
+   "kind": "hint",
+   "text": "Nästan! åtta och ett finns, men på fel plats."
+  },
+  {
+   "id": "fef5d7e7",
+   "kind": "hint",
+   "text": "Nästan! åtta och två finns, men på fel plats."
+  },
+  {
+   "id": "44b7d3a3",
+   "kind": "hint",
+   "text": "Nästan! åtta och tre finns, men på fel plats."
+  },
+  {
+   "id": "b4dc327c",
+   "kind": "hint",
+   "text": "Nästan! åtta och fyra finns, men på fel plats."
+  },
+  {
+   "id": "d2365eac",
+   "kind": "hint",
+   "text": "Nästan! åtta och fem finns, men på fel plats."
+  },
+  {
+   "id": "7bac0030",
+   "kind": "hint",
+   "text": "Nästan! åtta och sex finns, men på fel plats."
+  },
+  {
+   "id": "6e98e874",
+   "kind": "hint",
+   "text": "Nästan! åtta och sju finns, men på fel plats."
+  },
+  {
+   "id": "13a431ae",
+   "kind": "hint",
+   "text": "Nästan! åtta och nio finns, men på fel plats."
+  },
+  {
+   "id": "8566de98",
+   "kind": "hint",
+   "text": "Nästan! åtta och plus finns, men på fel plats."
+  },
+  {
+   "id": "9a66a750",
+   "kind": "hint",
+   "text": "Nästan! åtta och minus finns, men på fel plats."
+  },
+  {
+   "id": "18abbbf1",
+   "kind": "hint",
+   "text": "Nästan! åtta och är lika med finns, men på fel plats."
+  },
+  {
+   "id": "1d93515a",
+   "kind": "hint",
+   "text": "Nästan! nio finns, men på fel plats."
+  },
+  {
+   "id": "31910595",
+   "kind": "hint",
+   "text": "Nästan! nio och noll finns, men på fel plats."
+  },
+  {
+   "id": "d4b32e21",
+   "kind": "hint",
+   "text": "Nästan! nio och ett finns, men på fel plats."
+  },
+  {
+   "id": "e7f9ef7b",
+   "kind": "hint",
+   "text": "Nästan! nio och två finns, men på fel plats."
+  },
+  {
+   "id": "258a5b7f",
+   "kind": "hint",
+   "text": "Nästan! nio och tre finns, men på fel plats."
+  },
+  {
+   "id": "9f1cbc88",
+   "kind": "hint",
+   "text": "Nästan! nio och fyra finns, men på fel plats."
+  },
+  {
+   "id": "6e4d5da0",
+   "kind": "hint",
+   "text": "Nästan! nio och fem finns, men på fel plats."
+  },
+  {
+   "id": "aa689b44",
+   "kind": "hint",
+   "text": "Nästan! nio och sex finns, men på fel plats."
+  },
+  {
+   "id": "1a28ad48",
+   "kind": "hint",
+   "text": "Nästan! nio och sju finns, men på fel plats."
+  },
+  {
+   "id": "a46f6766",
+   "kind": "hint",
+   "text": "Nästan! nio och åtta finns, men på fel plats."
+  },
+  {
+   "id": "fdff8e2c",
+   "kind": "hint",
+   "text": "Nästan! nio och plus finns, men på fel plats."
+  },
+  {
+   "id": "4e5822f4",
+   "kind": "hint",
+   "text": "Nästan! nio och minus finns, men på fel plats."
+  },
+  {
+   "id": "5b2594c5",
+   "kind": "hint",
+   "text": "Nästan! nio och är lika med finns, men på fel plats."
+  },
+  {
+   "id": "ad114bfc",
+   "kind": "hint",
+   "text": "Nästan! plus finns, men på fel plats."
+  },
+  {
+   "id": "4775e4a3",
+   "kind": "hint",
+   "text": "Nästan! plus och noll finns, men på fel plats."
+  },
+  {
+   "id": "8c5def93",
+   "kind": "hint",
+   "text": "Nästan! plus och ett finns, men på fel plats."
+  },
+  {
+   "id": "944a7c21",
+   "kind": "hint",
+   "text": "Nästan! plus och två finns, men på fel plats."
+  },
+  {
+   "id": "7fb2b4d5",
+   "kind": "hint",
+   "text": "Nästan! plus och tre finns, men på fel plats."
+  },
+  {
+   "id": "de28b2be",
+   "kind": "hint",
+   "text": "Nästan! plus och fyra finns, men på fel plats."
+  },
+  {
+   "id": "7204fe6e",
+   "kind": "hint",
+   "text": "Nästan! plus och fem finns, men på fel plats."
+  },
+  {
+   "id": "9528ee02",
+   "kind": "hint",
+   "text": "Nästan! plus och sex finns, men på fel plats."
+  },
+  {
+   "id": "86330792",
+   "kind": "hint",
+   "text": "Nästan! plus och sju finns, men på fel plats."
+  },
+  {
+   "id": "96cbf3b4",
+   "kind": "hint",
+   "text": "Nästan! plus och åtta finns, men på fel plats."
+  },
+  {
+   "id": "e6d5e3fc",
+   "kind": "hint",
+   "text": "Nästan! plus och nio finns, men på fel plats."
+  },
+  {
+   "id": "9beee1ae",
+   "kind": "hint",
+   "text": "Nästan! plus och minus finns, men på fel plats."
+  },
+  {
+   "id": "1025febf",
+   "kind": "hint",
+   "text": "Nästan! plus och är lika med finns, men på fel plats."
+  },
+  {
+   "id": "6225b3c4",
+   "kind": "hint",
+   "text": "Nästan! minus finns, men på fel plats."
+  },
+  {
+   "id": "4ef608bb",
+   "kind": "hint",
+   "text": "Nästan! minus och noll finns, men på fel plats."
+  },
+  {
+   "id": "f8f8ac7b",
+   "kind": "hint",
+   "text": "Nästan! minus och ett finns, men på fel plats."
+  },
+  {
+   "id": "bb15b529",
+   "kind": "hint",
+   "text": "Nästan! minus och två finns, men på fel plats."
+  },
+  {
+   "id": "247476fd",
+   "kind": "hint",
+   "text": "Nästan! minus och tre finns, men på fel plats."
+  },
+  {
+   "id": "e083a9c6",
+   "kind": "hint",
+   "text": "Nästan! minus och fyra finns, men på fel plats."
+  },
+  {
+   "id": "d1f7df66",
+   "kind": "hint",
+   "text": "Nästan! minus och fem finns, men på fel plats."
+  },
+  {
+   "id": "bcf433fa",
+   "kind": "hint",
+   "text": "Nästan! minus och sex finns, men på fel plats."
+  },
+  {
+   "id": "d33b858a",
+   "kind": "hint",
+   "text": "Nästan! minus och sju finns, men på fel plats."
+  },
+  {
+   "id": "a7c4c4cc",
+   "kind": "hint",
+   "text": "Nästan! minus och åtta finns, men på fel plats."
+  },
+  {
+   "id": "5d35b134",
+   "kind": "hint",
+   "text": "Nästan! minus och nio finns, men på fel plats."
+  },
+  {
+   "id": "5dcc05de",
+   "kind": "hint",
+   "text": "Nästan! minus och plus finns, men på fel plats."
+  },
+  {
+   "id": "1e611007",
+   "kind": "hint",
+   "text": "Nästan! minus och är lika med finns, men på fel plats."
+  },
+  {
+   "id": "cebe4475",
+   "kind": "hint",
+   "text": "Nästan! är lika med finns, men på fel plats."
+  },
+  {
+   "id": "d9544ec8",
+   "kind": "hint",
+   "text": "Nästan! är lika med och noll finns, men på fel plats."
+  },
+  {
+   "id": "5ac99362",
+   "kind": "hint",
+   "text": "Nästan! är lika med och ett finns, men på fel plats."
+  },
+  {
+   "id": "5b056d34",
+   "kind": "hint",
+   "text": "Nästan! är lika med och två finns, men på fel plats."
+  },
+  {
+   "id": "70e4a298",
+   "kind": "hint",
+   "text": "Nästan! är lika med och tre finns, men på fel plats."
+  },
+  {
+   "id": "7ffe96b9",
+   "kind": "hint",
+   "text": "Nästan! är lika med och fyra finns, men på fel plats."
+  },
+  {
+   "id": "ebc0bc2b",
+   "kind": "hint",
+   "text": "Nästan! är lika med och fem finns, men på fel plats."
+  },
+  {
+   "id": "3138db8f",
+   "kind": "hint",
+   "text": "Nästan! är lika med och sex finns, men på fel plats."
+  },
+  {
+   "id": "08d642ff",
+   "kind": "hint",
+   "text": "Nästan! är lika med och sju finns, men på fel plats."
+  },
+  {
+   "id": "47fb8a63",
+   "kind": "hint",
+   "text": "Nästan! är lika med och åtta finns, men på fel plats."
+  },
+  {
+   "id": "30254f09",
+   "kind": "hint",
+   "text": "Nästan! är lika med och nio finns, men på fel plats."
+  },
+  {
+   "id": "4a8bb981",
+   "kind": "hint",
+   "text": "Nästan! är lika med och plus finns, men på fel plats."
+  },
+  {
+   "id": "4009bcc7",
+   "kind": "hint",
+   "text": "Nästan! är lika med och minus finns, men på fel plats."
+  }
+ ]
+}
