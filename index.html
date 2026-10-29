@@ -427,8 +427,7 @@ function unlockPlayer(){
 }
 function playPcm(c){
   return new Promise((res, rej)=>{
-    const bin = atob(c.d), bytes = new Uint8Array(bin.length);
-    for(let i=0;i<bin.length;i++) bytes[i] = bin.charCodeAt(i);
+    const bytes = c.bytes || b64bytes(c.d);
     const rate = c.rate || 24000, dur = bytes.length/2/rate;
     if(curUrl) URL.revokeObjectURL(curUrl);
     curUrl = URL.createObjectURL(wavBlob(bytes, rate));
@@ -469,6 +468,20 @@ function errText(e){
   return "Gemini fungerade inte: " + (e && e.message || "okänt fel");
 }
 /* parts: a string or a list of strings; each part is cached on its own so fixed phrases are reused */
+/* One clip per speak: cached phrases are glued together, anything new is fetched as one request.
+   One request avoids rate limits; one playback avoids iPhone blocking the 2nd, 3rd ... clip. */
+function b64bytes(d){ const bin=atob(d), u=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) u[i]=bin.charCodeAt(i); return u; }
+async function clipFor(parts){
+  const cs = await Promise.all(parts.map(cached));
+  if(cs.every(Boolean)){
+    if(cs.length===1) return cs[0];
+    const rate = cs[0].rate || 24000, gap = new Uint8Array(Math.round(rate*0.3)*2);
+    const chunks = []; cs.forEach((c,i)=>{ if(i) chunks.push(gap); chunks.push(b64bytes(c.d)); });
+    const out = new Uint8Array(chunks.reduce((n,c)=>n+c.length,0)); let o=0; chunks.forEach(c=>{ out.set(c,o); o+=c.length; });
+    return {bytes:out, rate};
+  }
+  return getClip(parts.map(p=>/[.!?]$/.test(p) ? p : p+".").join(" "));
+}
 async function speak(parts, force){
   if(!Array.isArray(parts)) parts = [parts];
   parts = parts.filter(Boolean).map(sayable).filter(Boolean);
@@ -479,23 +492,17 @@ async function speak(parts, force){
   if(useGemini()){
     unlockPlayer();
     setBusy(true);
-    const ps = parts.map(p=>getClip(p)); ps.forEach(p=>p.catch(()=>{}));
-    let i = 0;
     try{
-      const first = await Promise.race([ps[0], new Promise((_,rej)=>setTimeout(()=>rej(new Error("timeout")), 10000))]);
-      for(; i<parts.length; i++){
-        const c = i===0 ? first : await ps[i];
-        if(token!==speakToken) return;
-        await playPcm(c);
-        if(token!==speakToken) return;
-      }
+      const c = await Promise.race([clipFor(parts), new Promise((_,rej)=>setTimeout(()=>rej(new Error("timeout")), 12000))]);
+      if(token!==speakToken) return;
+      await playPcm(c);
+      if(token!==speakToken) return;
       setBusy(false); setVoiceInfo("Gemini fungerar ("+settings.gvoice+").");
       return;
     }catch(e){
       setVoiceInfo(errText(e) + ". Enhetens röst användes i stället.");
       if(token!==speakToken) return;
       setBusy(false);
-      parts = parts.slice(i);
     }
   }
   deviceSpeak(parts.join(" "));
