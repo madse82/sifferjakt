@@ -57,13 +57,11 @@
   #known{flex-direction:row;justify-content:center;gap:10px;padding:6px 10px}
   #known .lbl{font-size:12px;line-height:1.1;text-align:right;width:44px}
   .brand{display:flex;flex-direction:column;justify-content:center;min-width:0;line-height:1}
-  .lvl{font-size:13px;font-weight:900;color:var(--ink2);letter-spacing:.5px;text-transform:uppercase;margin-top:3px}
-  .lv{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:64px;padding:10px 14px;border-radius:16px;
-    border:2px solid var(--key);background:#fff;text-align:left;font-family:inherit;color:var(--ink)}
-  .lv b{font-size:20px;font-weight:900}
-  .lv span{display:block;font-size:14px;font-weight:700;color:var(--ink2)}
-  .lv.on{border-color:var(--accent)}
-  .lv .go{font-size:22px;color:var(--accent);font-weight:900}
+  .lvl{display:flex;align-items:center;gap:4px;font-size:13px;font-weight:900;color:var(--ink2);letter-spacing:.5px;text-transform:uppercase;margin-top:4px;position:relative;line-height:1.2;cursor:pointer;width:max-content}
+  .lvl b{color:var(--accent);font-weight:900}
+  .lvl i{width:0;height:0;border:5px solid transparent;border-top-color:var(--accent);margin-top:4px}
+  /* the real <select> lies invisibly on top, so a tap opens the phone's own picker */
+  .lvl select{position:absolute;inset:-6px -4px;opacity:0;font-size:16px;cursor:pointer}
 
   #board{display:flex;flex-direction:column;align-items:center;gap:8px;--t:56px;--fs:32px}
   #board.l1{--t:52px;--fs:30px}
@@ -175,7 +173,7 @@
 <body>
 <div class="wrap">
   <header>
-    <div class="brand"><h1>Siffer<span>jakt</span></h1><div class="lvl" id="lvlLabel">Nivå: Lätt</div></div>
+    <div class="brand"><h1>Siffer<span>jakt</span></h1><label class="lvl">Nivå: <b id="lvlName">Lätt</b><i></i><select id="lvlSel" aria-label="Nivå"><option value="0">Lätt</option><option value="1">Medel</option><option value="2">Svår</option></select></label></div>
     <div class="hright">
       <div class="chip" id="solvedChip" title="Lösta uträkningar">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="#f5c242" stroke="#b07d00" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg>
@@ -231,6 +229,9 @@
 <div class="ov" id="setOv">
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="setT">
     <h2 id="setT">Inställningar</h2>
+    <div class="vbox"><div class="vrow">Nivå
+      <select id="s_level"><option value="0">Lätt: plus och minus till 9</option><option value="1">Medel: plus och minus till 20</option><option value="2">Svår: större tal och gånger</option></select>
+    </div></div>
     <label class="toggle main">Lugnt läge <input type="checkbox" id="s_calm"></label>
     <p class="small">Slår på de fyra sakerna nedan på en gång. Du kan också välja en i taget.</p>
     <label class="toggle">Uppläsning (högtalarknapp) <input type="checkbox" id="s_tts"></label>
@@ -272,13 +273,15 @@
   </div>
 </div>
 
-<!-- New game: pick a level -->
-<div class="ov" id="newOv">
-  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="newT">
-    <h2 id="newT">Nytt spel</h2>
-    <div class="opts" id="lvGrid"></div>
-    <p class="small" id="newNote">Spelet du håller på med avslutas.</p>
-    <button class="big sec" id="newNo">Spela vidare</button>
+<!-- Confirm level change mid-game -->
+<div class="ov" id="confOv">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="confT">
+    <h2 id="confT">Byta nivå?</h2>
+    <p>Spelet du håller på med försvinner.</p>
+    <div class="btns">
+      <button class="big sec" id="confNo">Spela klart</button>
+      <button class="big pri" id="confYes">Byt nivå</button>
+    </div>
   </div>
 </div>
 
@@ -936,30 +939,24 @@ document.getElementById("qDone").onclick = ()=>done("quizOv");
 document.getElementById("qSkip").onclick = ()=>done("quizOv");
 
 /* ---------- level switching with confirm ---------- */
-const LEVEL_INFO = ["Plus och minus, tal upp till 9", "Plus och minus, tal upp till 20", "Större tal och gånger"];
-function showLevel(){ document.getElementById("lvlLabel").textContent = "Nivå: " + LEVELS[level].name; }
+function showLevel(){ document.getElementById("lvlName").textContent = LEVELS[level].name; document.getElementById("lvlSel").value = String(level); document.getElementById("s_level").value = String(level); }
 function setLevel(l){
   level = l; store.set("sj_level", String(l)); showLevel();
   newGame(); refit();
 }
-/* ↻ opens "Nytt spel": same level again or another one */
-document.getElementById("newBtn").onclick=()=>{
-  const grid = document.getElementById("lvGrid"); grid.innerHTML = "";
-  LEVELS.forEach((L,i)=>{
-    const b = document.createElement("button");
-    b.className = "lv" + (i===level ? " on" : "");
-    b.innerHTML = `<div><b>${L.name}</b><span>${LEVEL_INFO[i]}</span></div><div class="go">${i===level ? "↻" : "›"}</div>`;
-    b.onclick = ()=>{
-      close("newOv");
-      if(!over && guesses.length>0){ stats.run=0; saveStats(); }
-      if(i===level) newGame(); else setLevel(i);
-    };
-    grid.appendChild(b);
-  });
-  document.getElementById("newNote").hidden = !inProgress();
-  open("newOv");
-};
-document.getElementById("newNo").onclick=()=>close("newOv");
+/* level is chosen in the header dropdown or in settings; ask only if a game is under way */
+function requestLevel(l){
+  if(l===level) return;
+  if(inProgress()){ pendingLevel = l; open("confOv"); } else setLevel(l);
+}
+function cancelLevel(){ pendingLevel = null; close("confOv"); showLevel(); }
+document.getElementById("lvlSel").onchange = e=>requestLevel(+e.target.value);
+document.getElementById("s_level").onchange = e=>{ close("setOv"); requestLevel(+e.target.value); };
+document.getElementById("confNo").onclick = cancelLevel;
+document.getElementById("confYes").onclick = ()=>{ close("confOv"); if(pendingLevel!=null) setLevel(pendingLevel); pendingLevel = null; };
+
+/* ↻ starts a new game at the same level, as before */
+document.getElementById("newBtn").onclick=()=>{ if(!over && guesses.length>0){ stats.run=0; saveStats(); } newGame(); };
 
 /* ---------- help sheet ---------- */
 function buildHelp(){
@@ -1054,13 +1051,13 @@ cbT.onchange=()=>{ document.body.classList.toggle("cb", cbT.checked); store.set(
 /* backdrop click and Escape close the top sheet (and continue any chain) */
 document.querySelectorAll(".ov").forEach(o=>o.addEventListener("click",e=>{
   if(e.target!==o) return;
-  if(o.id==="newOv") close(o.id); else done(o.id);
+  if(o.id==="confOv") cancelLevel(); else done(o.id);
 }));
 
 /* physical keyboard (only while no sheet is open) */
 document.addEventListener("keydown",e=>{
   if(document.querySelector(".ov.open")){
-    if(e.key==="Escape") document.querySelectorAll(".ov.open").forEach(o=>{ if(o.id==="newOv") close(o.id); else done(o.id); });
+    if(e.key==="Escape") document.querySelectorAll(".ov.open").forEach(o=>{ if(o.id==="confOv") cancelLevel(); else done(o.id); });
     return;
   }
   let k=e.key;
