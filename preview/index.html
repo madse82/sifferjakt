@@ -485,29 +485,24 @@ function wavBlob(bytes, rate){
   return new Blob([h, bytes], {type:"audio/wav"});
 }
 
-/* ---------- sound effects: synthesised once into small WAV files, played on <audio> elements ---------- */
+/* ---------- sound effects: "Zen" set from UI SFX (CC0), played on <audio> elements ---------- */
 const SFX_RATE = 22050;
 function synth(dur, f){
   const n = Math.round(dur*SFX_RATE), pcm = new Int16Array(n);
   for(let i=0;i<n;i++){ const t = i/SFX_RATE; pcm[i] = Math.max(-1, Math.min(1, f(t, dur))) * 32767; }
   return URL.createObjectURL(wavBlob(new Uint8Array(pcm.buffer), SFX_RATE));
 }
-const env = (t, a, d)=> t < a ? t/a : Math.exp(-(t-a)/d);            /* attack, then exponential decay */
-const sine = (fr, t)=> Math.sin(2*Math.PI*fr*t);
-function bell(fr, t){ return sine(fr,t) + 0.35*sine(fr*2,t)*Math.exp(-t*18) + 0.15*sine(fr*3,t)*Math.exp(-t*30); }
+const SFX_BASE = (document.documentElement.dataset.audioBase || "audio/").replace(/audio\/$/, "sfx/") + "zen/";
+const SFX_FILES = {g:"check", y:"select", x:"release", bonk:"invalid-drop", pop:"reaction", win:"achievement", lose:"error"};
+const SFX_RATEOF = {g: i=>Math.pow(2, (i||0)*2/12)};   /* greens climb a little scale across the row */
 let SFX = null;
 function buildSfx(){
   if(SFX) return SFX;
-  const tick = (fr, vol)=> synth(.09, t=> vol * env(t,.002,.025) * (sine(fr,t) + .3*sine(fr*1.5,t)));
-  SFX = {
-    g: [0,1,2,3,4,5,6].map(i=>tick(880*Math.pow(2, i*2/12), .30)),   /* green: a little rising scale across the row */
-    y: tick(660, .24),
-    x: synth(.07, t=> .14 * env(t,.002,.018) * sine(330,t)),
-    bonk: synth(.22, t=> .30 * env(t,.004,.07) * sine(210 - 60*t/.22, t)),
-    pop:  synth(.08, t=> .16 * env(t,.002,.02) * sine(1200 + 2400*t, t)),
-    win:  synth(1.1, t=> .22 * [523.25,659.25,783.99,1046.5].reduce((acc,fr,k)=>{ const s0=k*.11; return acc + (t>=s0 ? env(t-s0,.004,.28)*bell(fr,t-s0) : 0); },0)),
-    lose: synth(.75, t=> .16 * [392,329.63,261.63].reduce((acc,fr,k)=>{ const s0=k*.16; return acc + (t>=s0 ? env(t-s0,.01,.18)*sine(fr,t-s0) : 0); },0))
-  };
+  SFX = {};
+  for(const [k,f] of Object.entries(SFX_FILES)){
+    SFX[k] = SFX_BASE + f + ".mp3";
+    fetch(SFX[k]).then(r=>r.ok ? r.blob() : null).then(b=>{ if(b) SFX[k] = URL.createObjectURL(b); }).catch(()=>{});   /* keep in memory so taps play instantly */
+  }
   return SFX;
 }
 const sfxPool = Array.from({length:6}, ()=>{ const a = new Audio(); a.preload = "auto"; a.setAttribute("playsinline",""); return a; });
@@ -523,10 +518,15 @@ document.addEventListener("click", unlockSfx, {capture:true});
 document.addEventListener("touchend", unlockSfx, {capture:true, passive:true});
 function sfx(name, i){
   if(!settings.sfx) return;
-  const s = buildSfx(); let url = s[name]; if(Array.isArray(url)) url = url[Math.min(i||0, url.length-1)];
+  const s = buildSfx(); const url = s[name];
   if(!url) return;
   const a = sfxPool[sfxNext++ % sfxPool.length];
-  try{ a.pause(); a.src = url; a.currentTime = 0; a.volume = 1; const p = a.play(); if(p) p.catch(()=>{}); }catch(e){}
+  try{
+    a.pause(); a.src = url; a.currentTime = 0; a.volume = .8;
+    a.preservesPitch = false; a.webkitPreservesPitch = false; a.mozPreservesPitch = false;
+    a.defaultPlaybackRate = a.playbackRate = SFX_RATEOF[name] ? SFX_RATEOF[name](i) : 1;
+    const p = a.play(); if(p) p.catch(()=>{});
+  }catch(e){}
 }
 /* must run inside the tap, before any await */
 function unlockPlayer(){
