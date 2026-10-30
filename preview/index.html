@@ -53,6 +53,12 @@
   #known .row{gap:6px}
   #known .tile{--t:34px;--fs:19px;border-width:2px;border-radius:10px}
   #known .also{display:none}
+  /* before the first guess: a short how-to instead of the message and "Det du vet" */
+  #intro{display:flex;align-items:flex-start;gap:10px;padding:10px 12px 10px 14px;border-radius:14px;background:#fff;border:2px solid var(--key)}
+  #intro .it{font-size:13px;font-weight:900;color:var(--ink2);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px}
+  #intro ol{margin:0;padding-left:20px;font-size:15px;font-weight:800;line-height:1.45;color:var(--ink)}
+  #intro .sw{display:inline-flex;vertical-align:-3px;margin:0 1px}
+  #intro > div{flex:1}
   /* new layout: slim "Det du vet", level under the logo, compact score, level choice in the new-game sheet */
   #known{flex-direction:row;justify-content:center;gap:10px;padding:6px 10px}
   #known .lbl{font-size:12px;line-height:1.1;text-align:right;width:44px}
@@ -167,6 +173,7 @@
     #msg{min-height:44px;font-size:15px}
     #known .tile{--t:30px;--fs:17px}
     .legend{display:none}
+    #intro{padding:7px 10px 7px 12px} #intro ol{font-size:14px;line-height:1.35} #intro .it{margin-bottom:2px}
   }
 </style>
 </head>
@@ -191,6 +198,17 @@
     </div>
   </header>
 
+  <div id="intro" hidden>
+    <div>
+      <div class="it">Så här gör du</div>
+      <ol>
+        <li>Skriv en uträkning, till exempel 3 + 4 = 7.</li>
+        <li>Tryck på Gissa.</li>
+        <li><span class="sw" style="background:var(--g)"></span> rätt plats, <span class="sw" style="background:var(--y)"></span> fel plats, <span class="sw" style="background:var(--x)"></span> finns inte.</li>
+      </ol>
+    </div>
+    <button class="say" id="introSay" aria-label="Läs upp"></button>
+  </div>
   <div id="msg" aria-live="polite">
     <span id="msgT"></span>
     <button class="say" id="msgSay" aria-label="Läs upp"></button>
@@ -638,8 +656,9 @@ function newGame(){
   secret = p[Math.floor(Math.random()*p.length)];
   guesses = []; cur = ""; over = false; busy = false;
   for(const k in keyState) delete keyState[k];
+  msgBeforeFirst = false;
   msg("Gissa en uträkning!", false, true);
-  buildBoard(); buildKeys(); render(); renderKnown();
+  buildBoard(); buildKeys(); render(); updateTop();
   maybeQuiz();
 }
 
@@ -677,7 +696,7 @@ function nextIndex(){
 function renderKnown(){
   const box = document.getElementById("known");
   document.body.classList.toggle("knownOn", !!settings.known);
-  if(!settings.known){ box.hidden = true; return; }
+  if(!settings.known || firstMove()){ box.hidden = true; return; }
   box.hidden = false;
   const L = LEVELS[level], pos = Array(L.len).fill(null);
   guesses.forEach(g=>{ score(g).forEach((k,i)=>{ if(k==="g") pos[i]=g[i]; }); });
@@ -712,7 +731,19 @@ function buildKeys(){
 }
 
 let lastMsg = "";
+let msgBeforeFirst = false;   /* an error before the first guess shows the message box after all */
+function firstMove(){ return guesses.length===0 && !over; }
+function updateTop(){
+  const first = firstMove();
+  document.getElementById("intro").hidden = !(first && !msgBeforeFirst);
+  document.getElementById("msg").hidden = first && !msgBeforeFirst;
+  renderKnown();
+  if(typeof refit==="function") refit();
+}
+const INTRO_TEXT = ["Så här gör du.", "Skriv en uträkning, till exempel 3 + 4 = 7.", "Tryck på Gissa.", "Grönt betyder rätt plats, gult fel plats, och grått att siffran inte finns."];
+document.getElementById("introSay").onclick = ()=>speak(INTRO_TEXT, true);
 function msg(t, err, quiet){
+  if(err && firstMove() && !msgBeforeFirst){ msgBeforeFirst = true; setTimeout(updateTop, 0); }
   lastMsg = t;
   document.getElementById("msgT").textContent = t;
   document.getElementById("msg").classList.toggle("err", !!err);
@@ -781,7 +812,7 @@ function submit(){
   const g = cur; cur="";
   setTimeout(()=>{
     busy = false;
-    buildKeys(); renderKnown();
+    buildKeys(); updateTop();
     if(g===secret){
       over=true;
       stats.solved++; stats.run++; stats.best=Math.max(stats.best, stats.run); saveStats();
