@@ -483,7 +483,7 @@ function joinParts(parts){ return parts.length===1 ? parts[0] : parts.map(p=>/[.
 function phraseId(t){ let h=0x811c9dc5; for(const ch of t){ h ^= ch.codePointAt(0); h = Math.imul(h, 0x01000193) >>> 0; } return h.toString(16).padStart(8,"0"); }
 const LIB = {voice:null, ids:new Set(), ext:"m4a"};
 const AUDIO_BASE = document.documentElement.dataset.audioBase || "audio/";
-fetch(AUDIO_BASE + "index.json", {cache:"no-cache"}).then(r=>r.ok ? r.json() : null).then(j=>{
+fetch(AUDIO_BASE + "index.json?v=" + Date.now(), {cache:"no-store"})   /* bypass browser and CDN caches so new clips show up at once */.then(r=>r.ok ? r.json() : null).then(j=>{
   if(!j) return; LIB.voice = j.voice; LIB.ext = j.ext || "m4a"; (j.ids||[]).forEach(id=>LIB.ids.add(id)); updateLibInfo();
 }).catch(()=>{});
 function libReady(){ return settings.voice==="gemini" && LIB.ids.size>0 && settings.gvoice===LIB.voice; }
