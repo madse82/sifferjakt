@@ -53,6 +53,11 @@
   #known .row{gap:6px}
   #known .tile{--t:34px;--fs:19px;border-width:2px;border-radius:10px}
   #known .also{display:none}
+  /* message and "Det du vet" share one card */
+  #card{display:flex;flex-direction:column;gap:6px;padding:6px 8px 8px 14px;border-radius:14px;background:#fff;border:2px solid var(--key)}
+  #card:has(#msg.err){border-color:var(--accent)}
+  #card #msg{border:0;background:none;padding:0;min-height:40px}
+  #card #known{border:0;background:none;padding:0;border-top:2px dashed var(--key);padding-top:8px;border-radius:0}
   /* before the first guess: a short how-to instead of the message and "Det du vet" */
   #intro{display:flex;align-items:flex-start;gap:10px;padding:10px 12px 10px 14px;border-radius:14px;background:#fff;border:2px solid var(--key)}
   #intro .it{font-size:13px;font-weight:900;color:var(--ink2);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px}
@@ -209,6 +214,7 @@
     </div>
     <button class="say" id="introSay" aria-label="Läs upp"></button>
   </div>
+  <div id="card">
   <div id="msg" aria-live="polite">
     <span id="msgT"></span>
     <button class="say" id="msgSay" aria-label="Läs upp"></button>
@@ -218,6 +224,7 @@
     <div class="lbl">DET<br>DU VET</div>
     <div class="row" id="knownRow"></div>
     <div class="also" id="knownAlso"></div>
+  </div>
   </div>
 
   <div id="board"></div>
@@ -736,7 +743,7 @@ function firstMove(){ return guesses.length===0 && !over; }
 function updateTop(){
   const first = firstMove();
   document.getElementById("intro").hidden = !(first && !msgBeforeFirst);
-  document.getElementById("msg").hidden = first && !msgBeforeFirst;
+  document.getElementById("card").hidden = first && !msgBeforeFirst;
   renderKnown();
   if(typeof refit==="function") refit();
 }
