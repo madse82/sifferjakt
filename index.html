@@ -20,7 +20,8 @@
   body{margin:0;background:var(--bg);color:var(--ink);
     font-family:"Nunito",system-ui,sans-serif;font-variant-numeric:tabular-nums;
     display:flex;flex-direction:column;align-items:center;min-height:100vh;padding:16px}
-  .wrap{width:100%;max-width:420px;display:flex;flex-direction:column;gap:12px}
+  .wrap{width:100%;max-width:420px;display:flex;flex-direction:column;gap:12px;zoom:var(--z,1)}
+  .ov .sheet{zoom:var(--z,1);max-height:calc(92vh / var(--z,1))}
   button{font-family:inherit;cursor:pointer}
   [hidden]{display:none!important}
 
@@ -920,7 +921,7 @@ document.getElementById("qSkip").onclick = ()=>done("quizOv");
 function setLevel(l){
   level = l; store.set("sj_level", String(l));
   document.querySelectorAll("#levels button").forEach(x=>x.classList.toggle("on", +x.dataset.l===l));
-  newGame();
+  newGame(); refit();
 }
 document.getElementById("levels").onclick=e=>{
   const b=e.target.closest("button"); if(!b) return;
@@ -960,7 +961,7 @@ function applySettings(){
   document.getElementById("s_gkey").value = gkey();
   if(settings.voice==="gemini" && !gkey()) setVoiceInfo(LIB.ids.size ? "Utan nyckel spelas biblioteket. Övrigt läses med enhetens röst." : "Klistra in din Gemini-nyckel (samma som i Aloud).");
   updateLibInfo();
-  renderKnown(); updateStats();
+  renderKnown(); updateStats(); if(typeof refit==="function") refit();
 }
 function setCalm(on){
   CALM_KEYS.forEach(k=>{ settings[k] = on; });
@@ -1050,6 +1051,22 @@ applySettings();
 const firstTime = store.get("sj_seenHelp")!=="1";
 if(firstTime) open("helpOv");
 newGame();
+
+/* Bigger screens (iPad): scale the whole layout up to fill the space, phones stay at 1 */
+function fit(){
+  const root = document.documentElement, wrap = document.querySelector(".wrap");
+  root.style.setProperty("--z", "1");
+  const h = wrap.scrollHeight;
+  let z = Math.min((window.innerWidth - 32) / 420, (window.innerHeight - 32) / h, 1.6);
+  if(z < 1.08) z = 1;
+  root.style.setProperty("--z", z.toFixed(3));
+}
+var fitT = null;
+function refit(){ clearTimeout(fitT); fitT = setTimeout(fit, 60); }
+window.addEventListener("resize", refit);
+window.addEventListener("orientationchange", refit);
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+fit();
 if(useGemini() && store.get("sj_prepped")!==settings.gmodel+"|"+settings.gvoice) setTimeout(()=>prepAll(true), 4000);
 </script>
 </body>
