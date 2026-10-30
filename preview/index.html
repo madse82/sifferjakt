@@ -485,16 +485,18 @@ function wavBlob(bytes, rate){
   return new Blob([h, bytes], {type:"audio/wav"});
 }
 
-/* ---------- sound effects: "Zen" set from UI SFX (CC0), played on <audio> elements ---------- */
+/* ---------- sound effects: a quiet click per tile (Kenney, CC0) and applause on a win ---------- */
 const SFX_RATE = 22050;
 function synth(dur, f){
   const n = Math.round(dur*SFX_RATE), pcm = new Int16Array(n);
   for(let i=0;i<n;i++){ const t = i/SFX_RATE; pcm[i] = Math.max(-1, Math.min(1, f(t, dur))) * 32767; }
   return URL.createObjectURL(wavBlob(new Uint8Array(pcm.buffer), SFX_RATE));
 }
-const SFX_BASE = (document.documentElement.dataset.audioBase || "audio/").replace(/audio\/$/, "sfx/") + "zen/";
-const SFX_FILES = {g:"check", y:"select", x:"release", bonk:"invalid-drop", pop:"reaction", win:"achievement", lose:"error"};
-const SFX_RATEOF = {g: i=>Math.pow(2, (i||0)*2/12)};   /* greens climb a little scale across the row */
+const SFX_BASE = (document.documentElement.dataset.audioBase || "audio/").replace(/audio\/$/, "sfx/") + "soft/";
+const SFX_FILES = {g:"click", y:"click", x:"click", pop:"click", win:"applause"};   /* no sound for invalid guesses or a lost game */
+const SFX_VOL = {pop:.6};   /* the click file is already quiet; iPhone ignores volume anyway */
+const jitter = ()=> 0.94 + Math.random()*0.12;   /* tiny pitch variation so a row of clicks doesn't sound mechanical */
+const SFX_RATEOF = {g:jitter, y:jitter, x:jitter, pop:jitter};
 let SFX = null;
 function buildSfx(){
   if(SFX) return SFX;
@@ -522,9 +524,9 @@ function sfx(name, i){
   if(!url) return;
   const a = sfxPool[sfxNext++ % sfxPool.length];
   try{
-    a.pause(); a.src = url; a.currentTime = 0; a.volume = .8;
+    a.pause(); a.src = url; a.currentTime = 0; a.volume = SFX_VOL[name] ?? 1;
     a.preservesPitch = false; a.webkitPreservesPitch = false; a.mozPreservesPitch = false;
-    a.defaultPlaybackRate = a.playbackRate = SFX_RATEOF[name] ? SFX_RATEOF[name](i) : 1;
+    a.defaultPlaybackRate = a.playbackRate = SFX_RATEOF[name] ? SFX_RATEOF[name]() : 1;
     const p = a.play(); if(p) p.catch(()=>{});
   }catch(e){}
 }
@@ -1120,7 +1122,7 @@ document.getElementById("s_calm").onchange = e=>setCalm(e.target.checked);
     saveSettings(); applySettings();
   };
 });
-document.getElementById("s_sfx").onchange = e=>{ settings.sfx = e.target.checked; saveSettings(); if(settings.sfx) sfx("win"); };
+document.getElementById("s_sfx").onchange = e=>{ settings.sfx = e.target.checked; saveSettings(); if(settings.sfx) sfx("g"); };
 document.getElementById("setBtn").onclick=()=>{ updateStats(); open("setOv"); };
 document.getElementById("setClose").onclick=()=>done("setOv");
 
