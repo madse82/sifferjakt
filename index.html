@@ -52,7 +52,41 @@
   #known .lbl{font-size:13px;font-weight:900;color:var(--ink2);letter-spacing:.3px}
   #known .row{gap:6px}
   #known .tile{--t:34px;--fs:19px;border-width:2px;border-radius:10px}
-  #known .also{font-size:14px;font-weight:800;color:var(--ink2);text-align:center}
+  #known .also{display:none}
+  /* message and "Det du vet" share one card */
+  #card{display:flex;flex-direction:column;gap:6px;padding:6px 8px 8px 14px;border-radius:14px;background:#fff;border:2px solid var(--key)}
+  #card:has(#msg.err){border-color:var(--accent)}
+  /* intro -> card: the slot glides to the new height, the new box fades up, known tiles pop in one by one */
+  /* the slot above the board has one fixed height (the taller of intro and card), so the board never moves */
+  #top{display:flex;flex-direction:column;position:relative}
+  #top > #intro, #top > #card{flex:1;box-sizing:border-box}
+  #card{justify-content:center}
+  #intro{align-items:center}
+  /* crossfade: the old box fades out on top while the new one fades in underneath */
+  .leave{position:absolute;inset:0;pointer-events:none;animation:leave .3s ease-out both}
+  @keyframes leave{to{opacity:0}}
+  .enter{animation:enter .5s cubic-bezier(.25,.1,.25,1) .12s both}
+  @keyframes enter{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  #card.enter #known .tile{animation:pop .4s cubic-bezier(.2,.9,.3,1.15) both;animation-delay:calc(var(--i) * 55ms + .35s)}
+  @keyframes pop{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){ .enter, .leave, #card.enter #known .tile{animation:none} .leave{display:none} }
+  #card #msg{border:0;background:none;padding:0;min-height:40px}
+  #card #known{border:0;background:none;padding:0;border-top:2px dashed var(--key);padding-top:8px;border-radius:0}
+  /* before the first guess: a short how-to instead of the message and "Det du vet" */
+  #intro{display:flex;align-items:flex-start;gap:10px;padding:10px 12px 10px 14px;border-radius:14px;background:#fff;border:2px solid var(--key)}
+  #intro .it{font-size:13px;font-weight:900;color:var(--ink2);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px}
+  #intro ol{margin:0;padding-left:20px;font-size:15px;font-weight:800;line-height:1.45;color:var(--ink)}
+  #intro .sw{display:inline-flex;vertical-align:-3px;margin:0 1px}
+  #intro > div{flex:1}
+  /* new layout: slim "Det du vet", level under the logo, compact score, level choice in the new-game sheet */
+  #known{flex-direction:row;justify-content:center;gap:10px;padding:6px 10px}
+  #known .lbl{font-size:12px;line-height:1.1;text-align:right;width:44px}
+  .brand{display:flex;flex-direction:column;justify-content:center;min-width:0;line-height:1}
+  .lvl{display:flex;align-items:center;gap:4px;font-size:13px;font-weight:900;color:var(--ink2);letter-spacing:.5px;text-transform:uppercase;margin-top:4px;position:relative;line-height:1.2;cursor:pointer;width:max-content}
+  .lvl b{color:var(--accent);font-weight:900}
+  .lvl i{width:0;height:0;border:5px solid transparent;border-top-color:var(--accent);margin-top:4px}
+  /* the real <select> lies invisibly on top, so a tap opens the phone's own picker */
+  .lvl select{position:absolute;inset:-6px -4px;opacity:0;font-size:16px;cursor:pointer}
 
   #board{display:flex;flex-direction:column;align-items:center;gap:8px;--t:56px;--fs:32px}
   #board.l1{--t:52px;--fs:30px}
@@ -148,16 +182,28 @@
   #confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:20}
   .c{position:absolute;top:-30px;font-size:26px;animation:fall 2.2s linear forwards}
   @keyframes fall{to{transform:translateY(110vh) rotate(540deg)}}
+  /* short phones (iPhone SE): smaller tiles and keys, no legend (it is in the help) */
+  @media (max-height:720px){
+    .wrap, body.knownOn .wrap{gap:8px} body{padding:8px 16px}
+    #board, body.knownOn #board{gap:6px;--t:44px;--fs:25px}
+    #board.l1, body.knownOn #board.l1{--t:42px;--fs:24px}
+    #board.l2, body.knownOn #board.l2{--t:38px;--fs:22px}
+    .key, body.knownOn .key{height:48px}
+    #msg{min-height:44px;font-size:15px}
+    #known .tile{--t:30px;--fs:17px}
+    .legend{display:none}
+    #intro{padding:7px 10px 7px 12px} #intro ol{font-size:14px;line-height:1.35} #intro .it{margin-bottom:2px}
+  }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <h1>Siffer<span>jakt</span></h1>
+    <div class="brand"><h1>Siffer<span>jakt</span></h1><label class="lvl">Nivå: <b id="lvlName">Lätt</b><i></i><select id="lvlSel" aria-label="Nivå"><option value="0">Lätt</option><option value="1">Medel</option><option value="2">Svår</option></select></label></div>
     <div class="hright">
       <div class="chip" id="solvedChip" title="Lösta uträkningar">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="#f5c242" stroke="#b07d00" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg>
-        <span id="solvedN">0</span>&nbsp;lösta
+        <span id="solvedN">0</span>
       </div>
       <button class="ibtn" id="helpBtn" aria-label="Hur spelar man?">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14"/><path d="M12 17.5v.01"/></svg>
@@ -171,21 +217,30 @@
     </div>
   </header>
 
-  <div class="seg" id="levels" role="group" aria-label="Nivå">
-    <button data-l="0" class="on">Lätt</button>
-    <button data-l="1">Medel</button>
-    <button data-l="2">Svår</button>
+  <div id="top">
+  <div id="intro" hidden>
+    <div>
+      <div class="it">Så här gör du</div>
+      <ol>
+        <li>Skriv en uträkning, till exempel 3 + 4 = 7.</li>
+        <li>Tryck på Gissa.</li>
+        <li><span class="sw" style="background:var(--g)"></span> rätt plats, <span class="sw" style="background:var(--y)"></span> fel plats, <span class="sw" style="background:var(--x)"></span> finns inte.</li>
+      </ol>
+    </div>
+    <button class="say" id="introSay" aria-label="Läs upp"></button>
   </div>
-
+  <div id="card">
   <div id="msg" aria-live="polite">
     <span id="msgT"></span>
     <button class="say" id="msgSay" aria-label="Läs upp"></button>
   </div>
 
   <div id="known" hidden>
-    <div class="lbl">DET DU VET</div>
+    <div class="lbl">DET<br>DU VET</div>
     <div class="row" id="knownRow"></div>
     <div class="also" id="knownAlso"></div>
+  </div>
+  </div>
   </div>
 
   <div id="board"></div>
@@ -215,6 +270,9 @@
 <div class="ov" id="setOv">
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="setT">
     <h2 id="setT">Inställningar</h2>
+    <div class="vbox"><div class="vrow">Nivå
+      <select id="s_level"><option value="0">Lätt: plus och minus till 9</option><option value="1">Medel: plus och minus till 20</option><option value="2">Svår: större tal och gånger</option></select>
+    </div></div>
     <label class="toggle main">Lugnt läge <input type="checkbox" id="s_calm"></label>
     <p class="small">Slår på de fyra sakerna nedan på en gång. Du kan också välja en i taget.</p>
     <label class="toggle">Uppläsning (högtalarknapp) <input type="checkbox" id="s_tts"></label>
@@ -223,6 +281,7 @@
     <label class="toggle">Fråga vad som hjälpte <input type="checkbox" id="s_reflect"></label>
     <p class="small">Mer:</p>
     <label class="toggle">Läs upp texterna automatiskt <input type="checkbox" id="s_auto"></label>
+    <label class="toggle">Ljudeffekter <input type="checkbox" id="s_sfx"></label>
     <label class="toggle">Färger för färgblinda (blå/orange) <input type="checkbox" id="cbToggle"></label>
     <div class="vbox">
       <div class="vrow">Röst
@@ -256,7 +315,7 @@
   </div>
 </div>
 
-<!-- Confirm level change -->
+<!-- Confirm level change mid-game -->
 <div class="ov" id="confOv">
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="confT">
     <h2 id="confT">Byta nivå?</h2>
@@ -334,7 +393,7 @@ function today(){ return ymd(new Date()); }
 function addDays(s, n){ const [y,m,d]=s.split("-").map(Number); const dt=new Date(y,m-1,d); dt.setDate(dt.getDate()+n); return ymd(dt); }
 
 /* ---------- settings ---------- */
-const settings = Object.assign({tts:false, auto:false, known:true, words:false, reflect:false, voice:"gemini", gvoice:"Zephyr", gmodel:"gemini-2.5-flash-preview-tts"}, loadJSON("sj_settings", {}));
+const settings = Object.assign({sfx:true, tts:false, auto:false, known:true, words:false, reflect:false, voice:"gemini", gvoice:"Zephyr", gmodel:"gemini-2.5-flash-preview-tts"}, loadJSON("sj_settings", {}));
 /* Gemini (with the audio library) is the default voice; older saved settings that never picked a voice move over once */
 if(!settings.knownChosen) settings.known = true;   /* "Det du vet" on by default until someone switches it off */
 if(!settings.voiceChosen){ settings.voice = "gemini"; settings.gvoice = settings.gvoice || "Zephyr"; }
@@ -424,6 +483,52 @@ function wavBlob(bytes, rate){
   v.setUint32(24,rate,true); v.setUint32(28,rate*2,true); v.setUint16(32,2,true); v.setUint16(34,16,true);
   w(36,"data"); v.setUint32(40, bytes.length, true);
   return new Blob([h, bytes], {type:"audio/wav"});
+}
+
+/* ---------- sound effects: a quiet click per tile (Kenney, CC0) and applause on a win ---------- */
+const SFX_RATE = 22050;
+function synth(dur, f){
+  const n = Math.round(dur*SFX_RATE), pcm = new Int16Array(n);
+  for(let i=0;i<n;i++){ const t = i/SFX_RATE; pcm[i] = Math.max(-1, Math.min(1, f(t, dur))) * 32767; }
+  return URL.createObjectURL(wavBlob(new Uint8Array(pcm.buffer), SFX_RATE));
+}
+const SFX_BASE = (document.documentElement.dataset.audioBase || "audio/").replace(/audio\/$/, "sfx/") + "soft/";
+const SFX_FILES = {g:"click", y:"click", x:"click", pop:"click", win:"applause-2s"};   /* no sound for invalid guesses or a lost game */
+const SFX_VOL = {pop:.6};   /* the click file is already quiet; iPhone ignores volume anyway */
+const jitter = ()=> 0.94 + Math.random()*0.12;   /* tiny pitch variation so a row of clicks doesn't sound mechanical */
+const SFX_RATEOF = {g:jitter, y:jitter, x:jitter, pop:jitter};
+let SFX = null;
+function buildSfx(){
+  if(SFX) return SFX;
+  SFX = {};
+  for(const [k,f] of Object.entries(SFX_FILES)){
+    SFX[k] = SFX_BASE + f + ".mp3";
+    fetch(SFX[k] + "?v=" + Date.now(), {cache:"no-store"}).then(r=>r.ok ? r.blob() : null).then(b=>{ if(b) SFX[k] = URL.createObjectURL(b); }).catch(()=>{});   /* keep in memory so taps play instantly */
+  }
+  return SFX;
+}
+const sfxPool = Array.from({length:6}, ()=>{ const a = new Audio(); a.preload = "auto"; a.setAttribute("playsinline",""); return a; });
+let sfxNext = 0, sfxUnlocked = false;
+/* iPhone only lets an audio element play later if it was started once inside a tap */
+function unlockSfx(){
+  if(sfxUnlocked) return; sfxUnlocked = true;
+  const s = buildSfx();
+  const quiet = s.silent || (s.silent = synth(.05, ()=>0));
+  sfxPool.forEach(a=>{ a.src = quiet; const p = a.play(); if(p) p.catch(()=>{}); });
+}
+document.addEventListener("click", unlockSfx, {capture:true});
+document.addEventListener("touchend", unlockSfx, {capture:true, passive:true});
+function sfx(name, i){
+  if(!settings.sfx) return;
+  const s = buildSfx(); const url = s[name];
+  if(!url) return;
+  const a = sfxPool[sfxNext++ % sfxPool.length];
+  try{
+    a.pause(); a.src = url; a.currentTime = 0; a.volume = SFX_VOL[name] ?? 1;
+    a.preservesPitch = false; a.webkitPreservesPitch = false; a.mozPreservesPitch = false;
+    a.defaultPlaybackRate = a.playbackRate = SFX_RATEOF[name] ? SFX_RATEOF[name]() : 1;
+    const p = a.play(); if(p) p.catch(()=>{});
+  }catch(e){}
 }
 /* must run inside the tap, before any await */
 function unlockPlayer(){
@@ -621,8 +726,9 @@ function newGame(){
   secret = p[Math.floor(Math.random()*p.length)];
   guesses = []; cur = ""; over = false; busy = false;
   for(const k in keyState) delete keyState[k];
+  msgBeforeFirst = false;
   msg("Gissa en uträkning!", false, true);
-  buildBoard(); buildKeys(); render(); renderKnown();
+  buildBoard(); buildKeys(); render(); updateTop();
   maybeQuiz();
 }
 
@@ -660,14 +766,14 @@ function nextIndex(){
 function renderKnown(){
   const box = document.getElementById("known");
   document.body.classList.toggle("knownOn", !!settings.known);
-  if(!settings.known){ box.hidden = true; return; }
+  if(!settings.known || firstMove()){ box.hidden = true; return; }
   box.hidden = false;
   const L = LEVELS[level], pos = Array(L.len).fill(null);
   guesses.forEach(g=>{ score(g).forEach((k,i)=>{ if(k==="g") pos[i]=g[i]; }); });
   document.getElementById("knownRow").innerHTML = pos.map((c,i)=>{
-    if(c) return `<div class="tile g">${c}</div>`;
-    if(L.lockEq===i) return `<div class="tile hint">=</div>`;
-    return `<div class="tile hint">?</div>`;
+    if(c) return `<div class="tile g" style="--i:${i}">${c}</div>`;
+    if(L.lockEq===i) return `<div class="tile hint" style="--i:${i}">=</div>`;
+    return `<div class="tile hint" style="--i:${i}">?</div>`;
   }).join("");
   const ys = Object.keys(keyState).filter(c=>keyState[c]==="y");
   const also = document.getElementById("knownAlso");
@@ -695,7 +801,34 @@ function buildKeys(){
 }
 
 let lastMsg = "";
+let msgBeforeFirst = false;   /* an error before the first guess shows the message box after all */
+function firstMove(){ return guesses.length===0 && !over; }
+let topIntro = null;   /* which box is showing: true = intro, false = card, null = not drawn yet */
+function updateTop(){
+  renderKnown();
+  showTop(firstMove() && !msgBeforeFirst);
+  if(typeof refit==="function") refit();
+}
+function showTop(intro){
+  const introEl = document.getElementById("intro"), cardEl = document.getElementById("card"), top = document.getElementById("top");
+  const reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if(topIntro===intro || topIntro===null || reduce){
+    introEl.hidden = !intro; cardEl.hidden = intro; topIntro = intro; return;
+  }
+  topIntro = intro;
+  const from = intro ? cardEl : introEl, to = intro ? introEl : cardEl;
+  to.hidden = false;
+  from.classList.add("leave");            /* the old box fades out on top of the new one; the slot keeps its height */
+  to.classList.remove("enter"); void to.offsetWidth; to.classList.add("enter");
+  if(to.id==="card" && !document.getElementById("known").hidden)
+    document.querySelectorAll("#knownRow .tile.g").forEach(t=>setTimeout(()=>sfx("pop"), 350 + 55*(+t.style.getPropertyValue("--i")||0)));
+  clearTimeout(showTop.t);
+  showTop.t = setTimeout(()=>{ from.hidden = true; from.classList.remove("leave"); to.classList.remove("enter"); }, 1000);
+}
+const INTRO_TEXT = ["Så här gör du.", "Skriv en uträkning, till exempel 3 + 4 = 7.", "Tryck på Gissa.", "Grönt betyder rätt plats, gult fel plats, och grått att siffran inte finns."];
+document.getElementById("introSay").onclick = ()=>speak(INTRO_TEXT, true);
 function msg(t, err, quiet){
+  if(err && firstMove() && !msgBeforeFirst){ msgBeforeFirst = true; setTimeout(updateTop, 0); }
   lastMsg = t;
   document.getElementById("msgT").textContent = t;
   document.getElementById("msg").classList.toggle("err", !!err);
@@ -746,14 +879,15 @@ function hint(g, res){
 
 function submit(){
   const L = LEVELS[level];
-  if(cur.length<L.len){ msg("Fyll alla rutor först!", true); shake(); return; }
-  if(!valid(cur)){ msg(explain(cur), true); shake(); return; }
+  if(cur.length<L.len){ msg("Fyll alla rutor först!", true); shake(); sfx("bonk"); return; }
+  if(!valid(cur)){ msg(explain(cur), true); shake(); sfx("bonk"); return; }
   busy = true;
   const res = score(cur), row = document.querySelectorAll("#board .row")[guesses.length];
   [...row.children].forEach((t,i)=>{
     t.classList.remove("cur","hint","filled");
     setTimeout(()=>{
       t.classList.add("flip",res[i]);
+      sfx(res[i], i);
       if(res[i]==="g") t.insertAdjacentHTML("beforeend", ICON_G);
       if(res[i]==="y") t.insertAdjacentHTML("beforeend", ICON_Y);
     },i*120);
@@ -764,15 +898,15 @@ function submit(){
   const g = cur; cur="";
   setTimeout(()=>{
     busy = false;
-    buildKeys(); renderKnown();
+    buildKeys(); updateTop();
     if(g===secret){
       over=true;
       stats.solved++; stats.run++; stats.best=Math.max(stats.best, stats.run); saveStats();
       msg(["Superbra!","Snyggt räknat!","Du är ett mattegeni!"][Math.floor(Math.random()*3)] + " Tryck på ↻ för ett nytt.");
-      confetti();
+      confetti(); sfx("win");
       setTimeout(afterWin, 1400);
     } else if(guesses.length===ROWS){
-      over=true; stats.run=0; saveStats();
+      over=true; stats.run=0; saveStats(); sfx("lose");
       msg(`Svaret var ${secret}. Försök igen!`);
     } else {
       msg(hint(g,res));
@@ -922,19 +1056,23 @@ document.getElementById("qDone").onclick = ()=>done("quizOv");
 document.getElementById("qSkip").onclick = ()=>done("quizOv");
 
 /* ---------- level switching with confirm ---------- */
+function showLevel(){ document.getElementById("lvlName").textContent = LEVELS[level].name; document.getElementById("lvlSel").value = String(level); document.getElementById("s_level").value = String(level); }
 function setLevel(l){
-  level = l; store.set("sj_level", String(l));
-  document.querySelectorAll("#levels button").forEach(x=>x.classList.toggle("on", +x.dataset.l===l));
+  level = l; store.set("sj_level", String(l)); showLevel();
   newGame(); refit();
 }
-document.getElementById("levels").onclick=e=>{
-  const b=e.target.closest("button"); if(!b) return;
-  const l=+b.dataset.l; if(l===level) return;
-  if(inProgress()){ pendingLevel=l; open("confOv"); } else setLevel(l);
-};
-document.getElementById("confNo").onclick=()=>{ pendingLevel=null; close("confOv"); };
-document.getElementById("confYes").onclick=()=>{ close("confOv"); if(pendingLevel!=null) setLevel(pendingLevel); pendingLevel=null; };
+/* level is chosen in the header dropdown or in settings; ask only if a game is under way */
+function requestLevel(l){
+  if(l===level) return;
+  if(inProgress()){ pendingLevel = l; open("confOv"); } else setLevel(l);
+}
+function cancelLevel(){ pendingLevel = null; close("confOv"); showLevel(); }
+document.getElementById("lvlSel").onchange = e=>requestLevel(+e.target.value);
+document.getElementById("s_level").onchange = e=>{ close("setOv"); requestLevel(+e.target.value); };
+document.getElementById("confNo").onclick = cancelLevel;
+document.getElementById("confYes").onclick = ()=>{ close("confOv"); if(pendingLevel!=null) setLevel(pendingLevel); pendingLevel = null; };
 
+/* ↻ starts a new game at the same level, as before */
 document.getElementById("newBtn").onclick=()=>{ if(!over && guesses.length>0){ stats.run=0; saveStats(); } newGame(); };
 
 /* ---------- help sheet ---------- */
@@ -955,6 +1093,7 @@ document.getElementById("helpSay").onclick=()=>speak(helpParts(), true);
 /* ---------- settings sheet ---------- */
 function applySettings(){
   ["tts","auto","known","words","reflect"].forEach(k=>{ document.getElementById("s_"+k).checked = !!settings[k]; });
+  document.getElementById("s_sfx").checked = !!settings.sfx;
   document.getElementById("s_calm").checked = CALM_KEYS.every(k=>settings[k]);
   document.body.classList.toggle("tts", !!settings.tts);
   document.getElementById("ttsNote").hidden = ttsOK || settings.voice==="gemini";
@@ -983,6 +1122,7 @@ document.getElementById("s_calm").onchange = e=>setCalm(e.target.checked);
     saveSettings(); applySettings();
   };
 });
+document.getElementById("s_sfx").onchange = e=>{ settings.sfx = e.target.checked; saveSettings(); if(settings.sfx) sfx("g"); };
 document.getElementById("setBtn").onclick=()=>{ updateStats(); open("setOv"); };
 document.getElementById("setClose").onclick=()=>done("setOv");
 
@@ -1030,13 +1170,13 @@ cbT.onchange=()=>{ document.body.classList.toggle("cb", cbT.checked); store.set(
 /* backdrop click and Escape close the top sheet (and continue any chain) */
 document.querySelectorAll(".ov").forEach(o=>o.addEventListener("click",e=>{
   if(e.target!==o) return;
-  if(o.id==="confOv"){ pendingLevel=null; close(o.id); } else done(o.id);
+  if(o.id==="confOv") cancelLevel(); else done(o.id);
 }));
 
 /* physical keyboard (only while no sheet is open) */
 document.addEventListener("keydown",e=>{
   if(document.querySelector(".ov.open")){
-    if(e.key==="Escape") document.querySelectorAll(".ov.open").forEach(o=>{ if(o.id==="confOv"){ pendingLevel=null; close(o.id); } else done(o.id); });
+    if(e.key==="Escape") document.querySelectorAll(".ov.open").forEach(o=>{ if(o.id==="confOv") cancelLevel(); else done(o.id); });
     return;
   }
   let k=e.key;
@@ -1051,7 +1191,7 @@ if(store.get("sj_cb")==="1"){ cbT.checked=true; document.body.classList.add("cb"
 if(new URLSearchParams(location.search).get("lugnt")==="1" && store.get("sj_calmUrlDone")!=="1"){
   store.set("sj_calmUrlDone","1"); CALM_KEYS.forEach(k=>{ settings[k] = true; }); saveSettings();
 }
-document.querySelectorAll("#levels button").forEach(x=>x.classList.toggle("on", +x.dataset.l===level));
+showLevel();
 buildHelp();
 applySettings();
 const firstTime = store.get("sj_seenHelp")!=="1";
@@ -1059,9 +1199,29 @@ if(firstTime) open("helpOv");
 newGame();
 
 /* Bigger screens (iPad): scale the whole layout up to fill the space, phones stay at 1 */
+/* height of the slot = the taller of: intro, or card with a two-line message (+ "Det du vet" if on).
+   Measured on the real boxes (synchronously, so nothing flickers), then everything is put back. */
+function lockTop(){
+  const top = document.getElementById("top"); if(!top) return;
+  const intro = document.getElementById("intro"), card = document.getElementById("card"),
+        known = document.getElementById("known"), msgT = document.getElementById("msgT"), row = document.getElementById("knownRow");
+  const saved = {i:intro.hidden, c:card.hidden, k:known.hidden, t:msgT.textContent, r:row.innerHTML, ic:intro.className, cc:card.className};
+  intro.className = ""; card.className = "";   /* no fade classes while measuring (.leave is absolutely positioned) */
+  top.style.height = "";
+  intro.hidden = false; card.hidden = true;
+  const hIntro = intro.offsetHeight;
+  intro.hidden = true; card.hidden = false;
+  msgT.textContent = "Nästan! 3 och 5 finns, men på fel plats. Testa igen!";
+  known.hidden = !settings.known;
+  if(settings.known) row.innerHTML = Array(LEVELS[level].len).fill('<div class="tile hint">?</div>').join("");
+  const hCard = card.offsetHeight;
+  intro.hidden = saved.i; card.hidden = saved.c; known.hidden = saved.k; intro.className = saved.ic; card.className = saved.cc; msgT.textContent = saved.t; row.innerHTML = saved.r;
+  top.style.height = Math.max(hIntro, hCard) + "px";
+}
 function fit(){
   const root = document.documentElement, wrap = document.querySelector(".wrap");
   root.style.setProperty("--z", "1");
+  lockTop();
   const h = wrap.scrollHeight;
   let z = Math.min((window.innerWidth - 32) / 420, (window.innerHeight - 32) / h, 1.6);
   if(z < 1.08) z = 1;
