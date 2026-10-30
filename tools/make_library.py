@@ -75,8 +75,16 @@ def write_index():
     (OUT / "index.json").write_text(json.dumps({"voice": CFG["voice"], "model": CFG["model"], "ext": EXT, "ids": done}))
     return done
 
+REDO = HERE / "redo.json"   # with --redo: ids to make again (overwrites); each id is removed when done
 def todo():
+    if "--redo" in sys.argv:
+        ids = set(json.loads(REDO.read_text())["ids"]) if REDO.exists() else set()
+        return [p for p in CFG["phrases"] if p["id"] in ids]
     return [p for p in CFG["phrases"] if not (OUT / f"{p['id']}.{EXT}").exists()]
+
+def mark_redone(pid):
+    if "--redo" in sys.argv and REDO.exists():
+        d = json.loads(REDO.read_text()); d["ids"] = [i for i in d["ids"] if i != pid]; REDO.write_text(json.dumps(d))
 
 def daily_limit(body):
     """True if a 429 is the per-day quota (Google puts PerDay in quotaId)."""
@@ -140,7 +148,7 @@ def wait_and_collect(name, ids):
         key = (item.get("metadata") or {}).get("key") or (ids[i] if i < len(ids) else None)
         a = audio_of(item.get("response") or {})
         if key and a:
-            save(key, *a); saved += 1
+            save(key, *a); mark_redone(key); saved += 1
     STATE.unlink(missing_ok=True)
     write_index()
     log(f"  Sparade {saved} av {len(ids)} klipp.")
@@ -197,7 +205,7 @@ def run_live():
             try:
                 a = audio_of(call("POST", f"/models/{CFG['model']}:generateContent", request_for(p["text"], strict=attempt > 0)))
                 if not a: raise ValueError("Gemini svarade utan ljud")
-                save(p["id"], *a); write_index(); log(f"[{n}/{len(left)}] {p['text'][:70]}")
+                save(p["id"], *a); mark_redone(p["id"]); write_index(); log(f"[{n}/{len(left)}] {p['text'][:70]}")
                 break
             except ApiError as e:
                 if e.code == 429 and daily_limit(e.body):
@@ -213,7 +221,7 @@ def run_live():
                 log(f"  hoppar över ({e}): {p['text'][:60]}"); break
         time.sleep(7)
 
-log(f"Start ({'live' if '--live' in sys.argv else 'batch'}): {len(CFG['phrases'])} fraser, {len(todo())} kvar. Röst {CFG['voice']}.")
+log(f"Start ({'live' if '--live' in sys.argv else 'batch'}{', redo' if '--redo' in sys.argv else ''}): {len(CFG['phrases'])} fraser, {len(todo())} kvar. Röst {CFG['voice']}.")
 stopped = run_live() if "--live" in sys.argv else run_batch()
 done = write_index()
 with zipfile.ZipFile(HERE / "sifferjakt-audio.zip", "w", zipfile.ZIP_STORED) as z:
