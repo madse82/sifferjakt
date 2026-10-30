@@ -334,8 +334,9 @@ function today(){ return ymd(new Date()); }
 function addDays(s, n){ const [y,m,d]=s.split("-").map(Number); const dt=new Date(y,m-1,d); dt.setDate(dt.getDate()+n); return ymd(dt); }
 
 /* ---------- settings ---------- */
-const settings = Object.assign({tts:false, auto:false, known:false, words:false, reflect:false, voice:"gemini", gvoice:"Zephyr", gmodel:"gemini-2.5-flash-preview-tts"}, loadJSON("sj_settings", {}));
+const settings = Object.assign({tts:false, auto:false, known:true, words:false, reflect:false, voice:"gemini", gvoice:"Zephyr", gmodel:"gemini-2.5-flash-preview-tts"}, loadJSON("sj_settings", {}));
 /* Gemini (with the audio library) is the default voice; older saved settings that never picked a voice move over once */
+if(!settings.knownChosen) settings.known = true;   /* "Det du vet" on by default until someone switches it off */
 if(!settings.voiceChosen){ settings.voice = "gemini"; settings.gvoice = settings.gvoice || "Zephyr"; }
 function saveSettings(){ store.set("sj_settings", JSON.stringify(settings)); }
 const CALM_KEYS = ["tts","known","words","reflect"];
@@ -967,6 +968,7 @@ function applySettings(){
 }
 function setCalm(on){
   CALM_KEYS.forEach(k=>{ settings[k] = on; });
+  settings.knownChosen = true;
   if(!on) settings.auto = false;
   saveSettings(); applySettings();
 }
@@ -974,6 +976,7 @@ document.getElementById("s_calm").onchange = e=>setCalm(e.target.checked);
 ["tts","auto","known","words","reflect"].forEach(k=>{
   document.getElementById("s_"+k).onchange = e=>{
     settings[k] = e.target.checked;
+    if(k==="known") settings.knownChosen = true;
     if(k==="auto" && settings.auto) settings.tts = true;
     if(k==="tts" && !settings.tts) settings.auto = false;
     saveSettings(); applySettings();
