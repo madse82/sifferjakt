@@ -116,7 +116,7 @@ def submit(chunk):
                       "input_config": {"requests": {"requests": [
                           {"request": request_for(p["text"], strict=p["id"] in TRIED), "metadata": {"key": p["id"]}} for p in chunk]}}}}
     TRIED.update(p["id"] for p in chunk)
-    job = call("POST", f"/models/{CFG['model']}:batchGenerateContent", body, timeout=300)
+    job = call("POST", f"/models/{BATCH_MODEL}:batchGenerateContent", body, timeout=300)
     name = job.get("name")
     if not name: raise RuntimeError("Inget batch-namn i svaret: " + json.dumps(job)[:300])
     STATE.write_text(json.dumps({"name": name, "ids": [p["id"] for p in chunk]}))
@@ -147,7 +147,31 @@ def wait_and_collect(name, ids):
     if not items: log("  Hittade inga svar i batchen. Början av svaret: " + json.dumps(job)[:600])
     return saved
 
+BATCH_MODEL = None
+def pick_batch_model():
+    """Ask Google which TTS models accept batch jobs for this key (preview models often don't)."""
+    names, token = [], ""
+    while True:
+        r = call("GET", "/models?pageSize=200" + (f"&pageToken={token}" if token else ""))
+        for m in r.get("models", []):
+            if "batchGenerateContent" in m.get("supportedGenerationMethods", []) and "tts" in m["name"].lower():
+                names.append(m["name"].split("/")[-1])
+        token = r.get("nextPageToken")
+        if not token: break
+    log("TTS-modeller som tar batch: " + (", ".join(names) or "inga"))
+    if CFG["model"] in names: return CFG["model"]
+    for pref in ("flash-tts", "flash", ""):
+        for n in names:
+            if pref in n and "lite" not in n: return n
+    return names[0] if names else None
+
 def run_batch():
+    global BATCH_MODEL
+    BATCH_MODEL = pick_batch_model()
+    if not BATCH_MODEL:
+        log("Ingen röstmodell tar batch-jobb för den här nyckeln. Kör i stället: /usr/bin/python3 make_library.py --live")
+        return "Batch går inte. Använd --live (gör ungefär 100 fraser per dag)."
+    if BATCH_MODEL != CFG["model"]: log(f"Använder {BATCH_MODEL} för batch (samma röst {CFG['voice']}).")
     if STATE.exists():
         st = json.loads(STATE.read_text())
         log(f"Fortsätter med pågående batch {st['name']}.")
