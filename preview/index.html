@@ -57,16 +57,19 @@
   #card{display:flex;flex-direction:column;gap:6px;padding:6px 8px 8px 14px;border-radius:14px;background:#fff;border:2px solid var(--key)}
   #card:has(#msg.err){border-color:var(--accent)}
   /* intro -> card: the slot glides to the new height, the new box fades up, known tiles pop in one by one */
+  /* the slot above the board has one fixed height (the taller of intro and card), so the board never moves */
   #top{display:flex;flex-direction:column;position:relative}
-  #top.anim{transition:height .5s cubic-bezier(.45,0,.25,1)}
+  #top > #intro, #top > #card{flex:1;box-sizing:border-box}
+  #card{justify-content:center}
+  #intro{align-items:center}
   /* crossfade: the old box fades out on top while the new one fades in underneath */
-  .leave{position:absolute;inset:0 0 auto 0;pointer-events:none;animation:leave .3s ease-out both}
+  .leave{position:absolute;inset:0;pointer-events:none;animation:leave .3s ease-out both}
   @keyframes leave{to{opacity:0}}
   .enter{animation:enter .5s cubic-bezier(.25,.1,.25,1) .12s both}
   @keyframes enter{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
   #card.enter #known .tile{animation:pop .4s cubic-bezier(.2,.9,.3,1.15) both;animation-delay:calc(var(--i) * 55ms + .35s)}
   @keyframes pop{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:none}}
-  @media (prefers-reduced-motion:reduce){ #top.anim{transition:none} .enter, .leave, #card.enter #known .tile{animation:none} .leave{display:none} }
+  @media (prefers-reduced-motion:reduce){ .enter, .leave, #card.enter #known .tile{animation:none} .leave{display:none} }
   #card #msg{border:0;background:none;padding:0;min-height:40px}
   #card #known{border:0;background:none;padding:0;border-top:2px dashed var(--key);padding-top:8px;border-radius:0}
   /* before the first guess: a short how-to instead of the message and "Det du vet" */
@@ -767,19 +770,11 @@ function showTop(intro){
   }
   topIntro = intro;
   const from = intro ? cardEl : introEl, to = intro ? introEl : cardEl;
-  const h0 = top.offsetHeight;
-  from.hidden = true; to.hidden = false;
-  const h1 = top.offsetHeight;
-  from.hidden = false; from.classList.add("leave");            /* keep the old box visible while it fades */
-  top.style.height = h0 + "px"; void top.offsetWidth; top.classList.add("anim");
+  to.hidden = false;
+  from.classList.add("leave");            /* the old box fades out on top of the new one; the slot keeps its height */
   to.classList.remove("enter"); void to.offsetWidth; to.classList.add("enter");
-  requestAnimationFrame(()=>{ top.style.height = h1 + "px"; });
   clearTimeout(showTop.t);
-  showTop.t = setTimeout(()=>{
-    from.hidden = true; from.classList.remove("leave");
-    top.classList.remove("anim"); top.style.height = ""; to.classList.remove("enter");
-    if(typeof refit==="function") refit();
-  }, 1000);
+  showTop.t = setTimeout(()=>{ from.hidden = true; from.classList.remove("leave"); to.classList.remove("enter"); }, 1000);
 }
 const INTRO_TEXT = ["Så här gör du.", "Skriv en uträkning, till exempel 3 + 4 = 7.", "Tryck på Gissa.", "Grönt betyder rätt plats, gult fel plats, och grått att siffran inte finns."];
 document.getElementById("introSay").onclick = ()=>speak(INTRO_TEXT, true);
@@ -1152,9 +1147,29 @@ if(firstTime) open("helpOv");
 newGame();
 
 /* Bigger screens (iPad): scale the whole layout up to fill the space, phones stay at 1 */
+/* height of the slot = the taller of: intro, or card with a two-line message (+ "Det du vet" if on).
+   Measured on the real boxes (synchronously, so nothing flickers), then everything is put back. */
+function lockTop(){
+  const top = document.getElementById("top"); if(!top) return;
+  const intro = document.getElementById("intro"), card = document.getElementById("card"),
+        known = document.getElementById("known"), msgT = document.getElementById("msgT"), row = document.getElementById("knownRow");
+  const saved = {i:intro.hidden, c:card.hidden, k:known.hidden, t:msgT.textContent, r:row.innerHTML, ic:intro.className, cc:card.className};
+  intro.className = ""; card.className = "";   /* no fade classes while measuring (.leave is absolutely positioned) */
+  top.style.height = "";
+  intro.hidden = false; card.hidden = true;
+  const hIntro = intro.offsetHeight;
+  intro.hidden = true; card.hidden = false;
+  msgT.textContent = "Nästan! 3 och 5 finns, men på fel plats. Testa igen!";
+  known.hidden = !settings.known;
+  if(settings.known) row.innerHTML = Array(LEVELS[level].len).fill('<div class="tile hint">?</div>').join("");
+  const hCard = card.offsetHeight;
+  intro.hidden = saved.i; card.hidden = saved.c; known.hidden = saved.k; intro.className = saved.ic; card.className = saved.cc; msgT.textContent = saved.t; row.innerHTML = saved.r;
+  top.style.height = Math.max(hIntro, hCard) + "px";
+}
 function fit(){
   const root = document.documentElement, wrap = document.querySelector(".wrap");
   root.style.setProperty("--z", "1");
+  lockTop();
   const h = wrap.scrollHeight;
   let z = Math.min((window.innerWidth - 32) / 420, (window.innerHeight - 32) / h, 1.6);
   if(z < 1.08) z = 1;
