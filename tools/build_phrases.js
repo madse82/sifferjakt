@@ -4,7 +4,8 @@ const {chromium} = require('playwright');
 const path = require('path'), fs = require('fs');
 (async()=>{
   const b = await chromium.launch(); const p = await b.newPage();
-  await p.goto('file://' + path.resolve(__dirname, '../index.html'));
+  const src = fs.existsSync(path.resolve(__dirname, '../preview/index.html')) ? '../preview/index.html' : '../index.html';
+  await p.goto('file://' + path.resolve(__dirname, src));
   const out = await p.evaluate(()=>{
     const list = new Map();
     const add = (parts, kind)=>{
@@ -13,6 +14,7 @@ const path = require('path'), fs = require('fs');
       const t = joinParts(parts); if(!list.has(t)) list.set(t, kind);
     };
     fixedPhrases().forEach(t=>add(t, "fixed"));
+    if(typeof INTRO_TEXT!=="undefined") add(INTRO_TEXT, "intro");   // "Så här gör du" box (new layout)
     add(helpParts(), "help");
     add(["Hej! Så här låter jag.", "Summan är svaret när man plussar.", "8 + 5 = 13."], "test");
     const base = ["green","yellow","keys"];
@@ -39,7 +41,7 @@ const path = require('path'), fs = require('fs');
             phrases:[...list].map(([text,kind])=>({id:phraseId(text), kind, text}))};
   });
   // most useful first, so a partial library (daily limits) already covers the common cases
-  const order = ["fixed","help","test","reflect","quiz","quiz-answer","word-card","answer","hint"];
+  const order = ["intro","fixed","help","test","reflect","quiz","quiz-answer","word-card","answer","hint"];
   out.phrases.sort((x,y)=>order.indexOf(x.kind)-order.indexOf(y.kind));
   const ids = new Set(out.phrases.map(x=>x.id));
   if(ids.size !== out.phrases.length) throw new Error("hash collision");

@@ -4,6 +4,11 @@
  "style": "Läs upp följande på svenska, lugnt och tydligt, för ett barn på nio år: ",
  "phrases": [
   {
+   "id": "26ac8a5e",
+   "kind": "intro",
+   "text": "Så här gör du. Skriv en uträkning, till exempel tre plus fyra är lika med sju. Tryck på Gissa. Grönt betyder rätt plats, gult fel plats, och grått att siffran inte finns."
+  },
+  {
    "id": "bd78afe2",
    "kind": "fixed",
    "text": "Gissa en uträkning!"
