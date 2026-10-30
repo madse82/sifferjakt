@@ -281,6 +281,7 @@
     <label class="toggle">Fråga vad som hjälpte <input type="checkbox" id="s_reflect"></label>
     <p class="small">Mer:</p>
     <label class="toggle">Läs upp texterna automatiskt <input type="checkbox" id="s_auto"></label>
+    <label class="toggle">Ljudeffekter <input type="checkbox" id="s_sfx"></label>
     <label class="toggle">Färger för färgblinda (blå/orange) <input type="checkbox" id="cbToggle"></label>
     <div class="vbox">
       <div class="vrow">Röst
@@ -392,7 +393,7 @@ function today(){ return ymd(new Date()); }
 function addDays(s, n){ const [y,m,d]=s.split("-").map(Number); const dt=new Date(y,m-1,d); dt.setDate(dt.getDate()+n); return ymd(dt); }
 
 /* ---------- settings ---------- */
-const settings = Object.assign({tts:false, auto:false, known:true, words:false, reflect:false, voice:"gemini", gvoice:"Zephyr", gmodel:"gemini-2.5-flash-preview-tts"}, loadJSON("sj_settings", {}));
+const settings = Object.assign({sfx:true, tts:false, auto:false, known:true, words:false, reflect:false, voice:"gemini", gvoice:"Zephyr", gmodel:"gemini-2.5-flash-preview-tts"}, loadJSON("sj_settings", {}));
 /* Gemini (with the audio library) is the default voice; older saved settings that never picked a voice move over once */
 if(!settings.knownChosen) settings.known = true;   /* "Det du vet" on by default until someone switches it off */
 if(!settings.voiceChosen){ settings.voice = "gemini"; settings.gvoice = settings.gvoice || "Zephyr"; }
@@ -482,6 +483,50 @@ function wavBlob(bytes, rate){
   v.setUint32(24,rate,true); v.setUint32(28,rate*2,true); v.setUint16(32,2,true); v.setUint16(34,16,true);
   w(36,"data"); v.setUint32(40, bytes.length, true);
   return new Blob([h, bytes], {type:"audio/wav"});
+}
+
+/* ---------- sound effects: synthesised once into small WAV files, played on <audio> elements ---------- */
+const SFX_RATE = 22050;
+function synth(dur, f){
+  const n = Math.round(dur*SFX_RATE), pcm = new Int16Array(n);
+  for(let i=0;i<n;i++){ const t = i/SFX_RATE; pcm[i] = Math.max(-1, Math.min(1, f(t, dur))) * 32767; }
+  return URL.createObjectURL(wavBlob(new Uint8Array(pcm.buffer), SFX_RATE));
+}
+const env = (t, a, d)=> t < a ? t/a : Math.exp(-(t-a)/d);            /* attack, then exponential decay */
+const sine = (fr, t)=> Math.sin(2*Math.PI*fr*t);
+function bell(fr, t){ return sine(fr,t) + 0.35*sine(fr*2,t)*Math.exp(-t*18) + 0.15*sine(fr*3,t)*Math.exp(-t*30); }
+let SFX = null;
+function buildSfx(){
+  if(SFX) return SFX;
+  const tick = (fr, vol)=> synth(.09, t=> vol * env(t,.002,.025) * (sine(fr,t) + .3*sine(fr*1.5,t)));
+  SFX = {
+    g: [0,1,2,3,4,5,6].map(i=>tick(880*Math.pow(2, i*2/12), .30)),   /* green: a little rising scale across the row */
+    y: tick(660, .24),
+    x: synth(.07, t=> .14 * env(t,.002,.018) * sine(330,t)),
+    bonk: synth(.22, t=> .30 * env(t,.004,.07) * sine(210 - 60*t/.22, t)),
+    pop:  synth(.08, t=> .16 * env(t,.002,.02) * sine(1200 + 2400*t, t)),
+    win:  synth(1.1, t=> .22 * [523.25,659.25,783.99,1046.5].reduce((acc,fr,k)=>{ const s0=k*.11; return acc + (t>=s0 ? env(t-s0,.004,.28)*bell(fr,t-s0) : 0); },0)),
+    lose: synth(.75, t=> .16 * [392,329.63,261.63].reduce((acc,fr,k)=>{ const s0=k*.16; return acc + (t>=s0 ? env(t-s0,.01,.18)*sine(fr,t-s0) : 0); },0))
+  };
+  return SFX;
+}
+const sfxPool = Array.from({length:6}, ()=>{ const a = new Audio(); a.preload = "auto"; a.setAttribute("playsinline",""); return a; });
+let sfxNext = 0, sfxUnlocked = false;
+/* iPhone only lets an audio element play later if it was started once inside a tap */
+function unlockSfx(){
+  if(sfxUnlocked) return; sfxUnlocked = true;
+  const s = buildSfx();
+  const quiet = s.silent || (s.silent = synth(.05, ()=>0));
+  sfxPool.forEach(a=>{ a.src = quiet; const p = a.play(); if(p) p.catch(()=>{}); });
+}
+document.addEventListener("click", unlockSfx, {capture:true});
+document.addEventListener("touchend", unlockSfx, {capture:true, passive:true});
+function sfx(name, i){
+  if(!settings.sfx) return;
+  const s = buildSfx(); let url = s[name]; if(Array.isArray(url)) url = url[Math.min(i||0, url.length-1)];
+  if(!url) return;
+  const a = sfxPool[sfxNext++ % sfxPool.length];
+  try{ a.pause(); a.src = url; a.currentTime = 0; a.volume = 1; const p = a.play(); if(p) p.catch(()=>{}); }catch(e){}
 }
 /* must run inside the tap, before any await */
 function unlockPlayer(){
@@ -773,6 +818,8 @@ function showTop(intro){
   to.hidden = false;
   from.classList.add("leave");            /* the old box fades out on top of the new one; the slot keeps its height */
   to.classList.remove("enter"); void to.offsetWidth; to.classList.add("enter");
+  if(to.id==="card" && !document.getElementById("known").hidden)
+    document.querySelectorAll("#knownRow .tile.g").forEach(t=>setTimeout(()=>sfx("pop"), 350 + 55*(+t.style.getPropertyValue("--i")||0)));
   clearTimeout(showTop.t);
   showTop.t = setTimeout(()=>{ from.hidden = true; from.classList.remove("leave"); to.classList.remove("enter"); }, 1000);
 }
@@ -830,14 +877,15 @@ function hint(g, res){
 
 function submit(){
   const L = LEVELS[level];
-  if(cur.length<L.len){ msg("Fyll alla rutor först!", true); shake(); return; }
-  if(!valid(cur)){ msg(explain(cur), true); shake(); return; }
+  if(cur.length<L.len){ msg("Fyll alla rutor först!", true); shake(); sfx("bonk"); return; }
+  if(!valid(cur)){ msg(explain(cur), true); shake(); sfx("bonk"); return; }
   busy = true;
   const res = score(cur), row = document.querySelectorAll("#board .row")[guesses.length];
   [...row.children].forEach((t,i)=>{
     t.classList.remove("cur","hint","filled");
     setTimeout(()=>{
       t.classList.add("flip",res[i]);
+      sfx(res[i], i);
       if(res[i]==="g") t.insertAdjacentHTML("beforeend", ICON_G);
       if(res[i]==="y") t.insertAdjacentHTML("beforeend", ICON_Y);
     },i*120);
@@ -853,10 +901,10 @@ function submit(){
       over=true;
       stats.solved++; stats.run++; stats.best=Math.max(stats.best, stats.run); saveStats();
       msg(["Superbra!","Snyggt räknat!","Du är ett mattegeni!"][Math.floor(Math.random()*3)] + " Tryck på ↻ för ett nytt.");
-      confetti();
+      confetti(); sfx("win");
       setTimeout(afterWin, 1400);
     } else if(guesses.length===ROWS){
-      over=true; stats.run=0; saveStats();
+      over=true; stats.run=0; saveStats(); sfx("lose");
       msg(`Svaret var ${secret}. Försök igen!`);
     } else {
       msg(hint(g,res));
@@ -1043,6 +1091,7 @@ document.getElementById("helpSay").onclick=()=>speak(helpParts(), true);
 /* ---------- settings sheet ---------- */
 function applySettings(){
   ["tts","auto","known","words","reflect"].forEach(k=>{ document.getElementById("s_"+k).checked = !!settings[k]; });
+  document.getElementById("s_sfx").checked = !!settings.sfx;
   document.getElementById("s_calm").checked = CALM_KEYS.every(k=>settings[k]);
   document.body.classList.toggle("tts", !!settings.tts);
   document.getElementById("ttsNote").hidden = ttsOK || settings.voice==="gemini";
@@ -1071,6 +1120,7 @@ document.getElementById("s_calm").onchange = e=>setCalm(e.target.checked);
     saveSettings(); applySettings();
   };
 });
+document.getElementById("s_sfx").onchange = e=>{ settings.sfx = e.target.checked; saveSettings(); if(settings.sfx) sfx("win"); };
 document.getElementById("setBtn").onclick=()=>{ updateStats(); open("setOv"); };
 document.getElementById("setClose").onclick=()=>done("setOv");
 
