@@ -482,7 +482,8 @@ function joinParts(parts){ return parts.length===1 ? parts[0] : parts.map(p=>/[.
 /* ---------- audio library: pre-made clips in audio/ (made once on the Mac, see tools/) ---------- */
 function phraseId(t){ let h=0x811c9dc5; for(const ch of t){ h ^= ch.codePointAt(0); h = Math.imul(h, 0x01000193) >>> 0; } return h.toString(16).padStart(8,"0"); }
 const LIB = {voice:null, ids:new Set(), ext:"m4a"};
-fetch("audio/index.json", {cache:"no-cache"}).then(r=>r.ok ? r.json() : null).then(j=>{
+const AUDIO_BASE = document.documentElement.dataset.audioBase || "audio/";
+fetch(AUDIO_BASE + "index.json", {cache:"no-cache"}).then(r=>r.ok ? r.json() : null).then(j=>{
   if(!j) return; LIB.voice = j.voice; LIB.ext = j.ext || "m4a"; (j.ids||[]).forEach(id=>LIB.ids.add(id)); updateLibInfo();
 }).catch(()=>{});
 function libReady(){ return settings.voice==="gemini" && LIB.ids.size>0 && settings.gvoice===LIB.voice; }
@@ -535,7 +536,7 @@ async function speak(parts, force){
     unlockPlayer();
     setBusy(true);
     try{
-      await playUrl(`audio/${phraseId(joined)}.${LIB.ext}`);
+      await playUrl(`${AUDIO_BASE}${phraseId(joined)}.${LIB.ext}`);
       if(token!==speakToken) return;
       setBusy(false); setVoiceInfo("Spelade från ljudbiblioteket.");
       return;
