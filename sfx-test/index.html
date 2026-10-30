@@ -1,19 +1,37 @@
 <!DOCTYPE html><html lang="sv"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Sifferjakt – ljudtest</title><style>
-body{font-family:-apple-system,system-ui,sans-serif;background:#f6f4ee;color:#222;margin:0;padding:16px 16px 60px;max-width:640px;margin:auto}
-h1{font-size:20px}h2{font-size:16px;margin:22px 0 8px}p{color:#555;font-size:14px}
-.row{display:flex;flex-wrap:wrap;gap:8px}
-button{font:inherit;font-size:14px;border:0;border-radius:10px;padding:10px 12px;background:#fff;box-shadow:0 1px 3px #0002}
-button.on{background:#6aaa64;color:#fff}
+<title>Sifferjakt – ljudtest 2</title><style>
+body{font-family:-apple-system,system-ui,sans-serif;background:#f6f4ee;color:#222;margin:0 auto;padding:16px 14px 60px;max-width:680px}
+h1{font-size:20px;margin:4px 0}p{color:#555;font-size:14px;margin:6px 0 14px}
+.pack{background:#fff;border-radius:14px;box-shadow:0 1px 3px #0002;padding:12px;margin:12px 0}
+.pack h2{font-size:17px;margin:0 0 8px;display:flex;justify-content:space-between;align-items:center}
+.row{display:flex;flex-wrap:wrap;gap:6px}
+button{font:inherit;font-size:13px;border:0;border-radius:9px;padding:8px 10px;background:#eceae3}
+button.demo{background:#6aaa64;color:#fff;font-weight:600}
+button.lose{background:#787c7e;color:#fff;font-weight:600}
+button.on{outline:2px solid #c9b458}
 </style></head><body>
-<h1>Ljudtest (Kenney, CC0)</h1>
-<p>Tryck för att lyssna. Skriv gärna ner numren du gillar per rad, t.ex. "grön: select_002". Sist finns alla 100 ljud.</p>
-<div id="slots"></div><h2>Alla ljud</h2><div class="row" id="all"></div>
+<h1>Ljudtest 2 – 12 ljudstilar</h1>
+<p>Börja med <b>▶ Demo</b>: en gissning (grön, gul, grå, grön, grön) och sedan vinst. <b>▶ Förlust</b> visar en förlust. Gröna rutor stiger i tonhöjd som i spelet. Säg vilken stil du gillar, eller blanda, t.ex. "vinst från glass".</p>
+<div id="packs"></div>
 <script>
-const slots=[["Grön ruta (rätt plats)", ["select_001", "select_002", "pluck_001", "glass_002", "tick_004", "toggle_004"]], ["Gul ruta (fel plats)", ["pluck_002", "drop_001", "glass_005", "toggle_001", "click_001"]], ["Grå ruta (finns inte)", ["drop_002", "back_001", "toggle_002", "scratch_003", "bong_001"]], ["Ogiltig gissning", ["error_004", "error_008", "error_001", "back_002", "glitch_002"]], ["Det du vet (pop)", ["maximize_007", "open_001", "glass_006", "select_007", "pluck_001"]], ["Vinst", ["confirmation_002", "confirmation_004", "maximize_005", "glass_004", "question_001"]], ["Förlust", ["error_005", "error_006", "minimize_005", "close_002", "error_003"]]], names=["back_001", "back_002", "back_003", "back_004", "bong_001", "click_001", "click_002", "click_003", "click_004", "click_005", "close_001", "close_002", "close_003", "close_004", "confirmation_001", "confirmation_002", "confirmation_003", "confirmation_004", "drop_001", "drop_002", "drop_003", "drop_004", "error_001", "error_002", "error_003", "error_004", "error_005", "error_006", "error_007", "error_008", "glass_001", "glass_002", "glass_003", "glass_004", "glass_005", "glass_006", "glitch_001", "glitch_002", "glitch_003", "glitch_004", "maximize_001", "maximize_002", "maximize_003", "maximize_004", "maximize_005", "maximize_006", "maximize_007", "maximize_008", "maximize_009", "minimize_001", "minimize_002", "minimize_003", "minimize_004", "minimize_005", "minimize_006", "minimize_007", "minimize_008", "minimize_009", "open_001", "open_002", "open_003", "open_004", "pluck_001", "pluck_002", "question_001", "question_002", "question_003", "question_004", "scratch_001", "scratch_002", "scratch_003", "scratch_004", "scratch_005", "scroll_001", "scroll_002", "scroll_003", "scroll_004", "scroll_005", "select_001", "select_002", "select_003", "select_004", "select_005", "select_006", "select_007", "select_008", "switch_001", "switch_002", "switch_003", "switch_004", "switch_005", "switch_006", "switch_007", "tick_001", "tick_002", "tick_004", "toggle_001", "toggle_002", "toggle_003", "toggle_004"];
-const a=new Audio();
-function btn(n){const b=document.createElement('button');b.textContent=n;b.onclick=()=>{document.querySelectorAll('.on').forEach(x=>x.classList.remove('on'));b.classList.add('on');a.src='s/'+n+'.m4a';a.currentTime=0;a.play();};return b;}
-const S=document.getElementById('slots');
-for(const [t,list] of slots){const h=document.createElement('h2');h.textContent=t;S.append(h);const r=document.createElement('div');r.className='row';list.forEach(n=>r.append(btn(n)));S.append(r);}
-const A=document.getElementById('all');names.forEach(n=>A.append(btn(n)));
+const packs=[["soft","Mjuk"],["dreamy","Drömsk"],["zen","Zen"],["glass","Glas"],["organic","Trä/organisk"],["rubber","Gummi"],["arcade","Arcade"],["minimal","Minimal"],["studio","Studio"],["mechanical","Mekanisk"],["cinematic","Filmisk"],["scifi","Sci-fi"]];
+const slots=[["check","Grön"],["select","Gul"],["release","Grå"],["invalid-drop","Ogiltig"],["reaction","Det du vet"],["achievement","Vinst"],["level-up","Vinst 2"],["streak","Vinst 3"],["error","Förlust"]];
+const pool=[...Array(6)].map(()=>new Audio());let pi=0;
+function play(p,n,rate=1){const a=pool[pi++%pool.length];a.src='p/'+p+'/'+n+'.mp3';a.preservesPitch=false;a.webkitPreservesPitch=false;a.playbackRate=rate;a.currentTime=0;a.play().catch(()=>{});}
+let timers=[];function stop(){timers.forEach(clearTimeout);timers=[];}
+function seq(p,steps){stop();let t=0;for(const [d,n,r] of steps){t+=d;timers.push(setTimeout(()=>play(p,n,r),t));}}
+const R=i=>Math.pow(2,i*2/12);
+const P=document.getElementById('packs');
+for(const [p,label] of packs){
+  const d=document.createElement('div');d.className='pack';
+  const h=document.createElement('h2');h.textContent=label;d.append(h);
+  const r=document.createElement('div');r.className='row';
+  const demo=document.createElement('button');demo.className='demo';demo.textContent='▶ Demo';
+  demo.onclick=()=>seq(p,[[0,'check',R(0)],[320,'select',1],[320,'release',1],[320,'check',R(3)],[320,'check',R(4)],[450,'reaction',1],[650,'achievement',1]]);
+  const lose=document.createElement('button');lose.className='lose';lose.textContent='▶ Förlust';
+  lose.onclick=()=>seq(p,[[0,'invalid-drop',1],[700,'release',1],[320,'select',1],[320,'release',1],[320,'check',R(3)],[320,'release',1],[600,'error',1]]);
+  r.append(demo,lose);
+  for(const [n,t] of slots){const b=document.createElement('button');b.textContent=t;b.onclick=()=>{stop();document.querySelectorAll('.on').forEach(x=>x.classList.remove('on'));b.classList.add('on');play(p,n);};r.append(b);}
+  d.append(r);P.append(d);
+}
 </script></body></html>
