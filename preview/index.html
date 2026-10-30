@@ -493,7 +493,7 @@ function synth(dur, f){
   return URL.createObjectURL(wavBlob(new Uint8Array(pcm.buffer), SFX_RATE));
 }
 const SFX_BASE = (document.documentElement.dataset.audioBase || "audio/").replace(/audio\/$/, "sfx/") + "soft/";
-const SFX_FILES = {g:"click", y:"click", x:"click", pop:"click", win:"applause"};   /* no sound for invalid guesses or a lost game */
+const SFX_FILES = {g:"click", y:"click", x:"click", pop:"click", win:"applause-2s"};   /* no sound for invalid guesses or a lost game */
 const SFX_VOL = {pop:.6};   /* the click file is already quiet; iPhone ignores volume anyway */
 const jitter = ()=> 0.94 + Math.random()*0.12;   /* tiny pitch variation so a row of clicks doesn't sound mechanical */
 const SFX_RATEOF = {g:jitter, y:jitter, x:jitter, pop:jitter};
@@ -503,7 +503,7 @@ function buildSfx(){
   SFX = {};
   for(const [k,f] of Object.entries(SFX_FILES)){
     SFX[k] = SFX_BASE + f + ".mp3";
-    fetch(SFX[k]).then(r=>r.ok ? r.blob() : null).then(b=>{ if(b) SFX[k] = URL.createObjectURL(b); }).catch(()=>{});   /* keep in memory so taps play instantly */
+    fetch(SFX[k] + "?v=" + Date.now(), {cache:"no-store"}).then(r=>r.ok ? r.blob() : null).then(b=>{ if(b) SFX[k] = URL.createObjectURL(b); }).catch(()=>{});   /* keep in memory so taps play instantly */
   }
   return SFX;
 }
