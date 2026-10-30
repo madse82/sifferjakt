@@ -56,6 +56,14 @@
   /* message and "Det du vet" share one card */
   #card{display:flex;flex-direction:column;gap:6px;padding:6px 8px 8px 14px;border-radius:14px;background:#fff;border:2px solid var(--key)}
   #card:has(#msg.err){border-color:var(--accent)}
+  /* intro -> card: the slot glides to the new height, the new box fades up, known tiles pop in one by one */
+  #top{display:flex;flex-direction:column}
+  #top.anim{overflow:hidden;transition:height .35s cubic-bezier(.2,.8,.2,1)}
+  .enter{animation:enter .4s cubic-bezier(.2,.8,.2,1) both}
+  @keyframes enter{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:none}}
+  #card.enter #known .tile{animation:pop .35s cubic-bezier(.3,1.6,.5,1) both;animation-delay:calc(var(--i) * 70ms + .2s)}
+  @keyframes pop{from{opacity:0;transform:scale(.4)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){ #top.anim{transition:none} .enter, #card.enter #known .tile{animation:none} }
   #card #msg{border:0;background:none;padding:0;min-height:40px}
   #card #known{border:0;background:none;padding:0;border-top:2px dashed var(--key);padding-top:8px;border-radius:0}
   /* before the first guess: a short how-to instead of the message and "Det du vet" */
@@ -203,6 +211,7 @@
     </div>
   </header>
 
+  <div id="top">
   <div id="intro" hidden>
     <div>
       <div class="it">Så här gör du</div>
@@ -224,6 +233,7 @@
     <div class="lbl">DET<br>DU VET</div>
     <div class="row" id="knownRow"></div>
     <div class="also" id="knownAlso"></div>
+  </div>
   </div>
   </div>
 
@@ -708,9 +718,9 @@ function renderKnown(){
   const L = LEVELS[level], pos = Array(L.len).fill(null);
   guesses.forEach(g=>{ score(g).forEach((k,i)=>{ if(k==="g") pos[i]=g[i]; }); });
   document.getElementById("knownRow").innerHTML = pos.map((c,i)=>{
-    if(c) return `<div class="tile g">${c}</div>`;
-    if(L.lockEq===i) return `<div class="tile hint">=</div>`;
-    return `<div class="tile hint">?</div>`;
+    if(c) return `<div class="tile g" style="--i:${i}">${c}</div>`;
+    if(L.lockEq===i) return `<div class="tile hint" style="--i:${i}">=</div>`;
+    return `<div class="tile hint" style="--i:${i}">?</div>`;
   }).join("");
   const ys = Object.keys(keyState).filter(c=>keyState[c]==="y");
   const also = document.getElementById("knownAlso");
@@ -740,12 +750,28 @@ function buildKeys(){
 let lastMsg = "";
 let msgBeforeFirst = false;   /* an error before the first guess shows the message box after all */
 function firstMove(){ return guesses.length===0 && !over; }
+let topIntro = null;   /* which box is showing: true = intro, false = card, null = not drawn yet */
 function updateTop(){
-  const first = firstMove();
-  document.getElementById("intro").hidden = !(first && !msgBeforeFirst);
-  document.getElementById("card").hidden = first && !msgBeforeFirst;
   renderKnown();
+  showTop(firstMove() && !msgBeforeFirst);
   if(typeof refit==="function") refit();
+}
+function showTop(intro){
+  const introEl = document.getElementById("intro"), cardEl = document.getElementById("card"), top = document.getElementById("top");
+  const reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if(topIntro===intro || topIntro===null || reduce){
+    introEl.hidden = !intro; cardEl.hidden = intro; topIntro = intro; return;
+  }
+  topIntro = intro;
+  const from = intro ? cardEl : introEl, to = intro ? introEl : cardEl;
+  const h0 = top.offsetHeight;
+  from.hidden = true; to.hidden = false;
+  const h1 = top.offsetHeight;
+  top.classList.add("anim"); top.style.height = h0 + "px";
+  to.classList.remove("enter"); void to.offsetWidth; to.classList.add("enter");
+  requestAnimationFrame(()=>{ top.style.height = h1 + "px"; });
+  clearTimeout(showTop.t);
+  showTop.t = setTimeout(()=>{ top.classList.remove("anim"); top.style.height = ""; to.classList.remove("enter"); if(typeof refit==="function") refit(); }, 900);
 }
 const INTRO_TEXT = ["Så här gör du.", "Skriv en uträkning, till exempel 3 + 4 = 7.", "Tryck på Gissa.", "Grönt betyder rätt plats, gult fel plats, och grått att siffran inte finns."];
 document.getElementById("introSay").onclick = ()=>speak(INTRO_TEXT, true);
