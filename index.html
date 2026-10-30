@@ -334,7 +334,9 @@ function today(){ return ymd(new Date()); }
 function addDays(s, n){ const [y,m,d]=s.split("-").map(Number); const dt=new Date(y,m-1,d); dt.setDate(dt.getDate()+n); return ymd(dt); }
 
 /* ---------- settings ---------- */
-const settings = Object.assign({tts:false, auto:false, known:false, words:false, reflect:false, voice:"device", gvoice:"Zephyr", gmodel:"gemini-2.5-flash-preview-tts"}, loadJSON("sj_settings", {}));
+const settings = Object.assign({tts:false, auto:false, known:false, words:false, reflect:false, voice:"gemini", gvoice:"Zephyr", gmodel:"gemini-2.5-flash-preview-tts"}, loadJSON("sj_settings", {}));
+/* Gemini (with the audio library) is the default voice; older saved settings that never picked a voice move over once */
+if(!settings.voiceChosen){ settings.voice = "gemini"; settings.gvoice = settings.gvoice || "Zephyr"; }
 function saveSettings(){ store.set("sj_settings", JSON.stringify(settings)); }
 const CALM_KEYS = ["tts","known","words","reflect"];
 
@@ -981,7 +983,7 @@ document.getElementById("setBtn").onclick=()=>{ updateStats(); open("setOv"); };
 document.getElementById("setClose").onclick=()=>done("setOv");
 
 /* ---------- voice settings ---------- */
-document.getElementById("s_voice").onchange = e=>{ settings.voice = e.target.value; saveSettings(); applySettings(); };
+document.getElementById("s_voice").onchange = e=>{ settings.voice = e.target.value; settings.voiceChosen = true; saveSettings(); applySettings(); };
 document.getElementById("s_gvoice").onchange = e=>{ settings.gvoice = e.target.value; saveSettings(); };
 document.getElementById("s_gmodel").onchange = e=>{ settings.gmodel = e.target.value; saveSettings(); };
 document.getElementById("s_gkey").onchange = e=>{ store.set("sj_gkey", e.target.value.trim()); setVoiceInfo(e.target.value.trim() ? "Nyckel sparad. Tryck på Testa rösten." : ""); };
