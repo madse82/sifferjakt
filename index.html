@@ -616,7 +616,7 @@ function newGame(){
   secret = p[Math.floor(Math.random()*p.length)];
   guesses = []; cur = ""; over = false; busy = false;
   for(const k in keyState) delete keyState[k];
-  msg("Gissa en uträkning!");
+  msg("Gissa en uträkning!", false, true);
   buildBoard(); buildKeys(); render(); renderKnown();
   maybeQuiz();
 }
@@ -690,11 +690,11 @@ function buildKeys(){
 }
 
 let lastMsg = "";
-function msg(t, err){
+function msg(t, err, quiet){
   lastMsg = t;
   document.getElementById("msgT").textContent = t;
   document.getElementById("msg").classList.toggle("err", !!err);
-  autoSpeak(t);
+  if(quiet) prefetch(t); else autoSpeak(t);   /* quiet: never auto-read, the speaker button still works */
 }
 document.getElementById("msgSay").onclick = ()=>speak(lastMsg, true);
 
