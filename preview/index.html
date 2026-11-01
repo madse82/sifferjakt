@@ -272,7 +272,7 @@
     <p id="helpP">Hitta den hemliga uträkningen. Du har 6 försök. Varje försök måste vara en riktig uträkning.</p>
     <div class="ex" id="exRow"></div>
     <div class="exl" id="exList"></div>
-    <p class="small">Uppläsning, Lugnt läge och färger för färgblinda hittar du under inställningar.</p>
+    <p class="small">Uppläsning, Extra stöd och färger för färgblinda hittar du under inställningar.</p>
     <button class="big pri" id="helpClose">Nu kör vi!</button>
   </div>
 </div>
@@ -284,7 +284,7 @@
     <div class="vbox"><div class="vrow">Nivå
       <select id="s_level"><option value="0">Lätt: plus och minus till 9</option><option value="1">Medel: plus och minus till 20</option><option value="2">Svår: större tal och gånger</option></select>
     </div></div>
-    <label class="toggle main">Lugnt läge <input type="checkbox" id="s_calm"></label>
+    <label class="toggle main">Extra stöd <input type="checkbox" id="s_calm"></label>
     <p class="small">Slår på de fyra sakerna nedan på en gång. Du kan också välja en i taget.</p>
     <label class="toggle">Uppläsning (högtalarknapp) <input type="checkbox" id="s_tts"></label>
     <label class="toggle">Visa raden ”Det du vet” <input type="checkbox" id="s_known"></label>
@@ -1262,7 +1262,7 @@ document.addEventListener("keydown",e=>{
 /* ---------- init ---------- */
 const savedL = +(store.get("sj_level")||0); level = [0,1,2].includes(savedL)?savedL:0;
 if(store.get("sj_cb")==="1"){ cbT.checked=true; document.body.classList.add("cb"); }
-if(new URLSearchParams(location.search).get("lugnt")==="1" && store.get("sj_calmUrlDone")!=="1"){
+if(["stod","lugnt"].some(k=>new URLSearchParams(location.search).get(k)==="1") && store.get("sj_calmUrlDone")!=="1"){
   store.set("sj_calmUrlDone","1"); CALM_KEYS.forEach(k=>{ settings[k] = true; }); saveSettings();
 }
 showLevel();
