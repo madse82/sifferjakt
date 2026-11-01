@@ -165,6 +165,16 @@
   .opt.ok{background:var(--g);border-color:var(--g);color:#fff}
   .opt.no{opacity:.45}
   .fb{font-size:17px!important;color:var(--ink)!important;text-align:center}
+  /* word-web on the word card */
+  .web{display:flex;flex-direction:column;gap:8px;padding:10px 12px;border-radius:14px;background:var(--bg);border:2px solid var(--key)}
+  .web .wr{display:flex;align-items:flex-start;gap:8px;font-size:16px;font-weight:800;color:var(--ink)}
+  .web .wl{flex:none;width:92px;color:var(--ink2);font-size:13px;text-transform:uppercase;letter-spacing:.5px;padding-top:3px}
+  .web .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .web .chip{background:#fff;border:2px solid var(--key);border-radius:999px;padding:2px 10px}
+  /* recall with a cue ladder */
+  .cue{font-size:18px;font-weight:800;text-align:center;color:var(--ink);background:#fff;border:2px solid var(--key);border-radius:12px;padding:8px 10px;margin:0 0 8px}
+  .reveal{font-size:40px;font-weight:900;color:var(--accent);text-align:center;line-height:1.1}
+  #qHint{transition:opacity .4s} #qHint.wait{opacity:0;pointer-events:none}
   .ropt{display:flex;align-items:center;gap:12px;min-height:56px;padding:8px 12px;border:2px solid var(--key);border-radius:14px;
     background:#fff;font-size:17px;font-weight:800;color:var(--ink);text-align:left}
   .ropt .tile{--t:34px;--fs:18px;flex:none;border-radius:9px}
@@ -261,7 +271,7 @@
     <p id="helpP">Hitta den hemliga uträkningen. Du har 6 försök. Varje försök måste vara en riktig uträkning.</p>
     <div class="ex" id="exRow"></div>
     <div class="exl" id="exList"></div>
-    <p class="small">Uppläsning, Lugnt läge och färger för färgblinda hittar du under inställningar.</p>
+    <p class="small">Uppläsning, Extra stöd och färger för färgblinda hittar du under inställningar.</p>
     <button class="big pri" id="helpClose">Nu kör vi!</button>
   </div>
 </div>
@@ -273,7 +283,7 @@
     <div class="vbox"><div class="vrow">Nivå
       <select id="s_level"><option value="0">Lätt: plus och minus till 9</option><option value="1">Medel: plus och minus till 20</option><option value="2">Svår: större tal och gånger</option></select>
     </div></div>
-    <label class="toggle main">Lugnt läge <input type="checkbox" id="s_calm"></label>
+    <label class="toggle main">Extra stöd <input type="checkbox" id="s_calm"></label>
     <p class="small">Slår på de fyra sakerna nedan på en gång. Du kan också välja en i taget.</p>
     <label class="toggle">Uppläsning (högtalarknapp) <input type="checkbox" id="s_tts"></label>
     <label class="toggle">Visa raden ”Det du vet” <input type="checkbox" id="s_known"></label>
@@ -344,6 +354,10 @@
     <div class="word" id="wWord"></div>
     <div class="sentence" id="wSent"></div>
     <p class="def" id="wDef"></p>
+    <div class="web" id="wWeb">
+      <div class="wr"><span class="wl">Hör ihop med</span><span class="chips" id="wRel"></span></div>
+      <div class="wr"><span class="wl">Låter som</span><span id="wSnd"></span></div>
+    </div>
     <div class="btns">
       <button class="big sec" id="wSay">🔊 Lyssna</button>
       <button class="big pri" id="wDone">Klar</button>
@@ -356,6 +370,17 @@
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="qT">
     <div class="shead"><h2 id="qT">Kommer du ihåg?</h2><button class="say" id="qSay" aria-label="Läs upp"></button></div>
     <p class="sentence" id="qQ"></p>
+    <p class="def" id="qPrompt">Säg ordet högt. Ta den tid du behöver.</p>
+    <div id="qCues"></div>
+    <div class="btns" id="qStart">
+      <button class="big sec wait" id="qHint">💡 Ledtråd</button>
+      <button class="big pri" id="qReveal">Visa ordet</button>
+    </div>
+    <div id="qCheck" hidden>
+      <div class="reveal" id="qWord"></div>
+      <p class="def">Sa du samma ord?</p>
+      <div class="btns"><button class="big sec" id="qNo">Nej</button><button class="big pri" id="qYes">Ja!</button></div>
+    </div>
     <div class="opts" id="qGrid"></div>
     <p class="fb" id="qFb" hidden></p>
     <button class="big pri" id="qDone" hidden>Spela!</button>
@@ -564,10 +589,13 @@ function stopSpeech(){
   setBusy(false);
 }
 function deviceSpeak(text){
-  if(!ttsOK || !text) return;
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang = "sv-SE"; if(svVoice) u.voice = svVoice; u.rate = 0.9;
-  speechSynthesis.speak(u);
+  if(!ttsOK || !text) return Promise.resolve();
+  return new Promise(res=>{
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = "sv-SE"; if(svVoice) u.voice = svVoice; u.rate = 0.9;
+    u.onend = u.onerror = ()=>res(); setTimeout(res, 20000);
+    speechSynthesis.speak(u);
+  });
 }
 let voiceInfo = "";
 function setVoiceInfo(t){ voiceInfo = t; const el=document.getElementById("gStatus"); if(el) el.textContent = t; }
@@ -663,7 +691,17 @@ async function speak(parts, force){
       setBusy(false);
     }
   }
-  deviceSpeak(parts.join(" "));
+  return deviceSpeak(parts.join(" "));
+}
+/* several clips one after the other (e.g. word card + word-web); stops if anything else starts speaking */
+async function speakSeq(lists, force){
+  for(const p of lists){
+    const before = speakToken;
+    await speak(p, force);
+    if(speakToken !== before+1) return;
+    await new Promise(r=>setTimeout(r, 350));
+    if(speakToken !== before+1) return;
+  }
 }
 document.querySelectorAll(".say").forEach(b=>b.innerHTML = ICON_SPK);
 
@@ -977,6 +1015,18 @@ const TERMS = {
   "dubbelt":   {def:"Dubbelt betyder två gånger så mycket.",                                q:"Vad säger man när något är två gånger så mycket, som 6 plus 6?"},
   "hälften":   {def:"Hälften är en av två lika stora delar.",                               q:"Vad heter en av två lika stora delar?"}
 };
+/* word-web (Best et al.): linked words, a meaning cue, and a sound cue (first sound via a familiar word + syllables) */
+const WEB = {
+  "summa":     {rel:["plus","addition","lägga ihop"],       hint:"Det är svaret när man lägger ihop två tal, som 3 plus 4.", like:"sol",   syl:2},
+  "differens": {rel:["minus","subtraktion","skillnaden"],   hint:"Det är svaret när man tar bort, som 9 minus 4.",            like:"dag",   syl:3},
+  "produkt":   {rel:["gånger","multiplikation"],            hint:"Det är svaret när man tar gånger, som 3 gånger 4.",          like:"päron", syl:2},
+  "dubbelt":   {rel:["två gånger","lika mycket till"],      hint:"Det är när man tar ett tal två gånger, som 6 plus 6.",       like:"dag",   syl:2},
+  "hälften":   {rel:["dela på två","lika stora delar"],     hint:"Det är när man delar något i två lika stora delar.",         like:"hus",   syl:2}
+};
+const SYL = ["", "en stavelse", "två stavelser", "tre stavelser"];
+const relText = term => { const r = WEB[term].rel; return r.length>1 ? r.slice(0,-1).join(", ") + " och " + r[r.length-1] : r[0]; };
+const webSay  = term => [`${term[0].toUpperCase()+term.slice(1)} hör ihop med ${relText(term)}.`, `Det börjar som ${WEB[term].like} och har ${SYL[WEB[term].syl]}.`];
+const soundCue = term => `Det börjar som ${WEB[term].like} och har ${SYL[WEB[term].syl]}.`;
 function termOptions(p){
   const {a,op,b,c} = p, o = [];
   if(op==="+"){
@@ -1008,10 +1058,14 @@ function showWord(next){
   document.getElementById("wSent").textContent = sentence;
   document.getElementById("wDef").textContent = T.def;
   wordParts = [term, sentence, T.def];
+  const W = WEB[term];
+  document.getElementById("wRel").innerHTML = W.rel.map(r=>`<span class="chip">${r}</span>`).join("");
+  document.getElementById("wSnd").textContent = `börjar som ”${W.like}”, ${SYL[W.syl]}`;
   openStep("wordOv", next);
-  autoSpeak(wordParts);
+  if(settings.auto) speakSeq(cardLists()); else cardLists().forEach(prefetch);
 }
-document.getElementById("wSay").onclick = ()=>speak(wordParts, true);
+const cardLists = ()=>{ const t = document.getElementById("wWord").textContent; return WEB[t] ? [wordParts, webSay(t)] : [wordParts]; };
+document.getElementById("wSay").onclick = ()=>speakSeq(cardLists(), true);
 document.getElementById("wDone").onclick = ()=>done("wordOv");
 
 /* ---------- daily quiz: spaced recall of earlier words ---------- */
@@ -1028,26 +1082,57 @@ function maybeQuiz(){
   const others = Object.keys(TERMS).filter(k=>k!==term).sort(()=>Math.random()-.5).slice(0,2);
   const choices = [term, ...others].sort((x,y)=>x.localeCompare(y,"sv"));
   store.set("sj_quizDay", t);
-  document.getElementById("qQ").textContent = T.q;
-  const fb = document.getElementById("qFb"), doneBtn = document.getElementById("qDone"), grid = document.getElementById("qGrid");
-  fb.hidden = true; doneBtn.hidden = true; document.getElementById("qSkip").hidden = false;
-  grid.innerHTML = "";
-  choices.forEach(c=>{
-    const b = document.createElement("button");
-    b.className = "opt"; b.textContent = c; b.dataset.term = c;
-    b.onclick = ()=>{
-      [...grid.children].forEach(x=>{ x.disabled = true; if(x.dataset.term===term) x.classList.add("ok"); else if(x!==b) x.classList.add("no"); });
-      let text, sp;
-      if(c===term){ v.step = Math.min(v.step+1, INTERVALS.length-1); text = "Ja! " + T.def; sp = ["Ja!", T.def]; }
-      else { b.classList.add("no"); v.step = 0; text = `Det heter ${term}. ${T.def}`; sp = [`Det heter ${term}.`, T.def]; }
-      v.due = addDays(t, INTERVALS[v.step]); saveVocab();
-      fb.textContent = text; fb.hidden = false; doneBtn.hidden = false; document.getElementById("qSkip").hidden = true;
-      quizParts = sp;  /* the speaker button now reads the answer */
-      autoSpeak(sp);
-    };
-    grid.appendChild(b);
-  });
-  quizParts = [T.q, ...choices];
+  const $ = id=>document.getElementById(id);
+  const fb = $("qFb"), doneBtn = $("qDone"), grid = $("qGrid"), cues = $("qCues"), hintBtn = $("qHint");
+  let cueN = 0, hintTimer = null;
+  $("qQ").textContent = T.q;
+  fb.hidden = true; doneBtn.hidden = true; $("qSkip").hidden = false;
+  grid.innerHTML = ""; cues.innerHTML = "";
+  $("qPrompt").hidden = false; $("qStart").hidden = false; $("qCheck").hidden = true;
+  hintBtn.textContent = "💡 Ledtråd"; hintBtn.classList.add("wait");
+  hintTimer = setTimeout(()=>hintBtn.classList.remove("wait"), 4000);   /* wait first, then offer help */
+
+  /* finish: retrieved without help moves the word on; with cues it stays; a miss starts over */
+  const finish = (ok, viaOptions)=>{
+    clearTimeout(hintTimer);
+    if(!ok) v.step = 0;
+    else if(cueN===0 && !viaOptions) v.step = Math.min(v.step+1, INTERVALS.length-1);
+    v.due = addDays(t, INTERVALS[v.step]); saveVocab();
+    const sp = ok ? [viaOptions ? "Ja!" : "Bra!", T.def] : [`Det heter ${term}.`, T.def];
+    fb.textContent = sp.join(" "); fb.hidden = false; doneBtn.hidden = false; $("qSkip").hidden = true;
+    $("qStart").hidden = true; $("qPrompt").hidden = true;
+    quizParts = sp; autoSpeak(sp);
+  };
+  const addCue = text=>{ const d = document.createElement("p"); d.className = "cue"; d.textContent = text; cues.appendChild(d); quizParts = [text]; autoSpeak(text); };
+  const showOptions = ()=>{
+    $("qStart").hidden = true; $("qPrompt").hidden = true;
+    choices.forEach(c=>{
+      const b = document.createElement("button");
+      b.className = "opt"; b.textContent = c; b.dataset.term = c;
+      b.onclick = ()=>{
+        [...grid.children].forEach(x=>{ x.disabled = true; if(x.dataset.term===term) x.classList.add("ok"); else if(x!==b) x.classList.add("no"); });
+        if(c!==term) b.classList.add("no");
+        finish(c===term, true);
+      };
+      grid.appendChild(b);
+    });
+    quizParts = [T.q, ...choices]; autoSpeak(quizParts);
+  };
+  hintBtn.onclick = ()=>{
+    cueN++;
+    if(cueN===1){ addCue(WEB[term].hint); }
+    else if(cueN===2){ addCue(soundCue(term)); hintBtn.textContent = "Visa förslag"; }
+    else showOptions();
+  };
+  $("qReveal").onclick = ()=>{
+    clearTimeout(hintTimer);
+    $("qStart").hidden = true; $("qPrompt").hidden = true; cues.innerHTML = "";
+    $("qWord").textContent = term; $("qCheck").hidden = false;
+    quizParts = [`Ordet är ${term}.`, "Sa du samma ord?"]; autoSpeak(quizParts);
+  };
+  $("qYes").onclick = ()=>{ $("qCheck").hidden = true; finish(true, false); };
+  $("qNo").onclick  = ()=>{ $("qCheck").hidden = true; finish(false, false); };
+  quizParts = [T.q, "Säg ordet högt."];
   openStep("quizOv", null);
   autoSpeak(quizParts);
 }
@@ -1188,7 +1273,7 @@ document.addEventListener("keydown",e=>{
 /* ---------- init ---------- */
 const savedL = +(store.get("sj_level")||0); level = [0,1,2].includes(savedL)?savedL:0;
 if(store.get("sj_cb")==="1"){ cbT.checked=true; document.body.classList.add("cb"); }
-if(new URLSearchParams(location.search).get("lugnt")==="1" && store.get("sj_calmUrlDone")!=="1"){
+if(["stod","lugnt"].some(k=>new URLSearchParams(location.search).get(k)==="1") && store.get("sj_calmUrlDone")!=="1"){
   store.set("sj_calmUrlDone","1"); CALM_KEYS.forEach(k=>{ settings[k] = true; }); saveSettings();
 }
 showLevel();
