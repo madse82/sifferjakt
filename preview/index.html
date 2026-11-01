@@ -166,12 +166,11 @@
   .opt.no{opacity:.45}
   .fb{font-size:17px!important;color:var(--ink)!important;text-align:center}
   /* word-web on the word card */
-  .web{position:relative;display:flex;flex-direction:column;gap:8px;padding:10px 54px 10px 12px;border-radius:14px;background:var(--bg);border:2px solid var(--key)}
+  .web{display:flex;flex-direction:column;gap:8px;padding:10px 12px;border-radius:14px;background:var(--bg);border:2px solid var(--key)}
   .web .wr{display:flex;align-items:flex-start;gap:8px;font-size:16px;font-weight:800;color:var(--ink)}
   .web .wl{flex:none;width:92px;color:var(--ink2);font-size:13px;text-transform:uppercase;letter-spacing:.5px;padding-top:3px}
   .web .chips{display:flex;flex-wrap:wrap;gap:6px}
   .web .chip{background:#fff;border:2px solid var(--key);border-radius:999px;padding:2px 10px}
-  .web .say{position:absolute;top:8px;right:8px}
   /* recall with a cue ladder */
   .cue{font-size:18px;font-weight:800;text-align:center;color:var(--ink);background:#fff;border:2px solid var(--key);border-radius:12px;padding:8px 10px;margin:0 0 8px}
   .reveal{font-size:40px;font-weight:900;color:var(--accent);text-align:center;line-height:1.1}
@@ -358,7 +357,6 @@
     <div class="web" id="wWeb">
       <div class="wr"><span class="wl">Hör ihop med</span><span class="chips" id="wRel"></span></div>
       <div class="wr"><span class="wl">Låter som</span><span id="wSnd"></span></div>
-      <button class="say" id="wWebSay" aria-label="Läs upp ordnätet"></button>
     </div>
     <div class="btns">
       <button class="big sec" id="wSay">🔊 Lyssna</button>
@@ -591,10 +589,13 @@ function stopSpeech(){
   setBusy(false);
 }
 function deviceSpeak(text){
-  if(!ttsOK || !text) return;
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang = "sv-SE"; if(svVoice) u.voice = svVoice; u.rate = 0.9;
-  speechSynthesis.speak(u);
+  if(!ttsOK || !text) return Promise.resolve();
+  return new Promise(res=>{
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = "sv-SE"; if(svVoice) u.voice = svVoice; u.rate = 0.9;
+    u.onend = u.onerror = ()=>res(); setTimeout(res, 20000);
+    speechSynthesis.speak(u);
+  });
 }
 let voiceInfo = "";
 function setVoiceInfo(t){ voiceInfo = t; const el=document.getElementById("gStatus"); if(el) el.textContent = t; }
@@ -690,7 +691,17 @@ async function speak(parts, force){
       setBusy(false);
     }
   }
-  deviceSpeak(parts.join(" "));
+  return deviceSpeak(parts.join(" "));
+}
+/* several clips one after the other (e.g. word card + word-web); stops if anything else starts speaking */
+async function speakSeq(lists, force){
+  for(const p of lists){
+    const before = speakToken;
+    await speak(p, force);
+    if(speakToken !== before+1) return;
+    await new Promise(r=>setTimeout(r, 350));
+    if(speakToken !== before+1) return;
+  }
 }
 document.querySelectorAll(".say").forEach(b=>b.innerHTML = ICON_SPK);
 
@@ -1051,10 +1062,10 @@ function showWord(next){
   document.getElementById("wRel").innerHTML = W.rel.map(r=>`<span class="chip">${r}</span>`).join("");
   document.getElementById("wSnd").textContent = `börjar som ”${W.like}”, ${SYL[W.syl]}`;
   openStep("wordOv", next);
-  autoSpeak(wordParts);
+  if(settings.auto) speakSeq(cardLists()); else cardLists().forEach(prefetch);
 }
-document.getElementById("wSay").onclick = ()=>speak(wordParts, true);
-document.getElementById("wWebSay").onclick = ()=>{ const t = document.getElementById("wWord").textContent; if(WEB[t]) speak(webSay(t), true); };
+const cardLists = ()=>{ const t = document.getElementById("wWord").textContent; return WEB[t] ? [wordParts, webSay(t)] : [wordParts]; };
+document.getElementById("wSay").onclick = ()=>speakSeq(cardLists(), true);
 document.getElementById("wDone").onclick = ()=>done("wordOv");
 
 /* ---------- daily quiz: spaced recall of earlier words ---------- */
