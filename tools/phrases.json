@@ -259,6 +259,16 @@
    "text": "Vad heter svaret när man plussar? dubbelt. hälften. summa."
   },
   {
+   "id": "ccf837ef",
+   "kind": "quiz",
+   "text": "Vad heter svaret när man plussar? Säg ordet högt."
+  },
+  {
+   "id": "50a5b41c",
+   "kind": "quiz",
+   "text": "Ordet är summa. Sa du samma ord?"
+  },
+  {
    "id": "99d6073b",
    "kind": "quiz",
    "text": "Vad heter svaret när man tar minus? differens. produkt. summa."
@@ -287,6 +297,16 @@
    "id": "69f83a4e",
    "kind": "quiz",
    "text": "Vad heter svaret när man tar minus? differens. dubbelt. hälften."
+  },
+  {
+   "id": "81e8ed44",
+   "kind": "quiz",
+   "text": "Vad heter svaret när man tar minus? Säg ordet högt."
+  },
+  {
+   "id": "c2c7a235",
+   "kind": "quiz",
+   "text": "Ordet är differens. Sa du samma ord?"
   },
   {
    "id": "3ce79764",
@@ -319,6 +339,16 @@
    "text": "Vad heter svaret när man gångrar? dubbelt. hälften. produkt."
   },
   {
+   "id": "03f4b469",
+   "kind": "quiz",
+   "text": "Vad heter svaret när man gångrar? Säg ordet högt."
+  },
+  {
+   "id": "ce9db44e",
+   "kind": "quiz",
+   "text": "Ordet är produkt. Sa du samma ord?"
+  },
+  {
    "id": "18a2c06d",
    "kind": "quiz",
    "text": "Vad säger man när något är två gånger så mycket, som sex plus sex? differens. dubbelt. summa."
@@ -347,6 +377,16 @@
    "id": "aca7254a",
    "kind": "quiz",
    "text": "Vad säger man när något är två gånger så mycket, som sex plus sex? dubbelt. hälften. produkt."
+  },
+  {
+   "id": "e188b1d1",
+   "kind": "quiz",
+   "text": "Vad säger man när något är två gånger så mycket, som sex plus sex? Säg ordet högt."
+  },
+  {
+   "id": "6b60ea4f",
+   "kind": "quiz",
+   "text": "Ordet är dubbelt. Sa du samma ord?"
   },
   {
    "id": "b037b8c0",
@@ -379,6 +419,66 @@
    "text": "Vad heter en av två lika stora delar? dubbelt. hälften. produkt."
   },
   {
+   "id": "d04a030b",
+   "kind": "quiz",
+   "text": "Vad heter en av två lika stora delar? Säg ordet högt."
+  },
+  {
+   "id": "a4e393d0",
+   "kind": "quiz",
+   "text": "Ordet är hälften. Sa du samma ord?"
+  },
+  {
+   "id": "07258cb8",
+   "kind": "quiz-cue",
+   "text": "Det är svaret när man lägger ihop två tal, som tre plus fyra."
+  },
+  {
+   "id": "5dd7007b",
+   "kind": "quiz-cue",
+   "text": "Det börjar som sol och har två stavelser."
+  },
+  {
+   "id": "04fbc54a",
+   "kind": "quiz-cue",
+   "text": "Det är svaret när man tar bort, som nio minus fyra."
+  },
+  {
+   "id": "6f0bd0cd",
+   "kind": "quiz-cue",
+   "text": "Det börjar som dag och har tre stavelser."
+  },
+  {
+   "id": "e070c6f6",
+   "kind": "quiz-cue",
+   "text": "Det är svaret när man tar gånger, som tre gånger fyra."
+  },
+  {
+   "id": "24739f44",
+   "kind": "quiz-cue",
+   "text": "Det börjar som päron och har två stavelser."
+  },
+  {
+   "id": "913f7b47",
+   "kind": "quiz-cue",
+   "text": "Det är när man tar ett tal två gånger, som sex plus sex."
+  },
+  {
+   "id": "f6d21f61",
+   "kind": "quiz-cue",
+   "text": "Det börjar som dag och har två stavelser."
+  },
+  {
+   "id": "ea2edefb",
+   "kind": "quiz-cue",
+   "text": "Det är när man delar något i två lika stora delar."
+  },
+  {
+   "id": "cdd6b925",
+   "kind": "quiz-cue",
+   "text": "Det börjar som hus och har två stavelser."
+  },
+  {
    "id": "2609913f",
    "kind": "quiz-answer",
    "text": "Ja! Summan är svaret när man plussar."
@@ -387,6 +487,11 @@
    "id": "a5778619",
    "kind": "quiz-answer",
    "text": "Det heter summa. Summan är svaret när man plussar."
+  },
+  {
+   "id": "ccd51e77",
+   "kind": "quiz-answer",
+   "text": "Bra! Summan är svaret när man plussar."
   },
   {
    "id": "b2e500af",
@@ -399,6 +504,11 @@
    "text": "Det heter differens. Differensen är svaret när man tar minus. Man kan också säga skillnaden."
   },
   {
+   "id": "3cedcc57",
+   "kind": "quiz-answer",
+   "text": "Bra! Differensen är svaret när man tar minus. Man kan också säga skillnaden."
+  },
+  {
    "id": "ec2e4120",
    "kind": "quiz-answer",
    "text": "Ja! Produkten är svaret när man gångrar."
@@ -407,6 +517,11 @@
    "id": "d7f0f114",
    "kind": "quiz-answer",
    "text": "Det heter produkt. Produkten är svaret när man gångrar."
+  },
+  {
+   "id": "1311c488",
+   "kind": "quiz-answer",
+   "text": "Bra! Produkten är svaret när man gångrar."
   },
   {
    "id": "b9557200",
@@ -419,6 +534,11 @@
    "text": "Det heter dubbelt. Dubbelt betyder två gånger så mycket."
   },
   {
+   "id": "5c0cc068",
+   "kind": "quiz-answer",
+   "text": "Bra! Dubbelt betyder två gånger så mycket."
+  },
+  {
    "id": "2c0eec6d",
    "kind": "quiz-answer",
    "text": "Ja! Hälften är en av två lika stora delar."
@@ -427,6 +547,36 @@
    "id": "49ce22b7",
    "kind": "quiz-answer",
    "text": "Det heter hälften. Hälften är en av två lika stora delar."
+  },
+  {
+   "id": "7f0b6d55",
+   "kind": "quiz-answer",
+   "text": "Bra! Hälften är en av två lika stora delar."
+  },
+  {
+   "id": "7a53b4a9",
+   "kind": "word-card",
+   "text": "Summa hör ihop med plus, addition och lägga ihop. Det börjar som sol och har två stavelser."
+  },
+  {
+   "id": "e981e3fe",
+   "kind": "word-card",
+   "text": "Differens hör ihop med minus, subtraktion och skillnaden. Det börjar som dag och har tre stavelser."
+  },
+  {
+   "id": "cecdc355",
+   "kind": "word-card",
+   "text": "Produkt hör ihop med gånger och multiplikation. Det börjar som päron och har två stavelser."
+  },
+  {
+   "id": "fd900edd",
+   "kind": "word-card",
+   "text": "Dubbelt hör ihop med två gånger och lika mycket till. Det börjar som dag och har två stavelser."
+  },
+  {
+   "id": "dc5a2182",
+   "kind": "word-card",
+   "text": "Hälften hör ihop med dela på två och lika stora delar. Det börjar som hus och har två stavelser."
   },
   {
    "id": "6e6d76ec",

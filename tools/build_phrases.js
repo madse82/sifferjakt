@@ -27,6 +27,10 @@ const path = require('path'), fs = require('fs');
         add([T.q, ...[term, rest[i], rest[j]].sort((x,y)=>x.localeCompare(y,"sv"))], "quiz");
       }
       add(["Ja!", T.def], "quiz-answer"); add([`Det heter ${term}.`, T.def], "quiz-answer");
+      if(typeof WEB!=="undefined" && WEB[term]){   // cue ladder + word-web (v6)
+        add([T.q, "Säg ordet högt."], "quiz"); add(WEB[term].hint, "quiz-cue"); add(soundCue(term), "quiz-cue");
+        add([`Ordet är ${term}.`, "Sa du samma ord?"], "quiz"); add(["Bra!", T.def], "quiz-answer"); add(webSay(term), "word-card");
+      }
     }
     for(const l of [0,1]) for(const s of pool(l)){
       add(`Svaret var ${s}. Försök igen!`, "answer");
@@ -41,7 +45,7 @@ const path = require('path'), fs = require('fs');
             phrases:[...list].map(([text,kind])=>({id:phraseId(text), kind, text}))};
   });
   // most useful first, so a partial library (daily limits) already covers the common cases
-  const order = ["intro","fixed","help","test","reflect","quiz","quiz-answer","word-card","answer","hint"];
+  const order = ["intro","fixed","help","test","reflect","quiz","quiz-cue","quiz-answer","word-card","answer","hint"];
   out.phrases.sort((x,y)=>order.indexOf(x.kind)-order.indexOf(y.kind));
   const ids = new Set(out.phrases.map(x=>x.id));
   if(ids.size !== out.phrases.length) throw new Error("hash collision");
