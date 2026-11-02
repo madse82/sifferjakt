@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<rect width="512" height="512" rx="112" fill="#2463c7"/>
+<g stroke="#fff" stroke-opacity=".55" stroke-width="14" stroke-linecap="round"><line x1="256" y1="256" x2="126" y2="181"/><line x1="256" y1="256" x2="256" y2="106"/><line x1="256" y1="256" x2="386" y2="181"/><line x1="256" y1="256" x2="386" y2="331"/><line x1="256" y1="256" x2="256" y2="406"/><line x1="256" y1="256" x2="126" y2="331"/></g>
+<g fill="#fff"><rect x="90" y="151" width="72" height="60" rx="18"/><rect x="220" y="76" width="72" height="60" rx="18"/><rect x="350" y="151" width="72" height="60" rx="18"/><rect x="350" y="301" width="72" height="60" rx="18"/><rect x="220" y="376" width="72" height="60" rx="18"/><rect x="90" y="301" width="72" height="60" rx="18"/></g>
+<circle cx="256" cy="256" r="78" fill="#fff8ef"/>
+<text x="256" y="296" text-anchor="middle" font-family="Nunito,Arial Rounded MT Bold,Arial,sans-serif" font-weight="900" font-size="118" fill="#2463c7">?</text>
+</svg>
