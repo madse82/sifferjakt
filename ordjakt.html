@@ -61,7 +61,12 @@
   #center{position:relative;z-index:1;grid-column:2;grid-row:2;align-self:center;justify-self:center;width:112px;height:112px;border-radius:50%;
     background:var(--ink);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;
     font-size:46px;font-weight:900;border:5px solid #fff;box-shadow:0 2px 10px rgba(43,45,66,.25)}
-  #center .w{font-size:17px;margin-top:2px;letter-spacing:.3px}
+  #center .em{margin-top:-14px}
+  /* the word sits on its own white label so long words stay readable and may stick out past the circle */
+  #center .w{position:absolute;left:50%;bottom:6px;transform:translateX(-50%);white-space:nowrap;
+    background:#fff;color:var(--ink);font-size:17px;font-weight:900;letter-spacing:.3px;line-height:1;
+    padding:6px 12px;border-radius:14px;box-shadow:0 1px 6px rgba(43,45,66,.25)}
+  #center .w:empty{display:none}
   #center.solved{background:var(--g)}
   #center.solved .em{animation:popin .5s cubic-bezier(.2,.9,.3,1.3) both}
   @keyframes popin{from{transform:scale(.3);opacity:0}to{transform:none;opacity:1}}
