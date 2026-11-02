@@ -43,6 +43,11 @@
   .clue .lb{font-size:11px;font-weight:900;letter-spacing:.4px;text-transform:uppercase;color:var(--ink2)}
   .clue.locked{background:repeating-linear-gradient(135deg,#f6f1e9 0 8px,#fbf8f3 8px 16px);color:var(--ink2)}
   .clue.locked .tx{display:none}
+  .clue.avail{border-color:var(--accent);border-style:dashed}
+  .seg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;padding:3px;border-radius:14px;background:var(--key)}
+  .seg button{min-height:46px;border:0;border-radius:11px;background:transparent;color:var(--ink2);font-size:13.5px;font-weight:800;line-height:1.15;padding:4px}
+  .seg button.on{background:#fff;color:var(--ink);font-weight:900;box-shadow:0 1px 3px rgba(43,45,66,.18)}
+  .ord{font-size:15px;letter-spacing:1px}
   .clue.next{border-color:var(--accent);animation:pulse 1.6s ease-in-out infinite}
   @keyframes pulse{50%{transform:scale(1.04)}}
   .clue.open{border-color:var(--sem)}
@@ -196,7 +201,8 @@ function speakText(word, k){
 const GIVEUP_END="Nu vet du det. Vi övar på det igen i morgon.";
 const FIXED=["Säg ordet högt!","Var det samma ord som du sa?","Bra försök! Ta en ledtråd till.","Snyggt! Vad hjälpte dig mest?",
   "Vad heter den här?","Kom du på det?","Klart! Bra jobbat!",GIVEUP_END,
-  "Bra jobbat i dag! Ett nytt ord väntar i morgon.","Du har hittat alla orden! Be en vuxen lägga till fler."];
+  "Bra jobbat i dag! Ett nytt ord väntar i morgon.","Du har hittat alla orden! Be en vuxen lägga till fler.",
+  "Välj en ledtråd!","Ljudledtrådarna öppnas när du har läst två andra."];
 const gaveUpLine=w=>`Ordet är ${w}.`;
 /* every phrase the clip library should contain (tools/build_phrases.js reads this) */
 function libraryPhrases(){
@@ -208,7 +214,7 @@ function libraryPhrases(){
 
 /* ---------- storage ---------- */
 const KEY="ordjakt.v1";
-const DEF={custom:[],disabled:{},prog:{},stars:0,set:{auto:true,test:true,lib:true},lastNew:"",helped:{},introSeen:false,done:0};
+const DEF={custom:[],disabled:{},prog:{},stars:0,set:{auto:true,test:true,lib:true,order:"fast"},lastNew:"",helped:{},introSeen:false,done:0};
 let S;
 try{ S=Object.assign(structuredClone(DEF), JSON.parse(localStorage.getItem(KEY)||"{}")); }catch(e){ S=structuredClone(DEF); }
 S.set=Object.assign({},DEF.set,S.set||{});
@@ -251,7 +257,7 @@ function playSeq(parts,i,tok){
 
 /* ---------- game state ---------- */
 const $=s=>document.querySelector(s);
-let G=null;      // {word, revealed, cur, phase:'play'|'done'|'rest', gaveUp}
+let G=null;      // {word, opened:[clue indices in the order she opened them], cur, phase:'play'|'done'|'rest', gaveUp}
 let sayNow="";   // text the 🔊 button reads
 
 function pickNew(){
@@ -262,9 +268,23 @@ function startGame(){
   const canNew = S.set.test || S.lastNew!==today();
   const w = canNew ? pickNew() : null;
   if(!w){ G={phase:"rest"}; render(); return; }
-  G={word:w, revealed:1, cur:0, phase:"play", gaveUp:false};
-  render(true);
-  if(S.set.auto) setTimeout(()=>say(speakText(w,TYPES[0].k)),350);
+  G={word:w, opened:[], cur:null, phase:"play", gaveUp:false, flip:null, mode:S.set.order};
+  if(G.mode==="fast"){ G.opened=[0]; G.cur=0; G.flip=0; }
+  render();
+  if(S.set.auto) setTimeout(()=>say(G.cur===null? FIXED[10] : speakText(w,TYPES[0].k)),350);
+}
+/* clue order modes: "fast" = fixed order, "mix" = meaning clues free and sound clues after two meaning clues, "fri" = free */
+function canOpen(i){
+  if(G.opened.includes(i)) return false;
+  const m=G.mode;
+  if(m==="fri") return true;
+  if(m==="mix") return !TYPES[i].pho || G.opened.filter(j=>!TYPES[j].pho).length>=2;
+  return i===G.opened.length;
+}
+function nextIdx(){ for(let i=0;i<6;i++) if(canOpen(i)) return i; return null; }
+function openClue(i){
+  G.opened.push(i); G.cur=i; G.flip=i; render();
+  if(S.set.auto) say(speakText(G.word,TYPES[i].k));
 }
 
 function starsFor(n){ return n<=2?3:n<=4?2:1; }
@@ -289,14 +309,16 @@ function render(flipFirst){
 
   const w=G.word, done=G.phase==="done";
   clues.forEach((c,i)=>{
-    const t=TYPES[i], open = done || i<G.revealed, isNext = !done && i===G.revealed;
-    c.className="clue"+(open?" open":" locked")+(t.pho?" pho":"")+(isNext?" next":"")+(!done&&open&&i===G.cur?" cur":"")+(flipFirst&&i===G.revealed-1&&!done?" flip":"");
+    const t=TYPES[i], open = done || G.opened.includes(i), avail = !done && canOpen(i);
+    c.className="clue"+(open?" open":" locked")+(t.pho?" pho":"")+(avail?(G.mode==="fast"?" next":" avail"):"")+(!done&&open&&i===G.cur?" cur":"")+(!done&&i===G.flip?" flip":"");
     c.innerHTML=`<div class="ic">${t.ic}</div><div class="lb">${t.lb}</div><div class="tx">${open?esc(clueText(w,t.k)):""}</div>`;
     c.onclick=()=>{
-      if(done || i<G.revealed){ G.cur=i; render(); say(speakText(w,t.k)); }
-      else if(i===G.revealed){ nextClue(); }
+      if(open){ G.cur=i; G.flip=null; render(); say(speakText(w,t.k)); }
+      else if(avail){ openClue(i); }
+      else if(G.mode==="mix" && t.pho){ setMsg(FIXED[11], "Inte än"); say(FIXED[11]); }
     };
   });
+  G.flip=null;
   C.className=done?"solved":"";
   C.innerHTML=done?`<div class="em">${w.e||"⭐"}</div><div class="w">${esc(w.w)}</div>`:`<div class="em">?</div>`;
   C.onclick=done?()=>say(w.w):null;
@@ -308,13 +330,13 @@ function render(flipFirst){
       (more?`<button class="big pri" onclick="startGame()">Nästa ord ➜</button>`:`<button class="big pri" onclick="startGame()">Klar ✔︎</button>`);
     $("#foot").textContent = dueList().length? "" : "";
   } else {
-    const t=TYPES[G.cur];
-    setMsg(esc(clueText(w,t.k)), `Ledtråd ${G.cur+1}: ${t.hint}`, speakText(w,t.k));
-    const left=6-G.revealed;
+    if(G.cur===null) setMsg(FIXED[10], G.mode==="mix"?"Börja med en ledtråd om betydelsen":"Du väljer", FIXED[10]);
+    else { const t=TYPES[G.cur]; setMsg(esc(clueText(w,t.k)), `Ledtråd ${G.opened.indexOf(G.cur)+1}: ${t.hint}`, speakText(w,t.k)); }
+    const left=6-G.opened.length;
     $("#actions").innerHTML=
       `<button class="big sec" onclick="nextClue()">${left?`💡 Ny ledtråd`:`👀 Visa ordet`}</button>`+
-      `<button class="big pri" onclick="iKnow()">🙋 Jag vet!</button>`;
-    const st=starsFor(G.revealed);
+      `<button class="big pri" onclick="iKnow()" ${G.opened.length?"":"disabled"}>🙋 Jag vet!</button>`;
+    const st=starsFor(Math.max(1,G.opened.length));
     $("#foot").textContent=`Gissar du nu: ${"⭐".repeat(st)}${left?` · ${left} ledtrådar kvar`:""}`;
   }
   drawLines();
@@ -335,9 +357,8 @@ addEventListener("resize",()=>G&&drawLines());
 /* ---------- actions ---------- */
 function nextClue(){
   if(G.phase!=="play") return;
-  if(G.revealed>=6){ giveUp(); return; }
-  G.cur=G.revealed; G.revealed++; render(true);
-  if(S.set.auto) say(speakText(G.word,TYPES[G.cur].k));
+  if(G.opened.length>=6){ giveUp(); return; }
+  const i=nextIdx(); if(i!==null) openClue(i);
 }
 function iKnow(){
   S.introSeen=true; save();
@@ -360,9 +381,9 @@ function notYet(){
   if(S.set.auto) say(sayNow);
 }
 function solved(){
-  const st=starsFor(G.revealed);
+  const st=starsFor(G.opened.length);
   finish(st);
-  const opts=TYPES.slice(0,G.revealed).map((t,i)=>`<button class="opt" onclick="helped('${t.k}')"><span class="ic">${t.ic}</span>${t.lb}</button>`).join("")+
+  const opts=G.opened.map(i=>TYPES[i]).map(t=>`<button class="opt" onclick="helped('${t.k}')"><span class="ic">${t.ic}</span>${t.lb}</button>`).join("")+
     `<button class="opt" onclick="helped('visste')"><span class="ic">⚡</span>Jag bara visste</button>`;
   sheet(`<h2>${"⭐".repeat(st)}</h2><p><b>Snyggt!</b> Vad hjälpte dig mest att hitta ordet?</p><div class="opts">${opts}</div>`);
   say("Snyggt! Vad hjälpte dig mest?");
@@ -378,7 +399,7 @@ function giveUp(){
 function finish(st){
   const w=G.word.w;
   S.stars+=st; S.done++;
-  S.prog[w]={stage:0, due:addDays(INTERVALS[0]), stars:st, clues:G.revealed, gaveUp:st===0, helped:null, first:today(), hist:[]};
+  S.prog[w]={stage:0, due:addDays(INTERVALS[0]), stars:st, clues:G.opened.length, order:G.opened.map(i=>TYPES[i].k), mode:G.mode, gaveUp:st===0, helped:null, first:today(), hist:[]};
   S.lastNew=today(); S.introSeen=true; save();
 }
 
@@ -426,19 +447,26 @@ function openSettings(){
   const ws=allWords();
   const custom=new Set(S.custom.map(w=>w.w));
   const list=ws.map(w=>{ const p=S.prog[w.w];
-    const st=!p?"ny":p.stage>=INTERVALS.length?"kan ✓":`${p.gaveUp?"visades":"⭐".repeat(p.stars)} · ${p.clues} ledtr. · nästa ${p.due}`;
+    const ic=k=>(TYPES.find(t=>t.k===k)||{}).ic||"";
+    const ord=p&&p.order?` · <span class="ord">${p.order.map(ic).join("")}</span>`:"";
+    const st=!p?"ny":p.stage>=INTERVALS.length?"kan ✓":`${p.gaveUp?"visades":"⭐".repeat(p.stars)} · ${p.clues} ledtr.${ord} · nästa ${p.due}`;
     return `<div class="wi ${S.disabled[w.w]?"off":""}"><span class="e">${w.e||"·"}</span><span class="n">${esc(w.w)}<div class="st">${st}</div></span>
       <button onclick="toggleWord('${esc(w.w)}')">${S.disabled[w.w]?"På":"Av"}</button>${custom.has(w.w)?`<button onclick="delWord('${esc(w.w)}')">🗑</button>`:""}</div>`; }).join("");
   const tot=Object.values(S.helped).reduce((a,b)=>a+b,0);
   const helpedStr=tot? Object.entries(S.helped).sort((a,b)=>b[1]-a[1]).map(([k,n])=>{const t=TYPES.find(t=>t.k===k); return `${t?t.ic+" "+t.lb:"⚡ Bara visste"}: ${n}`;}).join("<br>") : "Inga svar än.";
+  const freeFirst={}; Object.values(S.prog).forEach(p=>{ if(p.mode&&p.mode!=="fast"&&p.order&&p.order[0]) freeFirst[p.order[0]]=(freeFirst[p.order[0]]||0)+1; });
+  const firstStr=Object.keys(freeFirst).length? "<br><br><b>Första ledtråden hon valde själv</b><br>"+Object.entries(freeFirst).sort((a,b)=>b[1]-a[1]).map(([k,n])=>{const t=TYPES.find(t=>t.k===k); return `${t.ic} ${t.lb}: ${n}`;}).join("<br>") : "";
   const solved=Object.values(S.prog); const avg=solved.length?(solved.reduce((a,p)=>a+p.clues,0)/solved.length).toFixed(1):"–";
   sheet(`<h2>För vuxna</h2>
     <div class="sec-h">Inställningar</div>
     <div class="row"><span>Läs upp automatiskt<small>Ledtrådar läses upp när de visas</small></span><button class="tog ${S.set.auto?"on":""}" onclick="tog('auto')"></button></div>
     <div class="row"><span>Inspelad röst<small>${LIB.ids.size?`${LIB.ids.size} inspelade fraser (${LIB.voice}). Egna ord läses med enhetens röst.`:"Inga inspelningar hittades, enhetens röst används."}</small></span><button class="tog ${S.set.lib?"on":""}" onclick="tog('lib')"></button></div>
+    <div class="row" style="flex-direction:column;align-items:stretch"><span>Ledtrådarnas ordning<small>Gäller från nästa ord</small></span>
+      <div class="seg">${[["fast","I ordning"],["mix","Betydelse först"],["fri","Helt fritt"]].map(([k,l])=>`<button class="${S.set.order===k?"on":""}" onclick="setOrder('${k}')">${l}</button>`).join("")}</div>
+      <small style="font-weight:700;color:var(--ink2)">${{fast:"Ledtrådarna kommer en i taget, betydelse först och ljud sist.",mix:"Hon väljer fritt bland de fyra betydelseledtrådarna. Ljudledtrådarna öppnas efter två av dem.",fri:"Hon väljer fritt bland alla sex."}[S.set.order]}</small></div>
     <div class="row"><span>Testläge<small>Alla ord direkt, inte ett ord per dag</small></span><button class="tog ${S.set.test?"on":""}" onclick="tog('test')"></button></div>
     <div class="sec-h">Hur det går</div>
-    <div class="stat">Ord hittade: <b>${solved.length}</b> · snitt <b>${avg}</b> ledtrådar per ord<br><br><b>Vad hjälpte mest?</b><br>${helpedStr}</div>
+    <div class="stat">Ord hittade: <b>${solved.length}</b> · snitt <b>${avg}</b> ledtrådar per ord<br><br><b>Vad hjälpte mest?</b><br>${helpedStr}${firstStr}</div>
     <div class="sec-h">Orden</div>
     <div class="wl">${list}</div>
     <div class="sec-h">Lägg till ord (t.ex. veckans skolord)</div>
@@ -456,6 +484,7 @@ function openSettings(){
     <div class="note">Allt sparas bara på den här enheten.</div>
     <button class="big sec" onclick="closeOv();render()">Stäng</button>`);
 }
+function setOrder(k){ S.set.order=k; save(); openSettings(); }
 function tog(k){ S.set[k]=!S.set[k]; save(); openSettings(); }
 function toggleWord(w){ S.disabled[w]=!S.disabled[w]; save(); openSettings(); }
 function delWord(w){ S.custom=S.custom.filter(x=>x.w!==w); delete S.prog[w]; save(); openSettings(); }
