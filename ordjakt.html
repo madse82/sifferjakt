@@ -79,6 +79,8 @@
   .big:disabled{opacity:.45}
 
   #intro{padding:12px 14px;border-radius:16px;background:#fff;border:2px solid var(--key)}
+  #intro .ih{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  #intro .ih .say{width:40px;height:40px;font-size:18px}
   #intro .it{font-size:13px;font-weight:900;color:var(--ink2);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px}
   #intro ol{margin:0;padding-left:20px;font-size:15px;font-weight:800;line-height:1.5}
 
@@ -135,10 +137,10 @@
   </header>
 
   <div id="intro" hidden>
-    <div class="it">Så spelar du</div>
+    <div class="ih"><div class="it">Så spelar du</div><button class="say" id="introSay" aria-label="Läs upp">🔊</button></div>
     <ol>
       <li>Ett ord gömmer sig i mitten.</li>
-      <li>Läs ledtrådarna en i taget. Färre ledtrådar = fler stjärnor.</li>
+      <li>Öppna ledtrådar, en i taget. Färre ledtrådar = fler stjärnor.</li>
       <li>Vet du ordet? Tryck <b>Jag vet!</b> och säg det högt.</li>
     </ol>
   </div>
@@ -202,7 +204,9 @@ const GIVEUP_END="Nu vet du det. Vi övar på det igen i morgon.";
 const FIXED=["Säg ordet högt!","Var det samma ord som du sa?","Bra försök! Ta en ledtråd till.","Snyggt! Vad hjälpte dig mest?",
   "Vad heter den här?","Kom du på det?","Klart! Bra jobbat!",GIVEUP_END,
   "Bra jobbat i dag! Ett nytt ord väntar i morgon.","Du har hittat alla orden! Be en vuxen lägga till fler.",
-  "Välj en ledtråd!","Ljudledtrådarna öppnas när du har läst två andra."];
+  "Välj en ledtråd!","Ljudledtrådarna öppnas när du har läst två andra.",
+  "Så spelar du. Ett ord gömmer sig i mitten. Öppna ledtrådar, en i taget. Ju färre ledtrådar du behöver, desto fler stjärnor får du. Vet du ordet? Tryck på Jag vet, och säg ordet högt."];
+const INTRO=FIXED[12];
 const gaveUpLine=w=>`Ordet är ${w}.`;
 /* every phrase the clip library should contain (tools/build_phrases.js reads this) */
 function libraryPhrases(){
@@ -271,7 +275,8 @@ function startGame(){
   G={word:w, opened:[], cur:null, phase:"play", gaveUp:false, flip:null, mode:S.set.order};
   if(G.mode==="fast"){ G.opened=[0]; G.cur=0; G.flip=0; }
   render();
-  if(S.set.auto) setTimeout(()=>say(G.cur===null? FIXED[10] : speakText(w,TYPES[0].k)),350);
+  const first = G.cur===null? FIXED[10] : speakText(w,TYPES[0].k);
+  if(S.set.auto) setTimeout(()=>say(S.introSeen? first : [INTRO, first]),350);
 }
 /* clue order modes: "fast" = fixed order, "mix" = meaning clues free and sound clues after two meaning clues, "fri" = free */
 function canOpen(i){
@@ -515,6 +520,7 @@ $("#ov").addEventListener("click",e=>{ if(e.target.id==="ov" && G && G.phase!=="
 $("#setBtn").onclick=openSettings;
 $("#recallBtn").onclick=openRecall;
 $("#sayBtn").onclick=()=>say(sayNow);
+$("#introSay").onclick=()=>say(INTRO);
 if(!ttsOK) $("#sayBtn").hidden=true;
 
 startGame();
