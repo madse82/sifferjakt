@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#fff8ef">
+<title>Ordjakt</title>
+<style>
+  :root{
+    --bg:#fff8ef; --ink:#2b2d42; --ink2:#4a5163;
+    --tile:#ffffff; --border:#ddd6ca; --key:#ece6dc;
+    --accent:#d94c2b; --g:#1f8a57; --y:#f5c242;
+    --sem:#3d7dd8; --pho:#8a4fd1;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Nunito",system-ui,-apple-system,sans-serif;
+    display:flex;flex-direction:column;align-items:center;min-height:100vh;padding:16px 14px 28px}
+  .wrap{width:100%;max-width:440px;display:flex;flex-direction:column;gap:12px}
+  button{font-family:inherit;cursor:pointer}
+  [hidden]{display:none!important}
+
+  header{display:flex;align-items:center;justify-content:space-between;height:48px}
+  h1{margin:0;font-size:26px;font-weight:900;letter-spacing:.5px}
+  h1 span{color:var(--accent)}
+  .hright{display:flex;align-items:center;gap:6px}
+  .chip{display:flex;align-items:center;gap:4px;height:34px;padding:0 10px;border-radius:17px;
+    background:#fff;border:2px solid var(--key);font-size:15px;font-weight:900;color:var(--ink2);white-space:nowrap}
+  .ibtn{min-width:42px;height:42px;padding:0 10px;border:0;border-radius:14px;background:var(--key);color:var(--ink);
+    font-size:19px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:4px;flex:none}
+  .ibtn.due{background:var(--y)}
+
+  /* word web */
+  #web{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:6px 0}
+  #lines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+  #lines line{stroke:var(--border);stroke-width:3;stroke-dasharray:6 6;stroke-linecap:round}
+  #lines line.on{stroke:#c9bfae;stroke-dasharray:none}
+  .clue{position:relative;z-index:1;min-height:104px;border-radius:18px;border:3px solid var(--key);background:#fff;
+    padding:8px 7px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:4px;text-align:center;
+    font-size:13.5px;font-weight:800;line-height:1.25;color:var(--ink);transition:transform .25s}
+  .clue .ic{font-size:22px;line-height:1}
+  .clue .lb{font-size:11px;font-weight:900;letter-spacing:.4px;text-transform:uppercase;color:var(--ink2)}
+  .clue.locked{background:repeating-linear-gradient(135deg,#f6f1e9 0 8px,#fbf8f3 8px 16px);color:var(--ink2)}
+  .clue.locked .tx{display:none}
+  .clue.next{border-color:var(--accent);animation:pulse 1.6s ease-in-out infinite}
+  @keyframes pulse{50%{transform:scale(1.04)}}
+  .clue.open{border-color:var(--sem)}
+  .clue.open.pho{border-color:var(--pho)}
+  .clue.flip{animation:flip .45s ease-out}
+  @keyframes flip{from{transform:rotateY(90deg)}to{transform:none}}
+  .clue.cur{box-shadow:0 0 0 4px rgba(61,125,216,.18)}
+  #center{position:relative;z-index:1;grid-column:2;grid-row:2;align-self:center;justify-self:center;width:112px;height:112px;border-radius:50%;
+    background:var(--ink);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    font-size:46px;font-weight:900;border:5px solid #fff;box-shadow:0 2px 10px rgba(43,45,66,.25)}
+  #center .w{font-size:17px;margin-top:2px;letter-spacing:.3px}
+  #center.solved{background:var(--g)}
+  #center.solved .em{animation:popin .5s cubic-bezier(.2,.9,.3,1.3) both}
+  @keyframes popin{from{transform:scale(.3);opacity:0}to{transform:none;opacity:1}}
+  .side{grid-row:2;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:var(--ink2);text-align:center}
+
+  /* message card */
+  #card{display:flex;align-items:center;gap:8px;padding:10px 10px 10px 14px;border-radius:16px;background:#fff;border:2px solid var(--key);min-height:62px}
+  #msgT{flex:1;font-size:18px;font-weight:800;line-height:1.3}
+  #msgT small{display:block;font-size:12px;font-weight:900;color:var(--ink2);letter-spacing:.4px;text-transform:uppercase;margin-bottom:2px}
+  .say{flex:none;width:46px;height:46px;border:0;border-radius:14px;background:var(--key);color:var(--ink);font-size:21px;display:flex;align-items:center;justify-content:center}
+
+  .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .big{height:58px;border:0;border-radius:16px;font-size:19px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:8px}
+  .big.pri{background:var(--accent);color:#fff}
+  .big.sec{background:var(--key);color:var(--ink)}
+  .big.ok{background:var(--g);color:#fff}
+  .big.full{grid-column:1/-1}
+  .big:disabled{opacity:.45}
+
+  #intro{padding:12px 14px;border-radius:16px;background:#fff;border:2px solid var(--key)}
+  #intro .it{font-size:13px;font-weight:900;color:var(--ink2);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px}
+  #intro ol{margin:0;padding-left:20px;font-size:15px;font-weight:800;line-height:1.5}
+
+  /* overlays */
+  .ov{position:fixed;inset:0;background:rgba(43,45,66,.45);display:flex;align-items:flex-end;justify-content:center;z-index:20;padding:0}
+  .sheet{width:100%;max-width:460px;max-height:92vh;overflow:auto;background:var(--bg);border-radius:24px 24px 0 0;padding:18px 16px calc(22px + env(safe-area-inset-bottom));
+    display:flex;flex-direction:column;gap:12px;animation:up .28s ease-out}
+  @keyframes up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+  .sheet h2{margin:0;font-size:22px;font-weight:900;text-align:center}
+  .sheet p{margin:0;font-size:16px;font-weight:700;text-align:center;color:var(--ink2);line-height:1.4}
+  .reveal{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0}
+  .reveal .em{font-size:84px;line-height:1.05}
+  .reveal .w{font-size:34px;font-weight:900;letter-spacing:.5px}
+  .opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .opt{min-height:58px;border:2px solid var(--key);border-radius:14px;background:#fff;font-size:15px;font-weight:800;color:var(--ink);
+    display:flex;align-items:center;gap:8px;padding:6px 10px;text-align:left}
+  .opt .ic{font-size:22px}
+
+  /* settings */
+  .sec-h{font-size:13px;font-weight:900;letter-spacing:.5px;text-transform:uppercase;color:var(--ink2);margin-top:6px}
+  .row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;background:#fff;border-radius:14px;border:2px solid var(--key);font-size:15px;font-weight:800}
+  .row small{display:block;font-weight:700;color:var(--ink2);font-size:12.5px}
+  .tog{width:52px;height:30px;border-radius:15px;background:var(--key);border:0;position:relative;flex:none}
+  .tog::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:left .2s}
+  .tog.on{background:var(--g)} .tog.on::after{left:25px}
+  .wl{display:flex;flex-direction:column;gap:6px}
+  .wi{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fff;border-radius:12px;border:2px solid var(--key);font-size:15px;font-weight:800}
+  .wi .e{font-size:22px;width:28px;text-align:center}
+  .wi .n{flex:1}
+  .wi .st{font-size:12px;font-weight:800;color:var(--ink2)}
+  .wi button{border:0;background:var(--key);border-radius:10px;height:32px;padding:0 10px;font-weight:900}
+  .wi.off{opacity:.45}
+  .form{display:flex;flex-direction:column;gap:8px;padding:12px;background:#fff;border-radius:14px;border:2px solid var(--key)}
+  .form label{font-size:12.5px;font-weight:900;color:var(--ink2)}
+  .form input{width:100%;font-family:inherit;font-size:16px;font-weight:700;height:42px;border-radius:10px;border:2px solid var(--key);background:var(--bg);padding:0 10px}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .smallbtn{height:44px;border:0;border-radius:12px;background:var(--key);font-size:15px;font-weight:900;color:var(--ink)}
+  .smallbtn.danger{background:#f6dcd4;color:#8a2a14}
+  .stat{font-size:14px;font-weight:700;color:var(--ink2);line-height:1.5;background:#fff;border-radius:14px;border:2px solid var(--key);padding:10px 12px}
+  .note{font-size:12.5px;font-weight:700;color:var(--ink2);text-align:center}
+  body.rc .wrap{visibility:hidden}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Ord<span>jakt</span></h1>
+    <div class="hright">
+      <div class="chip" id="stars">⭐ 0</div>
+      <button class="ibtn due" id="recallBtn" hidden aria-label="Minns du?">🔁 <span id="dueN">0</span></button>
+      <button class="ibtn" id="setBtn" aria-label="Inställningar">⚙️</button>
+    </div>
+  </header>
+
+  <div id="intro" hidden>
+    <div class="it">Så spelar du</div>
+    <ol>
+      <li>Ett ord gömmer sig i mitten.</li>
+      <li>Läs ledtrådarna en i taget. Färre ledtrådar = fler stjärnor.</li>
+      <li>Vet du ordet? Tryck <b>Jag vet!</b> och säg det högt.</li>
+    </ol>
+  </div>
+
+  <div id="web">
+    <svg id="lines" aria-hidden="true"></svg>
+    <div class="clue" data-i="0"></div><div class="clue" data-i="1"></div><div class="clue" data-i="2"></div>
+    <div class="side" style="grid-column:1"></div>
+    <div id="center"><div class="em">?</div><div class="w"></div></div>
+    <div class="side" style="grid-column:3"></div>
+    <div class="clue" data-i="3"></div><div class="clue" data-i="4"></div><div class="clue" data-i="5"></div>
+  </div>
+
+  <div id="card"><div id="msgT"></div><button class="say" id="sayBtn" aria-label="Läs upp">🔊</button></div>
+
+  <div class="actions" id="actions"></div>
+  <div class="note" id="foot"></div>
+</div>
+
+<div class="ov" id="ov" hidden><div class="sheet" id="sheet"></div></div>
+
+<script>
+/* ---------- data ---------- */
+const TYPES = [
+  {k:"kat",   ic:"🗂️", lb:"Sorts sak", hint:"Vad är det för sorts sak?"},
+  {k:"ser",   ic:"👀", lb:"Ser ut",    hint:"Hur ser det ut?"},
+  {k:"gor",   ic:"✋", lb:"Gör / till", hint:"Vad gör man med det?"},
+  {k:"finns", ic:"📍", lb:"Finns",     hint:"Var finns det?"},
+  {k:"stav",  ic:"👏", lb:"Stavelser", hint:"Hur många stavelser?", pho:true},
+  {k:"start", ic:"🔤", lb:"Börjar",    hint:"Hur börjar ordet?",   pho:true},
+];
+const BUILTIN = [
+  {w:"paraply", e:"☂️", kat:"Det är en sak man tar med sig ut.", ser:"Den är rund när den är uppfälld och har ett handtag.", gor:"Man håller den över huvudet så att man inte blir blöt.", finns:"I hallen eller i väskan när det regnar.", stav:3, start:"pa"},
+  {w:"ekorre", e:"🐿️", kat:"Det är ett djur.", ser:"Den är liten och brun eller röd, med en stor yvig svans.", gor:"Den klättrar i träd och samlar kottar och nötter.", finns:"I skogen och i parken.", stav:3, start:"e"},
+  {w:"fjäril", e:"🦋", kat:"Det är en insekt.", ser:"Den har stora vingar med fina färger och mönster.", gor:"Den flyger från blomma till blomma.", finns:"På sommaren, på ängen och i trädgården.", stav:2, start:"fjä"},
+  {w:"hammare", e:"🔨", kat:"Det är ett verktyg.", ser:"Den har ett skaft och ett tungt huvud av metall.", gor:"Man slår i spikar med den.", finns:"I verktygslådan.", stav:3, start:"ham"},
+  {w:"tandborste", e:"🪥", kat:"Det är en sak i badrummet.", ser:"Den är lång och smal, med små strån i ena änden.", gor:"Man använder den i munnen, morgon och kväll.", finns:"I ett glas vid handfatet.", stav:3, start:"tand"},
+  {w:"vulkan", e:"🌋", kat:"Det är ett slags berg.", ser:"Den har ett hål i toppen, och ibland kommer det ut rök.", gor:"Ibland får den utbrott och sprutar het lava.", finns:"Till exempel på Island och på Hawaii.", stav:2, start:"vul"},
+  {w:"pingvin", e:"🐧", kat:"Det är en fågel.", ser:"Den är svart och vit och vaggar när den går.", gor:"Den kan inte flyga, men den simmar jättebra och äter fisk.", finns:"Där det är kallt och isigt, långt söderut.", stav:2, start:"ping"},
+  {w:"kompass", e:"🧭", kat:"Det är en sak man har med sig ut i naturen.", ser:"Den är rund och har en nål som snurrar.", gor:"Nålen pekar mot norr, så att man hittar rätt.", finns:"I ryggsäcken när man vandrar eller springer orientering.", stav:2, start:"kom"},
+  {w:"ryggsäck", e:"🎒", kat:"Det är en sorts väska.", ser:"Den har två remmar och ofta fickor med blixtlås.", gor:"Man bär böcker eller matsäck i den.", finns:"I skolan och på utflykter.", stav:2, start:"rygg"},
+  {w:"gaffel", e:"🍴", kat:"Det är något man äter med.", ser:"Den har ett skaft och tre eller fyra spetsiga piggar.", gor:"Man sticker den i maten, till exempel i en potatis.", finns:"I bestickslådan i köket.", stav:2, start:"gaf"},
+  {w:"snögubbe", e:"☃️", kat:"Det är något man bygger.", ser:"Den är vit och gjord av stora bollar, ofta med en morot som näsa.", gor:"Barn bygger den ute när det har snöat.", finns:"I trädgården på vintern.", stav:3, start:"snö"},
+  {w:"sax", e:"✂️", kat:"Det är ett redskap man har i skolan och hemma.", ser:"Den har två vassa blad och två hål för fingrarna.", gor:"Man klipper papper med den.", finns:"I pennskrinet eller i en låda.", stav:1, start:"s"},
+];
+const NUM = ["noll","en","två","tre","fyra","fem","sex","sju"];
+const INTERVALS = [1,3,7,14]; // days until next recall, by stage
+
+function clueText(word, k){
+  if(k==="stav"){ const n=word.stav; return `Ordet har ${NUM[n]||n} ${n===1?"stavelse":"stavelser"}. ${"👏".repeat(Math.min(n,6))}`; }
+  if(k==="start"){ return `Ordet börjar så här: ”${word.start}…”`; }
+  return word[k] || "";
+}
+function speakText(word, k){
+  if(k==="start") return `Ordet börjar så här: ${word.start}`;
+  if(k==="stav"){ const n=word.stav; return `Ordet har ${NUM[n]||n} ${n===1?"stavelse":"stavelser"}.`; }
+  return word[k];
+}
+
+/* ---------- storage ---------- */
+const KEY="ordjakt.v1";
+const DEF={custom:[],disabled:{},prog:{},stars:0,set:{auto:true,test:true},lastNew:"",helped:{},introSeen:false,done:0};
+let S;
+try{ S=Object.assign(structuredClone(DEF), JSON.parse(localStorage.getItem(KEY)||"{}")); }catch(e){ S=structuredClone(DEF); }
+S.set=Object.assign({},DEF.set,S.set||{});
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+
+const today=()=>new Date().toLocaleDateString("sv-SE");
+function addDays(n){ const d=new Date(); d.setDate(d.getDate()+n); return d.toLocaleDateString("sv-SE"); }
+const allWords=()=>BUILTIN.concat(S.custom);
+const activeWords=()=>allWords().filter(w=>!S.disabled[w.w]);
+const findWord=w=>allWords().find(x=>x.w===w);
+function dueList(){ const t=today(); return Object.entries(S.prog).filter(([w,p])=>p.stage<INTERVALS.length && p.due<=t && findWord(w) && !S.disabled[w]).map(([w])=>w); }
+
+/* ---------- speech ---------- */
+const ttsOK=("speechSynthesis" in window)&&("SpeechSynthesisUtterance" in window);
+let svVoice=null;
+function pickVoice(){ if(!ttsOK) return; const vs=speechSynthesis.getVoices(); svVoice=vs.find(v=>/^sv/i.test(v.lang))||null; }
+if(ttsOK){ pickVoice(); speechSynthesis.onvoiceschanged=pickVoice; }
+function say(t){ if(!ttsOK||!t) return; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(t); u.lang="sv-SE"; if(svVoice) u.voice=svVoice; u.rate=0.85; speechSynthesis.speak(u); }
+
+/* ---------- game state ---------- */
+const $=s=>document.querySelector(s);
+let G=null;      // {word, revealed, cur, phase:'play'|'done'|'rest', gaveUp}
+let sayNow="";   // text the 🔊 button reads
+
+function pickNew(){
+  const ws=activeWords().filter(w=>!S.prog[w.w]);
+  return ws[0]||null;
+}
+function startGame(){
+  const canNew = S.set.test || S.lastNew!==today();
+  const w = canNew ? pickNew() : null;
+  if(!w){ G={phase:"rest"}; render(); return; }
+  G={word:w, revealed:1, cur:0, phase:"play", gaveUp:false};
+  render(true);
+  if(S.set.auto) setTimeout(()=>say(speakText(w,TYPES[0].k)),350);
+}
+
+function starsFor(n){ return n<=2?3:n<=4?2:1; }
+
+/* ---------- render ---------- */
+function render(flipFirst){
+  $("#stars").textContent="⭐ "+S.stars;
+  const due=dueList(); $("#recallBtn").hidden=!due.length; $("#dueN").textContent=due.length;
+  $("#intro").hidden = S.introSeen || !G || G.phase!=="play";
+  const clues=[...document.querySelectorAll(".clue")];
+  const C=$("#center");
+
+  if(G.phase==="rest"){
+    clues.forEach((c,i)=>{ c.className="clue locked"; c.innerHTML=`<div class="ic">${TYPES[i].ic}</div><div class="lb">${TYPES[i].lb}</div>`; });
+    C.className=""; C.innerHTML=`<div class="em">🌙</div>`;
+    const left=activeWords().filter(w=>!S.prog[w.w]).length;
+    setMsg(left? "Bra jobbat i dag! Ett nytt ord väntar i morgon." : "Du har hittat alla orden! Be en vuxen lägga till fler.", "Klart");
+    $("#actions").innerHTML = due.length? `<button class="big pri full" onclick="openRecall()">🔁 Minns du? (${due.length})</button>` : "";
+    $("#foot").textContent="";
+    drawLines(); return;
+  }
+
+  const w=G.word, done=G.phase==="done";
+  clues.forEach((c,i)=>{
+    const t=TYPES[i], open = done || i<G.revealed, isNext = !done && i===G.revealed;
+    c.className="clue"+(open?" open":" locked")+(t.pho?" pho":"")+(isNext?" next":"")+(!done&&open&&i===G.cur?" cur":"")+(flipFirst&&i===G.revealed-1&&!done?" flip":"");
+    c.innerHTML=`<div class="ic">${t.ic}</div><div class="lb">${t.lb}</div><div class="tx">${open?esc(clueText(w,t.k)):""}</div>`;
+    c.onclick=()=>{
+      if(done || i<G.revealed){ G.cur=i; render(); say(speakText(w,t.k)); }
+      else if(i===G.revealed){ nextClue(); }
+    };
+  });
+  C.className=done?"solved":"";
+  C.innerHTML=done?`<div class="em">${w.e||"⭐"}</div><div class="w">${esc(w.w)}</div>`:`<div class="em">?</div>`;
+  C.onclick=done?()=>say(w.w):null;
+
+  if(done){
+    setMsg(G.gaveUp?`Nu vet du det: <b>${esc(w.w)}</b>. Vi övar på det igen i morgon.`:`Ordnätet för <b>${esc(w.w)}</b>. Tryck på en ledtråd för att höra den.`, G.gaveUp?"Bra kämpat":"Du hittade ordet!", readAll());
+    const more=S.set.test? pickNew()!==null : false;
+    $("#actions").innerHTML=`<button class="big sec" onclick="say(readAll())">🔊 Hela nätet</button>`+
+      (more?`<button class="big pri" onclick="startGame()">Nästa ord ➜</button>`:`<button class="big pri" onclick="startGame()">Klar ✔︎</button>`);
+    $("#foot").textContent = dueList().length? "" : "";
+  } else {
+    const t=TYPES[G.cur];
+    setMsg(esc(clueText(w,t.k)), `Ledtråd ${G.cur+1}: ${t.hint}`, speakText(w,t.k));
+    const left=6-G.revealed;
+    $("#actions").innerHTML=
+      `<button class="big sec" onclick="nextClue()">${left?`💡 Ny ledtråd`:`👀 Visa ordet`}</button>`+
+      `<button class="big pri" onclick="iKnow()">🙋 Jag vet!</button>`;
+    const st=starsFor(G.revealed);
+    $("#foot").textContent=`Gissar du nu: ${"⭐".repeat(st)}${left?` · ${left} ledtrådar kvar`:""}`;
+  }
+  drawLines();
+}
+function setMsg(html, small, speak){ $("#msgT").innerHTML=(small?`<small>${small}</small>`:"")+html; sayNow=speak||$("#msgT").textContent; }
+function readAll(){ const w=G.word; return w.w+". "+TYPES.map(t=>speakText(w,t.k)).join(" "); }
+function esc(s){ return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+
+function drawLines(){
+  const web=$("#web"), svg=$("#lines"), C=$("#center"); const r=web.getBoundingClientRect(), cr=C.getBoundingClientRect();
+  const cx=cr.left-r.left+cr.width/2, cy=cr.top-r.top+cr.height/2;
+  svg.setAttribute("viewBox",`0 0 ${r.width} ${r.height}`);
+  svg.innerHTML=[...document.querySelectorAll(".clue")].map(c=>{ const b=c.getBoundingClientRect();
+    return `<line class="${c.classList.contains("open")?"on":""}" x1="${cx}" y1="${cy}" x2="${b.left-r.left+b.width/2}" y2="${b.top-r.top+b.height/2}"/>`; }).join("");
+}
+addEventListener("resize",()=>G&&drawLines());
+
+/* ---------- actions ---------- */
+function nextClue(){
+  if(G.phase!=="play") return;
+  if(G.revealed>=6){ giveUp(); return; }
+  G.cur=G.revealed; G.revealed++; render(true);
+  if(S.set.auto) say(speakText(G.word,TYPES[G.cur].k));
+}
+function iKnow(){
+  S.introSeen=true; save();
+  sheet(`<h2>Säg ordet högt! 🗣️</h2><p>Säg det till en vuxen, eller till dig själv.</p>
+    <button class="big pri" onclick="showAnswer()">Visa svaret</button>
+    <button class="big sec" onclick="closeOv()">Tillbaka</button>`);
+}
+function showAnswer(){
+  const w=G.word;
+  sheet(`<div class="reveal"><div class="em">${w.e||"⭐"}</div><div class="w">${esc(w.w)}</div></div>
+    <p>Var det samma ord som du sa?</p>
+    <div class="actions"><button class="big sec" onclick="notYet()">Inte än</button><button class="big ok" onclick="solved()">Ja! ✅</button></div>`);
+  say(w.w);
+}
+function notYet(){
+  closeOv();
+  setMsg("Bra försök! Ta en ledtråd till.", "Nästan");
+  sayNow="Bra försök! Ta en ledtråd till.";
+  if(S.set.auto) say(sayNow);
+}
+function solved(){
+  const st=starsFor(G.revealed);
+  finish(st);
+  const opts=TYPES.slice(0,G.revealed).map((t,i)=>`<button class="opt" onclick="helped('${t.k}')"><span class="ic">${t.ic}</span>${t.lb}</button>`).join("")+
+    `<button class="opt" onclick="helped('visste')"><span class="ic">⚡</span>Jag bara visste</button>`;
+  sheet(`<h2>${"⭐".repeat(st)}</h2><p><b>Snyggt!</b> Vad hjälpte dig mest att hitta ordet?</p><div class="opts">${opts}</div>`);
+  say("Snyggt! Vad hjälpte dig mest?");
+}
+function helped(k){
+  S.helped[k]=(S.helped[k]||0)+1;
+  S.prog[G.word.w].helped=k; save();
+  closeOv(); G.phase="done"; render();
+}
+function giveUp(){
+  finish(0); G.gaveUp=true; G.phase="done"; render(); say("Ordet är "+G.word.w);
+}
+function finish(st){
+  const w=G.word.w;
+  S.stars+=st; S.done++;
+  S.prog[w]={stage:0, due:addDays(INTERVALS[0]), stars:st, clues:G.revealed, gaveUp:st===0, helped:null, first:today(), hist:[]};
+  S.lastNew=today(); S.introSeen=true; save();
+}
+
+/* ---------- recall: "Minns du?" ---------- */
+let R=null;
+function openRecall(){
+  const q=dueList(); if(!q.length) return;
+  R={q, i:0, ok:0}; document.body.classList.add("rc"); recallCard();
+}
+function recallCard(){
+  if(R.i>=R.q.length){
+    sheet(`<h2>Klart! 🎉</h2><p>Du mindes ${R.ok} av ${R.q.length} ord.</p><button class="big pri" onclick="closeOv();render()">Okej</button>`);
+    say(`Klart! Du mindes ${R.ok} av ${R.q.length}.`); return;
+  }
+  const w=findWord(R.q[R.i]);
+  sheet(`<p>Minns du? (${R.i+1} av ${R.q.length})</p>
+    <div class="reveal"><div class="em">${w.e||"❓"}</div></div>
+    <h2>Vad heter den här?</h2>
+    <div id="rhint" class="stat" hidden></div>
+    <div class="actions"><button class="big sec" onclick="recallHint()">💡 Ledtråd</button><button class="big pri" onclick="recallShow()">🙋 Visa</button></div>`);
+  say("Vad heter den här?");
+}
+function recallHint(){
+  const w=findWord(R.q[R.i]), p=S.prog[w.w];
+  const k=(p.helped && p.helped!=="visste")?p.helped:"kat";
+  const el=$("#rhint"); el.hidden=false; el.textContent=clueText(w,k); say(speakText(w,k));
+}
+function recallShow(){
+  const w=findWord(R.q[R.i]);
+  sheet(`<div class="reveal"><div class="em">${w.e||"⭐"}</div><div class="w">${esc(w.w)}</div></div>
+    <p>Kom du på det?</p>
+    <div class="actions"><button class="big sec" onclick="recallRes(false)">Inte än</button><button class="big ok" onclick="recallRes(true)">Ja! ✅</button></div>`);
+  say(w.w);
+}
+function recallRes(ok){
+  const w=R.q[R.i], p=S.prog[w];
+  p.hist=(p.hist||[]).concat([{d:today(),ok}]);
+  if(ok){ p.stage++; R.ok++; S.stars+=1; p.due = p.stage<INTERVALS.length ? addDays(INTERVALS[p.stage]) : "9999-12-31"; }
+  else { p.stage=0; p.due=addDays(INTERVALS[0]); }
+  save(); R.i++; recallCard();
+}
+
+/* ---------- settings (for grown-ups) ---------- */
+function openSettings(){
+  const ws=allWords();
+  const custom=new Set(S.custom.map(w=>w.w));
+  const list=ws.map(w=>{ const p=S.prog[w.w];
+    const st=!p?"ny":p.stage>=INTERVALS.length?"kan ✓":`${p.gaveUp?"visades":"⭐".repeat(p.stars)} · ${p.clues} ledtr. · nästa ${p.due}`;
+    return `<div class="wi ${S.disabled[w.w]?"off":""}"><span class="e">${w.e||"·"}</span><span class="n">${esc(w.w)}<div class="st">${st}</div></span>
+      <button onclick="toggleWord('${esc(w.w)}')">${S.disabled[w.w]?"På":"Av"}</button>${custom.has(w.w)?`<button onclick="delWord('${esc(w.w)}')">🗑</button>`:""}</div>`; }).join("");
+  const tot=Object.values(S.helped).reduce((a,b)=>a+b,0);
+  const helpedStr=tot? Object.entries(S.helped).sort((a,b)=>b[1]-a[1]).map(([k,n])=>{const t=TYPES.find(t=>t.k===k); return `${t?t.ic+" "+t.lb:"⚡ Bara visste"}: ${n}`;}).join("<br>") : "Inga svar än.";
+  const solved=Object.values(S.prog); const avg=solved.length?(solved.reduce((a,p)=>a+p.clues,0)/solved.length).toFixed(1):"–";
+  sheet(`<h2>För vuxna</h2>
+    <div class="sec-h">Inställningar</div>
+    <div class="row"><span>Läs upp automatiskt<small>Ledtrådar läses upp när de visas</small></span><button class="tog ${S.set.auto?"on":""}" onclick="tog('auto')"></button></div>
+    <div class="row"><span>Testläge<small>Alla ord direkt, inte ett ord per dag</small></span><button class="tog ${S.set.test?"on":""}" onclick="tog('test')"></button></div>
+    <div class="sec-h">Hur det går</div>
+    <div class="stat">Ord hittade: <b>${solved.length}</b> · snitt <b>${avg}</b> ledtrådar per ord<br><br><b>Vad hjälpte mest?</b><br>${helpedStr}</div>
+    <div class="sec-h">Orden</div>
+    <div class="wl">${list}</div>
+    <div class="sec-h">Lägg till ord (t.ex. veckans skolord)</div>
+    <div class="form">
+      <div class="two"><div><label>Ord</label><input id="fw" placeholder="t.ex. termometer" autocapitalize="off"></div><div><label>Bild (emoji, valfri)</label><input id="fe" placeholder="🌡️"></div></div>
+      <label>🗂️ Sorts sak</label><input id="fkat" placeholder="Det är en sak som …">
+      <label>👀 Ser ut</label><input id="fser" placeholder="Den är …">
+      <label>✋ Gör / används till</label><input id="fgor" placeholder="Man använder den till …">
+      <label>📍 Finns</label><input id="ffinns" placeholder="Den finns …">
+      <div class="two"><div><label>👏 Stavelser</label><input id="fstav" inputmode="numeric" placeholder="auto"></div><div><label>🔤 Början</label><input id="fstart" placeholder="auto"></div></div>
+      <button class="smallbtn" onclick="addWord()">➕ Lägg till</button>
+    </div>
+    <div class="sec-h">Testa</div>
+    <div class="two"><button class="smallbtn" onclick="allDue()">Repetitioner nu</button><button class="smallbtn danger" onclick="resetAll()">Nollställ allt</button></div>
+    <div class="note">Allt sparas bara på den här enheten.</div>
+    <button class="big sec" onclick="closeOv();render()">Stäng</button>`);
+}
+function tog(k){ S.set[k]=!S.set[k]; save(); openSettings(); }
+function toggleWord(w){ S.disabled[w]=!S.disabled[w]; save(); openSettings(); }
+function delWord(w){ S.custom=S.custom.filter(x=>x.w!==w); delete S.prog[w]; save(); openSettings(); }
+function syl(w){ const m=w.toLowerCase().match(/[aeiouyåäö]+/g); return m?m.length:1; }
+function firstPart(w){ const m=w.toLowerCase().match(/^[^aeiouyåäö]*[aeiouyåäö]+/); return m?m[0]:w.slice(0,2); }
+function addWord(){
+  const v=id=>($("#"+id).value||"").trim();
+  const w=v("fw").toLowerCase();
+  if(!w){ alertMsg("Skriv ett ord först."); return; }
+  if(findWord(w)){ alertMsg("Det ordet finns redan."); return; }
+  const need=["fkat","fser","fgor","ffinns"].filter(id=>!v(id));
+  if(need.length){ alertMsg("Fyll i alla fyra ledtrådarna."); return; }
+  S.custom.push({w, e:v("fe"), kat:v("fkat"), ser:v("fser"), gor:v("fgor"), finns:v("ffinns"), stav:parseInt(v("fstav"))||syl(w), start:v("fstart")||firstPart(w)});
+  save(); openSettings();
+}
+function alertMsg(t){ const n=document.querySelector(".form"); let e=n.querySelector(".err"); if(!e){ e=document.createElement("div"); e.className="note err"; e.style.color="var(--accent)"; n.prepend(e);} e.textContent=t; }
+function allDue(){ const t=today(); Object.values(S.prog).forEach(p=>{ if(p.stage<INTERVALS.length) p.due=t; }); save(); openSettings(); }
+function resetAll(){
+  sheet(`<h2>Nollställa allt?</h2><p>Stjärnor och framsteg försvinner. Dina egna ord sparas.</p>
+    <div class="actions"><button class="big sec" onclick="openSettings()">Avbryt</button><button class="big pri" onclick="doReset()">Nollställ</button></div>`);
+}
+function doReset(){ const c=S.custom, set=S.set; S=structuredClone(DEF); S.custom=c; S.set=set; save(); closeOv(); startGame(); }
+
+/* ---------- overlay ---------- */
+function sheet(html){ $("#sheet").innerHTML=html; $("#ov").hidden=false; }
+function closeOv(){ $("#ov").hidden=true; document.body.classList.remove("rc"); }
+$("#ov").addEventListener("click",e=>{ if(e.target.id==="ov" && G && G.phase!=="play") {} });
+$("#setBtn").onclick=openSettings;
+$("#recallBtn").onclick=openRecall;
+$("#sayBtn").onclick=()=>say(sayNow);
+if(!ttsOK) $("#sayBtn").hidden=true;
+
+startGame();
+</script>
+</body>
+</html>
