@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="sv">
+<html lang="sv" data-audio-base="ordjakt-audio/">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -157,6 +157,7 @@
 
 <script>
 /* ---------- data ---------- */
+/*DATA*/
 const TYPES = [
   {k:"kat",   ic:"🗂️", lb:"Sorts sak", hint:"Vad är det för sorts sak?"},
   {k:"ser",   ic:"👀", lb:"Ser ut",    hint:"Hur ser det ut?"},
@@ -192,10 +193,22 @@ function speakText(word, k){
   if(k==="stav"){ const n=word.stav; return `Ordet har ${NUM[n]||n} ${n===1?"stavelse":"stavelser"}.`; }
   return word[k];
 }
+const GIVEUP_END="Nu vet du det. Vi övar på det igen i morgon.";
+const FIXED=["Säg ordet högt!","Var det samma ord som du sa?","Bra försök! Ta en ledtråd till.","Snyggt! Vad hjälpte dig mest?",
+  "Vad heter den här?","Kom du på det?","Klart! Bra jobbat!",GIVEUP_END,
+  "Bra jobbat i dag! Ett nytt ord väntar i morgon.","Du har hittat alla orden! Be en vuxen lägga till fler."];
+const gaveUpLine=w=>`Ordet är ${w}.`;
+/* every phrase the clip library should contain (tools/build_phrases.js reads this) */
+function libraryPhrases(){
+  const out=new Set(FIXED);
+  for(const w of BUILTIN){ out.add(w.w); out.add(gaveUpLine(w.w)); TYPES.forEach(t=>out.add(speakText(w,t.k))); }
+  return [...out];
+}
+/*END DATA*/
 
 /* ---------- storage ---------- */
 const KEY="ordjakt.v1";
-const DEF={custom:[],disabled:{},prog:{},stars:0,set:{auto:true,test:true},lastNew:"",helped:{},introSeen:false,done:0};
+const DEF={custom:[],disabled:{},prog:{},stars:0,set:{auto:true,test:true,lib:true},lastNew:"",helped:{},introSeen:false,done:0};
 let S;
 try{ S=Object.assign(structuredClone(DEF), JSON.parse(localStorage.getItem(KEY)||"{}")); }catch(e){ S=structuredClone(DEF); }
 S.set=Object.assign({},DEF.set,S.set||{});
@@ -208,12 +221,33 @@ const activeWords=()=>allWords().filter(w=>!S.disabled[w.w]);
 const findWord=w=>allWords().find(x=>x.w===w);
 function dueList(){ const t=today(); return Object.entries(S.prog).filter(([w,p])=>p.stage<INTERVALS.length && p.due<=t && findWord(w) && !S.disabled[w]).map(([w])=>w); }
 
-/* ---------- speech ---------- */
+/* ---------- speech: recorded clips first (ordjakt-audio/, made once on the Mac), device voice as fallback ---------- */
 const ttsOK=("speechSynthesis" in window)&&("SpeechSynthesisUtterance" in window);
 let svVoice=null;
 function pickVoice(){ if(!ttsOK) return; const vs=speechSynthesis.getVoices(); svVoice=vs.find(v=>/^sv/i.test(v.lang))||null; }
 if(ttsOK){ pickVoice(); speechSynthesis.onvoiceschanged=pickVoice; }
-function say(t){ if(!ttsOK||!t) return; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(t); u.lang="sv-SE"; if(svVoice) u.voice=svVoice; u.rate=0.85; speechSynthesis.speak(u); }
+function phraseId(t){ let h=0x811c9dc5; for(const ch of t){ h^=ch.codePointAt(0); h=Math.imul(h,0x01000193)>>>0; } return h.toString(16).padStart(8,"0"); }
+const LIB={ids:new Set(), ext:"m4a", voice:null};
+const AUDIO_BASE=document.documentElement.dataset.audioBase||"ordjakt-audio/";
+fetch(AUDIO_BASE+"index.json?v="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.json():null).then(j=>{
+  if(!j) return; LIB.ext=j.ext||"m4a"; LIB.voice=j.voice; (j.ids||[]).forEach(i=>LIB.ids.add(i)); }).catch(()=>{});
+const player=new Audio(); player.preload="auto"; player.setAttribute("playsinline","");
+let playTok=0;
+function ttsSay(t){ if(!ttsOK||!t) return; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(t); u.lang="sv-SE"; if(svVoice) u.voice=svVoice; u.rate=0.85; speechSynthesis.speak(u); }
+function say(parts){
+  parts=[].concat(parts||[]).filter(Boolean); if(!parts.length) return;
+  const tok=++playTok; try{ player.pause(); }catch(e){} if(ttsOK) speechSynthesis.cancel();
+  if(S.set.lib && LIB.ids.size && parts.every(t=>LIB.ids.has(phraseId(t)))) playSeq(parts,0,tok);
+  else ttsSay(parts.join(" "));
+}
+function playSeq(parts,i,tok){
+  if(tok!==playTok||i>=parts.length) return;
+  const fail=()=>{ if(tok===playTok){ playTok++; ttsSay(parts.slice(i).join(" ")); } };
+  player.onended=()=>setTimeout(()=>playSeq(parts,i+1,tok),250);
+  player.onerror=fail;
+  player.src=AUDIO_BASE+phraseId(parts[i])+"."+LIB.ext;
+  const p=player.play(); if(p) p.catch(fail);
+}
 
 /* ---------- game state ---------- */
 const $=s=>document.querySelector(s);
@@ -247,7 +281,7 @@ function render(flipFirst){
     clues.forEach((c,i)=>{ c.className="clue locked"; c.innerHTML=`<div class="ic">${TYPES[i].ic}</div><div class="lb">${TYPES[i].lb}</div>`; });
     C.className=""; C.innerHTML=`<div class="em">🌙</div>`;
     const left=activeWords().filter(w=>!S.prog[w.w]).length;
-    setMsg(left? "Bra jobbat i dag! Ett nytt ord väntar i morgon." : "Du har hittat alla orden! Be en vuxen lägga till fler.", "Klart");
+    const rm=left? FIXED[8] : FIXED[9]; setMsg(rm, "Klart", rm);
     $("#actions").innerHTML = due.length? `<button class="big pri full" onclick="openRecall()">🔁 Minns du? (${due.length})</button>` : "";
     $("#foot").textContent="";
     drawLines(); return;
@@ -285,8 +319,8 @@ function render(flipFirst){
   }
   drawLines();
 }
-function setMsg(html, small, speak){ $("#msgT").innerHTML=(small?`<small>${small}</small>`:"")+html; sayNow=speak||$("#msgT").textContent; }
-function readAll(){ const w=G.word; return w.w+". "+TYPES.map(t=>speakText(w,t.k)).join(" "); }
+function setMsg(html, small, speak){ $("#msgT").innerHTML=(small?`<small>${small}</small>`:"")+html; sayNow=speak||html.replace(/<[^>]+>/g,""); }
+function readAll(){ const w=G.word; return [w.w].concat(TYPES.map(t=>speakText(w,t.k))); }
 function esc(s){ return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
 
 function drawLines(){
@@ -307,6 +341,7 @@ function nextClue(){
 }
 function iKnow(){
   S.introSeen=true; save();
+  say("Säg ordet högt!");
   sheet(`<h2>Säg ordet högt! 🗣️</h2><p>Säg det till en vuxen, eller till dig själv.</p>
     <button class="big pri" onclick="showAnswer()">Visa svaret</button>
     <button class="big sec" onclick="closeOv()">Tillbaka</button>`);
@@ -316,7 +351,7 @@ function showAnswer(){
   sheet(`<div class="reveal"><div class="em">${w.e||"⭐"}</div><div class="w">${esc(w.w)}</div></div>
     <p>Var det samma ord som du sa?</p>
     <div class="actions"><button class="big sec" onclick="notYet()">Inte än</button><button class="big ok" onclick="solved()">Ja! ✅</button></div>`);
-  say(w.w);
+  say([w.w,"Var det samma ord som du sa?"]);
 }
 function notYet(){
   closeOv();
@@ -338,7 +373,7 @@ function helped(k){
   closeOv(); G.phase="done"; render();
 }
 function giveUp(){
-  finish(0); G.gaveUp=true; G.phase="done"; render(); say("Ordet är "+G.word.w);
+  finish(0); G.gaveUp=true; G.phase="done"; render(); say([gaveUpLine(G.word.w), GIVEUP_END]);
 }
 function finish(st){
   const w=G.word.w;
@@ -356,7 +391,7 @@ function openRecall(){
 function recallCard(){
   if(R.i>=R.q.length){
     sheet(`<h2>Klart! 🎉</h2><p>Du mindes ${R.ok} av ${R.q.length} ord.</p><button class="big pri" onclick="closeOv();render()">Okej</button>`);
-    say(`Klart! Du mindes ${R.ok} av ${R.q.length}.`); return;
+    say("Klart! Bra jobbat!"); return;
   }
   const w=findWord(R.q[R.i]);
   sheet(`<p>Minns du? (${R.i+1} av ${R.q.length})</p>
@@ -376,7 +411,7 @@ function recallShow(){
   sheet(`<div class="reveal"><div class="em">${w.e||"⭐"}</div><div class="w">${esc(w.w)}</div></div>
     <p>Kom du på det?</p>
     <div class="actions"><button class="big sec" onclick="recallRes(false)">Inte än</button><button class="big ok" onclick="recallRes(true)">Ja! ✅</button></div>`);
-  say(w.w);
+  say([w.w,"Kom du på det?"]);
 }
 function recallRes(ok){
   const w=R.q[R.i], p=S.prog[w];
@@ -400,6 +435,7 @@ function openSettings(){
   sheet(`<h2>För vuxna</h2>
     <div class="sec-h">Inställningar</div>
     <div class="row"><span>Läs upp automatiskt<small>Ledtrådar läses upp när de visas</small></span><button class="tog ${S.set.auto?"on":""}" onclick="tog('auto')"></button></div>
+    <div class="row"><span>Inspelad röst<small>${LIB.ids.size?`${LIB.ids.size} inspelade fraser (${LIB.voice}). Egna ord läses med enhetens röst.`:"Inga inspelningar hittades, enhetens röst används."}</small></span><button class="tog ${S.set.lib?"on":""}" onclick="tog('lib')"></button></div>
     <div class="row"><span>Testläge<small>Alla ord direkt, inte ett ord per dag</small></span><button class="tog ${S.set.test?"on":""}" onclick="tog('test')"></button></div>
     <div class="sec-h">Hur det går</div>
     <div class="stat">Ord hittade: <b>${solved.length}</b> · snitt <b>${avg}</b> ledtrådar per ord<br><br><b>Vad hjälpte mest?</b><br>${helpedStr}</div>
