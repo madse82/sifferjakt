@@ -33,6 +33,14 @@
   .ibtn{min-width:42px;height:42px;padding:0 10px;border:0;border-radius:14px;background:var(--key);color:var(--ink);
     font-size:19px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:4px;flex:none}
   .ibtn.due{background:var(--y)}
+  .catbar{display:flex;align-items:center;gap:8px;height:46px;padding:0 14px;border:2px solid var(--key);border-radius:16px;background:#fff;
+    font-size:17px;font-weight:900;color:var(--ink);text-align:left}
+  .catbar .n{flex:1} .catbar .p{font-size:13px;font-weight:800;color:var(--ink2)} .catbar .ch{color:var(--accent);font-size:15px}
+  .cats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .cat{min-height:96px;border:3px solid var(--key);border-radius:18px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+    font-size:17px;font-weight:900;color:var(--ink)}
+  .cat .e{font-size:34px} .cat .p{font-size:12.5px;font-weight:800;color:var(--ink2)}
+  .cat.on{border-color:var(--accent)}
 
   /* word web */
   #web{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:6px 0}
@@ -144,6 +152,7 @@
       <button class="ibtn" id="setBtn" aria-label="Inställningar">⚙️</button>
     </div>
   </header>
+  <button class="catbar" id="catBtn"></button>
 
   <div id="intro" hidden>
     <div class="ih"><div class="it">Så spelar du</div><button class="say" id="introSay" aria-label="Läs upp">🔊</button></div>
@@ -196,6 +205,25 @@ const BUILTIN = [
   {w:"snögubbe", e:"☃️", kat:"Det är något man bygger.", ser:"Den är vit och gjord av stora bollar, ofta med en morot som näsa.", gor:"Barn bygger den ute när det har snöat.", finns:"I trädgården på vintern.", stav:3, start:"snö"},
   {w:"sax", e:"✂️", kat:"Det är ett redskap man har i skolan och hemma.", ser:"Den har två vassa blad och två hål för fingrarna.", gor:"Man klipper papper med den.", finns:"I pennskrinet eller i en låda.", stav:1, start:"s"},
 ];
+BUILTIN.forEach(w=>w.cat="blandat");
+/* Yrken: Frida's school theme, Nov 2026 */
+const YRKEN = [
+  {w:"polis", e:"👮", kat:"Det är ett yrke där man ser till att alla följer lagen.", ser:"Hen har en blå uniform och ibland en bil med blåljus.", gor:"Hen hjälper till vid olyckor och letar efter tjuvar.", finns:"Ute på gatorna, i en bil eller på en häst.", stav:2, start:"po"},
+  {w:"brandman", e:"🧑‍🚒", kat:"Det är ett yrke där man räddar människor.", ser:"Hen har hjälm, tjocka kläder och en lång slang.", gor:"Hen släcker eldar och hjälper till vid olyckor.", finns:"På en station med en stor röd bil.", stav:2, start:"brand"},
+  {w:"läkare", e:"🧑‍⚕️", kat:"Det är ett yrke inom vården.", ser:"Hen har ofta en vit rock och något runt halsen som man lyssnar med.", gor:"Hen tar reda på varför man är sjuk och hjälper en att bli frisk.", finns:"På sjukhuset och på vårdcentralen.", stav:3, start:"lä"},
+  {w:"lärare", e:"🧑‍🏫", kat:"Det är ett yrke där man jobbar med barn och ungdomar.", ser:"Hen står ofta framme vid tavlan.", gor:"Hen hjälper eleverna att lära sig läsa, skriva och räkna.", finns:"I skolan, i klassrummet.", stav:3, start:"lä"},
+  {w:"kock", e:"🧑‍🍳", kat:"Det är ett yrke där man jobbar med mat.", ser:"Hen har ofta en vit jacka och en hög vit mössa.", gor:"Hen lagar mat till många människor.", finns:"I köket på en restaurang eller i skolan.", stav:1, start:"ko"},
+  {w:"bonde", e:"🧑‍🌾", kat:"Det är ett yrke där man jobbar med djur och natur.", ser:"Hen har ofta stövlar och kör traktor.", gor:"Hen tar hand om kor och odlar på åkern.", finns:"På en gård på landet.", stav:2, start:"bon"},
+  {w:"pilot", e:"🧑‍✈️", kat:"Det är ett yrke där man reser mycket.", ser:"Hen har uniform och en mössa med ett märke på.", gor:"Hen flyger flygplan.", finns:"Längst fram i flygplanet.", stav:2, start:"pi"},
+  {w:"frisör", e:"💇", kat:"Det är ett yrke där man gör människor fina.", ser:"Hen har en sax, en kam och en hårtork.", gor:"Hen klipper och tvättar hår.", finns:"I en salong med stora speglar.", stav:2, start:"fri"},
+  {w:"mekaniker", e:"🧑‍🔧", kat:"Det är ett yrke där man jobbar med maskiner.", ser:"Hen har overall och ofta lite olja på händerna.", gor:"Hen lagar bilar som har gått sönder.", finns:"I en verkstad.", stav:4, start:"me"},
+  {w:"tandläkare", e:"🦷", kat:"Det är ett yrke inom vården.", ser:"Hen har munskydd och en liten spegel med långt skaft.", gor:"Hen tittar på tänderna och lagar hål.", finns:"På en mottagning med en stol som man ligger i.", stav:4, start:"tand"},
+  {w:"veterinär", e:"🐾", kat:"Det är ett yrke där man jobbar med djur.", ser:"Hen har ofta en grön eller blå rock.", gor:"Hen hjälper sjuka hundar, katter och andra djur.", finns:"På en djurklinik.", stav:4, start:"ve"},
+  {w:"bagare", e:"🥖", kat:"Det är ett yrke där man jobbar med mat.", ser:"Hen har ofta mjöl på kläderna och händerna.", gor:"Hen bakar bröd och bullar, ofta tidigt på morgonen.", finns:"I en butik som luktar nybakat.", stav:3, start:"ba"},
+];
+YRKEN.forEach(w=>{ w.cat="yrken"; BUILTIN.push(w); });
+const CATS=[{k:"blandat",n:"Blandat",e:"🎲"},{k:"yrken",n:"Yrken",e:"👷"}];
+
 const NUM = ["noll","en","två","tre","fyra","fem","sex","sju"];
 const INTERVALS = [1,3,7,14]; // days until next recall, by stage
 
@@ -214,8 +242,9 @@ const FIXED=["Säg ordet högt!","Var det samma ord som du sa?","Bra försök! T
   "Vad heter den här?","Kom du på det?","Klart! Bra jobbat!",GIVEUP_END,
   "Bra jobbat i dag! Ett nytt ord väntar i morgon.","Du har hittat alla orden! Be en vuxen lägga till fler.",
   "Välj en ledtråd!","Ljudledtrådarna öppnas när du har läst två andra.",
+  "Du har hittat alla orden i det här temat! Välj ett annat tema.",
   "Så spelar du. Ett ord gömmer sig i mitten. Öppna ledtrådar, en i taget. Ju färre ledtrådar du behöver, desto fler stjärnor får du. Vet du ordet? Tryck på Jag vet, och säg ordet högt."];
-const INTRO=FIXED[12];
+const INTRO=FIXED[13];
 const gaveUpLine=w=>`Ordet är ${w}.`;
 /* every phrase the clip library should contain (tools/build_phrases.js reads this) */
 function libraryPhrases(){
@@ -227,7 +256,7 @@ function libraryPhrases(){
 
 /* ---------- storage ---------- */
 const KEY="ordjakt.v1";
-const DEF={custom:[],disabled:{},prog:{},stars:0,set:{auto:true,test:true,lib:true,order:"fast"},lastNew:"",helped:{},introSeen:false,done:0};
+const DEF={custom:[],disabled:{},prog:{},stars:0,set:{auto:true,test:true,lib:true,order:"fast"},cat:"blandat",lastNew:"",helped:{},introSeen:false,done:0};
 let S;
 try{ S=Object.assign(structuredClone(DEF), JSON.parse(localStorage.getItem(KEY)||"{}")); }catch(e){ S=structuredClone(DEF); }
 S.set=Object.assign({},DEF.set,S.set||{});
@@ -237,6 +266,15 @@ const today=()=>new Date().toLocaleDateString("sv-SE");
 function addDays(n){ const d=new Date(); d.setDate(d.getDate()+n); return d.toLocaleDateString("sv-SE"); }
 const allWords=()=>BUILTIN.concat(S.custom);
 const activeWords=()=>allWords().filter(w=>!S.disabled[w.w]);
+/* themes: built-in ones plus any theme name a grown-up types when adding words */
+const catOf=w=>w.cat||"egna";
+function allCats(){
+  const list=CATS.slice(); const seen=new Set(list.map(c=>c.k));
+  S.custom.forEach(w=>{ const k=catOf(w); if(!seen.has(k)){ seen.add(k); list.push({k, n:k==="egna"?"Egna ord":k.charAt(0).toUpperCase()+k.slice(1), e:"✏️"}); } });
+  return list;
+}
+const curCat=()=>allCats().find(c=>c.k===S.cat)||allCats()[0];
+const catWords=k=>activeWords().filter(w=>catOf(w)===k);
 const findWord=w=>allWords().find(x=>x.w===w);
 function dueList(){ const t=today(); return Object.entries(S.prog).filter(([w,p])=>p.stage<INTERVALS.length && p.due<=t && findWord(w) && !S.disabled[w]).map(([w])=>w); }
 
@@ -274,7 +312,7 @@ let G=null;      // {word, opened:[clue indices in the order she opened them], c
 let sayNow="";   // text the 🔊 button reads
 
 function pickNew(){
-  const ws=activeWords().filter(w=>!S.prog[w.w]);
+  const ws=catWords(curCat().k).filter(w=>!S.prog[w.w]);
   return ws[0]||null;
 }
 function startGame(){
@@ -306,6 +344,8 @@ function starsFor(n){ return n<=2?3:n<=4?2:1; }
 /* ---------- render ---------- */
 function render(flipFirst){
   $("#stars").textContent="⭐ "+S.stars;
+  { const c=curCat(), ws=catWords(c.k), done=ws.filter(w=>S.prog[w.w]).length;
+    $("#catBtn").innerHTML=`<span>${c.e}</span><span class="n">${esc(c.n)}</span><span class="p">${done}/${ws.length} ord</span><span class="ch">Byt ▾</span>`; }
   const due=dueList(); $("#recallBtn").hidden=!due.length; $("#dueN").textContent=due.length;
   $("#intro").hidden = S.introSeen || !G || G.phase!=="play";
   const clues=[...document.querySelectorAll(".clue")];
@@ -314,9 +354,10 @@ function render(flipFirst){
   if(G.phase==="rest"){
     clues.forEach((c,i)=>{ c.className="clue locked"; c.innerHTML=`<div class="ic">${TYPES[i].ic}</div><div class="lb">${TYPES[i].lb}</div>`; });
     C.className=""; C.innerHTML=`<div class="em">🌙</div>`;
-    const left=activeWords().filter(w=>!S.prog[w.w]).length;
-    const rm=left? FIXED[8] : FIXED[9]; setMsg(rm, "Klart", rm);
-    $("#actions").innerHTML = due.length? `<button class="big pri full" onclick="openRecall()">🔁 Minns du? (${due.length})</button>` : "";
+    const leftHere=catWords(curCat().k).filter(w=>!S.prog[w.w]).length, left=activeWords().filter(w=>!S.prog[w.w]).length;
+    const rm=leftHere? FIXED[8] : left? FIXED[12] : FIXED[9]; setMsg(rm, "Klart", rm);
+    $("#actions").innerHTML = (due.length? `<button class="big pri full" onclick="openRecall()">🔁 Minns du? (${due.length})</button>` : "")+
+      (!leftHere && left? `<button class="big sec full" onclick="openCats()">📚 Välj tema</button>` : "");
     $("#foot").textContent="";
     drawLines(); return;
   }
@@ -417,6 +458,15 @@ function finish(st){
   S.lastNew=today(); S.introSeen=true; save();
 }
 
+/* ---------- theme picker ---------- */
+function openCats(){
+  const cards=allCats().map(c=>{ const ws=catWords(c.k), done=ws.filter(w=>S.prog[w.w]).length;
+    return `<button class="cat ${c.k===curCat().k?"on":""}" onclick="pickCat('${esc(c.k)}')"><span class="e">${c.e}</span>${esc(c.n)}<span class="p">${done}/${ws.length} ord</span></button>`; }).join("");
+  sheet(`<h2>Välj tema</h2><div class="cats">${cards}</div><button class="big sec" onclick="closeOv()">Stäng</button>`);
+}
+function pickCat(k){ S.cat=k; save(); closeOv(); startGame(); }
+$("#catBtn").onclick=openCats;
+
 /* ---------- recall: "Minns du?" ---------- */
 let R=null;
 function openRecall(){
@@ -460,11 +510,15 @@ function recallRes(ok){
 function openSettings(){
   const ws=allWords();
   const custom=new Set(S.custom.map(w=>w.w));
+  const order=allCats().map(c=>c.k);
+  ws.sort((a,b)=>order.indexOf(catOf(a))-order.indexOf(catOf(b)));
+  let lastCat=null;
   const list=ws.map(w=>{ const p=S.prog[w.w];
+    const head = catOf(w)!==lastCat ? (lastCat=catOf(w), `<div class="sec-h" style="margin-top:4px">${(allCats().find(c=>c.k===lastCat)||{}).e||""} ${esc((allCats().find(c=>c.k===lastCat)||{n:lastCat}).n)}</div>`) : "";
     const ic=k=>(TYPES.find(t=>t.k===k)||{}).ic||"";
     const ord=p&&p.order?` · <span class="ord">${p.order.map(ic).join("")}</span>`:"";
     const st=!p?"ny":p.stage>=INTERVALS.length?"kan ✓":`${p.gaveUp?"visades":"⭐".repeat(p.stars)} · ${p.clues} ledtr.${ord} · nästa ${p.due}`;
-    return `<div class="wi ${S.disabled[w.w]?"off":""}"><span class="e">${w.e||"·"}</span><span class="n">${esc(w.w)}<div class="st">${st}</div></span>
+    return head+`<div class="wi ${S.disabled[w.w]?"off":""}"><span class="e">${w.e||"·"}</span><span class="n">${esc(w.w)}<div class="st">${st}</div></span>
       <button onclick="toggleWord('${esc(w.w)}')">${S.disabled[w.w]?"På":"Av"}</button>${custom.has(w.w)?`<button onclick="delWord('${esc(w.w)}')">🗑</button>`:""}</div>`; }).join("");
   const tot=Object.values(S.helped).reduce((a,b)=>a+b,0);
   const helpedStr=tot? Object.entries(S.helped).sort((a,b)=>b[1]-a[1]).map(([k,n])=>{const t=TYPES.find(t=>t.k===k); return `${t?t.ic+" "+t.lb:"⚡ Bara visste"}: ${n}`;}).join("<br>") : "Inga svar än.";
@@ -486,6 +540,7 @@ function openSettings(){
     <div class="sec-h">Lägg till ord (t.ex. veckans skolord)</div>
     <div class="form">
       <div class="two"><div><label>Ord</label><input id="fw" placeholder="t.ex. termometer" autocapitalize="off"></div><div><label>Bild (emoji, valfri)</label><input id="fe" placeholder="🌡️"></div></div>
+      <label>📚 Tema (t.ex. yrken, veckans ord)</label><input id="fcat" list="catlist" placeholder="egna" autocapitalize="off"><datalist id="catlist">${allCats().map(c=>`<option value="${esc(c.k)}">`).join("")}</datalist>
       <label>🗂️ Sorts sak</label><input id="fkat" placeholder="Det är en sak som …">
       <label>👀 Ser ut</label><input id="fser" placeholder="Den är …">
       <label>✋ Gör / används till</label><input id="fgor" placeholder="Man använder den till …">
@@ -511,7 +566,7 @@ function addWord(){
   if(findWord(w)){ alertMsg("Det ordet finns redan."); return; }
   const need=["fkat","fser","fgor","ffinns"].filter(id=>!v(id));
   if(need.length){ alertMsg("Fyll i alla fyra ledtrådarna."); return; }
-  S.custom.push({w, e:v("fe"), kat:v("fkat"), ser:v("fser"), gor:v("fgor"), finns:v("ffinns"), stav:parseInt(v("fstav"))||syl(w), start:v("fstart")||firstPart(w)});
+  S.custom.push({w, cat:(v("fcat")||"egna").toLowerCase(), e:v("fe"), kat:v("fkat"), ser:v("fser"), gor:v("fgor"), finns:v("ffinns"), stav:parseInt(v("fstav"))||syl(w), start:v("fstart")||firstPart(w)});
   save(); openSettings();
 }
 function alertMsg(t){ const n=document.querySelector(".form"); let e=n.querySelector(".err"); if(!e){ e=document.createElement("div"); e.className="note err"; e.style.color="var(--accent)"; n.prepend(e);} e.textContent=t; }
