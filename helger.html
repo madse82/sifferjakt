@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#fff8ef">
+<meta name="apple-mobile-web-app-title" content="4000 helger">
+<link rel="apple-touch-icon" href="helger-icon.png">
+<link rel="icon" type="image/svg+xml" href="helger-icon.svg">
+<title>4000 helger</title>
+<style>
+  :root{
+    --bg:#fff8ef; --ink:#2b2d42; --ink2:#5a6072;
+    --card:#ffffff; --key:#ece6dc; --line:#ddd6ca;
+    --accent:#1d6f5c; --accent2:#d9efe8; --summer:#fdf0c8; --past:#d8d3ca;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Nunito",system-ui,-apple-system,sans-serif;
+    display:flex;flex-direction:column;align-items:center;min-height:100vh;padding:14px 14px 40px}
+  .wrap{width:100%;max-width:460px;display:flex;flex-direction:column;gap:14px}
+  button{font-family:inherit;cursor:pointer;color:inherit}
+  [hidden]{display:none!important}
+
+  header{display:flex;align-items:center;justify-content:space-between;height:48px}
+  h1{margin:0;font-size:25px;font-weight:900;letter-spacing:.3px}
+  h1 span{color:var(--accent)}
+  .hright{display:flex;gap:6px}
+  .ibtn{min-width:42px;height:42px;padding:0 10px;border:0;border-radius:14px;background:var(--key);
+    font-size:18px;font-weight:900;display:flex;align-items:center;justify-content:center}
+
+  .hero{background:var(--card);border:2px solid var(--key);border-radius:22px;padding:18px 18px 14px}
+  .big{font-size:56px;font-weight:900;line-height:1;color:var(--accent);letter-spacing:-1px}
+  .big small{font-size:20px;font-weight:900;color:var(--ink);letter-spacing:0;margin-left:6px}
+  .sub{font-size:15px;font-weight:700;color:var(--ink2);margin-top:6px}
+  .kidrows{display:flex;flex-direction:column;gap:6px;margin-top:14px;padding-top:12px;border-top:2px dashed var(--key)}
+  .kr{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:800}
+  .kr .n{flex:1}
+  .kr .v{color:var(--ink2);font-weight:700}
+  .dot{width:12px;height:12px;border-radius:50%;flex:none}
+
+  .tabs{display:flex;gap:6px;background:var(--key);padding:4px;border-radius:16px}
+  .tab{flex:1;height:40px;border:0;border-radius:12px;background:transparent;font-size:15px;font-weight:800;color:var(--ink2)}
+  .tab.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+
+  .now{display:flex;align-items:center;gap:12px;background:var(--accent);color:#fff;border:0;border-radius:20px;padding:14px 16px;text-align:left;width:100%}
+  .now .t{flex:1}
+  .now .l{font-size:13px;font-weight:800;opacity:.85;text-transform:uppercase;letter-spacing:.6px}
+  .now .p{font-size:18px;font-weight:900;margin-top:2px}
+  .now .ch{font-size:22px;font-weight:900}
+
+  .legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;font-weight:700;color:var(--ink2)}
+  .legend i{display:inline-block;width:14px;height:14px;border-radius:4px;vertical-align:-2px;margin-right:5px;border:2px solid var(--line);background:#fff}
+  .legend i.s{background:var(--summer);border-color:#ecd99a}
+  .legend i.p{background:var(--accent);border-color:var(--accent)}
+  .legend i.l{background:var(--accent2);border-color:var(--accent)}
+  .legend i.x{background:var(--past);border-color:var(--past)}
+
+  .year{display:flex;flex-direction:column;gap:8px}
+  .yh{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+  .yh b{font-size:18px;font-weight:900}
+  .yh span{font-size:13px;font-weight:700;color:var(--ink2);text-align:right}
+  .grid{display:grid;grid-template-columns:repeat(13,1fr);gap:4px}
+  .w{aspect-ratio:1;border:2px solid var(--line);border-radius:6px;background:#fff;padding:0;position:relative;
+    font-size:11px;line-height:1;display:flex;align-items:center;justify-content:center;background-size:cover;background-position:center}
+  .w.summer{background-color:var(--summer);border-color:#ecd99a}
+  .w.plan{background-color:var(--accent2);border-color:var(--accent)}
+  .w.prot{background-color:var(--accent);border-color:var(--accent);color:#fff}
+  .w.past{background-color:var(--past);border-color:var(--past)}
+  .w.past.has{border-color:var(--ink2)}
+  .w.photo{border-color:var(--ink)}
+  .w.part{opacity:.45}
+  .w.cur{outline:3px solid var(--ink);outline-offset:1px}
+  .w .bd{position:absolute;top:-7px;right:-6px;font-size:11px}
+  .w.prot::before{content:"♥";font-size:11px}
+  .w.photo::before{content:""}
+
+  .empty{background:var(--card);border:2px dashed var(--line);border-radius:18px;padding:16px;font-size:15px;font-weight:700;color:var(--ink2);text-align:center}
+  .foot{font-size:13px;font-weight:700;color:var(--ink2);text-align:center;line-height:1.5}
+  .quote{font-size:14px;font-weight:700;color:var(--ink2);font-style:italic;text-align:center;padding:4px 12px}
+
+  /* sheets */
+  .scrim{position:fixed;inset:0;background:rgba(30,32,45,.42);display:flex;align-items:flex-end;justify-content:center;z-index:10}
+  .sheet{width:100%;max-width:480px;max-height:92vh;overflow:auto;background:var(--bg);border-radius:24px 24px 0 0;
+    padding:18px 16px calc(22px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:14px}
+  .shh{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+  .shh h2{margin:0;font-size:21px;font-weight:900}
+  .shh .meta{font-size:14px;font-weight:700;color:var(--ink2);margin-top:3px}
+  .lbl{font-size:13px;font-weight:900;color:var(--ink2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px}
+  textarea,input[type=text],input[type=date]{width:100%;font-family:inherit;font-size:16px;font-weight:700;border-radius:12px;border:2px solid var(--key);background:#fff;padding:10px 12px;color:var(--ink)}
+  textarea{min-height:84px;resize:vertical}
+  .toggle{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;border:2px solid var(--key);border-radius:16px;background:#fff;padding:8px 14px;text-align:left}
+  .toggle .tt{flex:1;font-size:16px;font-weight:900}
+  .toggle .tt small{display:block;font-size:13px;font-weight:700;color:var(--ink2)}
+  .sw{width:50px;height:30px;border-radius:15px;background:var(--key);position:relative;flex:none;transition:.15s}
+  .sw::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.2);transition:.15s}
+  .toggle.on .sw{background:var(--accent)} .toggle.on .sw::after{left:23px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chipk{height:40px;padding:0 14px;border-radius:20px;border:2px solid var(--key);background:#fff;font-size:15px;font-weight:800;display:flex;align-items:center;gap:7px}
+  .chipk.on{border-color:var(--ink);background:var(--ink);color:#fff}
+  .btn{height:50px;border:0;border-radius:16px;background:var(--key);font-size:16px;font-weight:900;padding:0 16px}
+  .btn.pri{background:var(--accent);color:#fff}
+  .btn.danger{background:#fbe3dc;color:#9b2f17}
+  .row{display:flex;gap:8px}
+  .row>*{flex:1}
+  .photo{width:100%;border-radius:16px;display:block;max-height:340px;object-fit:cover}
+  .hint{font-size:14px;font-weight:700;color:var(--ink2);line-height:1.45}
+  .kidedit{display:grid;grid-template-columns:28px 1fr 150px 36px;gap:8px;align-items:center}
+  .kidedit .c{width:28px;height:28px;border-radius:50%;border:0}
+  .kidedit .x{height:36px;border:0;border-radius:10px;background:var(--key);font-weight:900}
+  .bdnote{background:#fff;border:2px solid var(--key);border-radius:14px;padding:10px 12px;font-size:15px;font-weight:800}
+
+  /* onboarding */
+  .ob h2{font-size:26px;margin:6px 0 0;font-weight:900;line-height:1.15}
+  .ob p{font-size:16px;font-weight:700;color:var(--ink2);line-height:1.5;margin:8px 0 0}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<script>
+/* ---------- state ---------- */
+const KEY="helger-v1";
+const COLORS=["#e0603f","#3a6fd8","#9a5cc6","#c98a0c"];
+const DEF={kids:[],weeks:{},view:"all",showPast:false,since:null};
+let S;
+try{ S=Object.assign(structuredClone(DEF), JSON.parse(localStorage.getItem(KEY)||"{}")); }catch(e){ S=structuredClone(DEF); }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+
+/* ---------- photos (IndexedDB) ---------- */
+const DB={db:null,urls:{}};
+function idb(){ return new Promise((res,rej)=>{
+  if(DB.db) return res(DB.db);
+  const r=indexedDB.open("helger-photos",1);
+  r.onupgradeneeded=()=>r.result.createObjectStore("p");
+  r.onsuccess=()=>{DB.db=r.result;res(DB.db)}; r.onerror=()=>rej(r.error);
+});}
+async function pPut(k,v){ const db=await idb(); return new Promise((res,rej)=>{const t=db.transaction("p","readwrite");t.objectStore("p").put(v,k);t.oncomplete=res;t.onerror=()=>rej(t.error);}); }
+async function pGet(k){ const db=await idb(); return new Promise((res,rej)=>{const r=db.transaction("p").objectStore("p").get(k);r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);}); }
+async function pDel(k){ const db=await idb(); return new Promise((res)=>{const t=db.transaction("p","readwrite");t.objectStore("p").delete(k);t.oncomplete=res;}); }
+async function loadThumbs(){
+  const ks=Object.keys(S.weeks).filter(k=>S.weeks[k].photo);
+  for(const k of ks){ if(DB.urls[k]) continue; try{ const v=await pGet(k); if(v&&v.thumb) DB.urls[k]=URL.createObjectURL(v.thumb); }catch(e){} }
+}
+function resize(file,max,q){ return new Promise((res,rej)=>{
+  const img=new Image(); const u=URL.createObjectURL(file);
+  img.onload=()=>{ const s=Math.min(1,max/Math.max(img.width,img.height));
+    const c=document.createElement("canvas"); c.width=Math.round(img.width*s); c.height=Math.round(img.height*s);
+    c.getContext("2d").drawImage(img,0,0,c.width,c.height); URL.revokeObjectURL(u);
+    c.toBlob(b=>b?res(b):rej(new Error("blob")),"image/jpeg",q); };
+  img.onerror=()=>{URL.revokeObjectURL(u);rej(new Error("img"))}; img.src=u;
+});}
+
+/* ---------- dates ---------- */
+const pad=n=>String(n).padStart(2,"0");
+const key=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const parse=s=>{const[y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d)};
+const add=(d,n)=>new Date(d.getFullYear(),d.getMonth(),d.getDate()+n);
+const today=()=>{const n=new Date();return new Date(n.getFullYear(),n.getMonth(),n.getDate())};
+function satOfWeekend(d){ const w=d.getDay(); return w===0?add(d,-1):add(d,6-w); } // current weekend or next one
+function satOnOrAfter(d){ return add(d,(6-d.getDay()+7)%7); }
+const eighteen=k=>{const b=parse(k.birth);return new Date(b.getFullYear()+18,b.getMonth(),b.getDate())};
+function ageOn(k,d){ const b=parse(k.birth); let a=d.getFullYear()-b.getFullYear(); if(d<new Date(d.getFullYear(),b.getMonth(),b.getDate())) a--; return a; }
+const MON=["jan","feb","mar","apr","maj","jun","jul","aug","sep","okt","nov","dec"];
+function range(sat){ const sun=add(sat,1);
+  return sat.getMonth()===sun.getMonth()? `${sat.getDate()}–${sun.getDate()} ${MON[sun.getMonth()]}` : `${sat.getDate()} ${MON[sat.getMonth()]} – ${sun.getDate()} ${MON[sun.getMonth()]}`; }
+const isSummer=d=>{const m=d.getMonth();return m>=5&&m<=7};
+
+function weekendsLeft(k){ const end=eighteen(k); let n=0; for(let s=satOfWeekend(today()); s<end; s=add(s,7)) n++; return n; }
+function summersLeft(k){ const t=today(), end=eighteen(k); let n=0;
+  for(let y=t.getFullYear(); y<end.getFullYear()+1; y++){ const mid=new Date(y,6,15); if(mid>=t && mid<end) n++; } return n; }
+function birthdayInWeek(k,sat){ // Mon..Sun around this weekend
+  const mon=add(sat,-5), sun=add(sat,1), b=parse(k.birth);
+  for(const y of [mon.getFullYear(),sun.getFullYear()]){ const bd=new Date(y,b.getMonth(),b.getDate()); if(bd>=mon&&bd<=sun) return y-b.getFullYear(); }
+  return null; }
+
+/* ---------- view helpers ---------- */
+function viewKids(){ return S.view==="all"? S.kids : S.kids.filter(k=>k.id===S.view); }
+function viewEnd(){ return new Date(Math.max(...viewKids().map(k=>eighteen(k).getTime()))); }
+function viewPastStart(){
+  const ks=viewKids(); const now=satOfWeekend(today());
+  if(S.showPast){ const youngestBirth=new Date(Math.max(...ks.map(k=>parse(k.birth).getTime()))); return satOnOrAfter(youngestBirth); }
+  const since=S.since? parse(S.since) : now; return since<now? since : now;
+}
+function pastCount(){ let n=0; const now=satOfWeekend(today()); for(let s=viewPastStart(); s<now; s=add(s,7)) n++; return n; }
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const kidById=id=>S.kids.find(k=>k.id===id);
+
+/* ---------- render ---------- */
+const app=document.getElementById("app");
+function render(){
+  if(!S.kids.length) return renderOnboarding();
+  if(S.view!=="all" && !kidById(S.view)) S.view="all";
+  const ks=viewKids(), now=satOfWeekend(today());
+  const big = S.view==="all" ? Math.max(...ks.map(weekendsLeft)) : weekendsLeft(ks[0]);
+  const youngest = ks.reduce((a,b)=>parse(a.birth)>parse(b.birth)?a:b);
+  const sub = S.view==="all" && ks.length>1
+    ? `tills ${esc(youngest.name)}, den yngsta, fyller 18`
+    : `tills ${esc(ks[0].name)} fyller 18`;
+  const protLeft = Object.entries(S.weeks).filter(([k,v])=>v.prot && parse(k)>=now && parse(k)<viewEnd()).length;
+
+  let h=`<header><h1>4000 <span>helger</span></h1><div class="hright">
+    <button class="ibtn" id="share" aria-label="Dela">⇪</button>
+    <button class="ibtn" id="settings" aria-label="Inställningar">⚙︎</button></div></header>`;
+
+  h+=`<section class="hero"><div class="big">${big}<small>helger kvar</small></div>
+    <div class="sub">${sub}${protLeft?` · ${protLeft} ${protLeft===1?"skyddad":"skyddade"}`:""}${S.showPast?` · ${pastCount()} har redan gått`:""}</div>
+    <div class="kidrows">${S.kids.map(k=>`<div class="kr"><span class="dot" style="background:${k.color}"></span>
+      <span class="n">${esc(k.name)} <span class="v">${ageOn(k,today())} år</span></span>
+      <span class="v">${weekendsLeft(k)} helger · ${summersLeft(k)} ${summersLeft(k)===1?"sommar":"somrar"}</span></div>`).join("")}</div></section>`;
+
+  if(S.kids.length>1) h+=`<div class="tabs">${[{id:"all",name:"Alla"},...S.kids].map(k=>`<button class="tab ${S.view===k.id?"on":""}" data-view="${k.id}">${esc(k.name)}</button>`).join("")}</div>`;
+
+  const nw=S.weeks[key(now)]||{};
+  h+=`<button class="now" data-w="${key(now)}"><div class="t"><div class="l">Den här helgen · ${range(now)}</div>
+    <div class="p">${nw.plan?esc(nw.plan):(nw.prot?"Skyddad – ingen plan än":"Ingen plan än")}</div></div><div class="ch">›</div></button>`;
+
+  h+=`<div class="legend"><span><i></i>helg</span><span><i class="s"></i>sommar</span><span><i class="l"></i>planerad</span><span><i class="p"></i>skyddad</span><span><i class="x"></i>har varit</span></div>`;
+
+  // grid, grouped by year
+  const start=viewPastStart(), end=viewEnd();
+  const years={};
+  for(let s=start; s<end; s=add(s,7)){ (years[s.getFullYear()] ||= []).push(s); }
+  for(const y of Object.keys(years)){
+    const turns = ks.map(k=>{ const b=parse(k.birth); const a=+y-b.getFullYear(); return a>=1&&a<=18? `${esc(k.name)} fyller ${a}`:null; }).filter(Boolean).join(" · ");
+    h+=`<section class="year"><div class="yh"><b>${y}</b><span>${turns}</span></div><div class="grid">`;
+    for(const s of years[y]){
+      const k=key(s), w=S.weeks[k]||{}, past=s<now;
+      const cls=["w"];
+      if(past){ cls.push("past"); if(w.note||w.photo) cls.push("has"); }
+      else if(w.prot) cls.push("prot"); else if(w.plan) cls.push("plan"); else if(isSummer(s)) cls.push("summer");
+      if(s.getTime()===now.getTime()) cls.push("cur");
+      if(S.view==="all" && ks.length>1 && ks.some(kk=>eighteen(kk)<=s)) cls.push("part");
+      let style="", inner="";
+      if(w.photo && DB.urls[k]){ cls.push("photo"); style=` style="background-image:url(${DB.urls[k]})"`; }
+      const bd = ks.map(kk=>birthdayInWeek(kk,s)).some(a=>a!==null&&a>0&&a<=18);
+      if(bd) inner+=`<span class="bd">🎂</span>`;
+      h+=`<button class="${cls.join(" ")}" data-w="${k}"${style} aria-label="${range(s)} ${s.getFullYear()}">${inner}</button>`;
+    }
+    h+=`</div></section>`;
+  }
+  h+=`<div class="quote">Det är inte meningen att du ska hinna allt. Välj vad som får vara viktigt.</div>
+    <div class="foot">Allt sparas bara på den här enheten.<br>Säkerhetskopiera under ⚙︎.</div>`;
+  app.innerHTML=h;
+
+  app.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>{S.view=b.dataset.view;save();render();});
+  app.querySelectorAll("[data-w]").forEach(b=>b.onclick=()=>openWeek(b.dataset.w));
+  document.getElementById("settings").onclick=openSettings;
+  document.getElementById("share").onclick=share;
+}
+
+/* ---------- onboarding ---------- */
+let draft=[{name:"",birth:""},{name:"",birth:""}];
+function renderOnboarding(){
+  app.innerHTML=`<header><h1>4000 <span>helger</span></h1></header>
+  <section class="hero ob"><h2>Hur många helger har du kvar med dina barn?</h2>
+  <p>Fram till 18 års ålder har ett barn ungefär 940 helger. Lägg in barnen så räknar appen ut hur många som är kvar och visar dem som ett rutnät.</p>
+  <p>Tryck på en helg för att skydda den eller planera något. Inga streaks, ingen skuld. Bara rutnätet.</p></section>
+  <section class="hero" style="display:flex;flex-direction:column;gap:10px">
+    <div class="lbl">Barnen</div><div id="drafts" style="display:flex;flex-direction:column;gap:10px"></div>
+    <button class="btn" id="addk">+ Lägg till barn</button>
+    <button class="btn pri" id="go">Visa mina helger</button>
+    <div class="hint">Namn och födelsedagar sparas bara på den här enheten.</div>
+  </section>`;
+  const dr=document.getElementById("drafts");
+  const paint=()=>{ dr.innerHTML=draft.map((d,i)=>`<div class="kidedit" style="grid-template-columns:28px 1fr 150px">
+    <span class="dot" style="width:22px;height:22px;background:${COLORS[i%4]}"></span>
+    <input type="text" placeholder="Namn" value="${esc(d.name)}" data-i="${i}" data-f="name">
+    <input type="date" value="${d.birth}" data-i="${i}" data-f="birth" max="${key(today())}"></div>`).join("");
+    dr.querySelectorAll("input").forEach(inp=>inp.oninput=()=>{draft[inp.dataset.i][inp.dataset.f]=inp.value;}); };
+  paint();
+  document.getElementById("addk").onclick=()=>{ if(draft.length<4){draft.push({name:"",birth:""});paint();} };
+  document.getElementById("go").onclick=()=>{
+    const ok=draft.filter(d=>d.name.trim()&&d.birth&&eighteen(d)>today());
+    if(!ok.length){ alertBox("Fyll i namn och födelsedag för minst ett barn under 18."); return; }
+    S.kids=ok.map((d,i)=>({id:"k"+Date.now().toString(36)+i,name:d.name.trim(),birth:d.birth,color:COLORS[i%4]}));
+    S.since=key(satOfWeekend(today())); save(); render();
+  };
+}
+function alertBox(t){ let e=document.querySelector(".errbox"); if(!e){ e=document.createElement("div"); e.className="hint errbox"; e.style.color="#9b2f17"; document.getElementById("go").before(e);} e.textContent=t; }
+
+/* ---------- sheets ---------- */
+function sheet(html){ const sc=document.createElement("div"); sc.className="scrim";
+  sc.innerHTML=`<div class="sheet" role="dialog">${html}</div>`; document.body.appendChild(sc);
+  sc.addEventListener("click",e=>{ if(e.target===sc) close(); });
+  function close(){ sc.remove(); render(); }
+  return {el:sc.firstElementChild, close}; }
+
+async function openWeek(k){
+  const sat=parse(k), now=satOfWeekend(today()), past=sat<now;
+  const w=Object.assign({prot:false,plan:"",kids:[],note:"",photo:false}, S.weeks[k]||{});
+  const ages=S.kids.filter(kk=>eighteen(kk)>sat && parse(kk.birth)<=add(sat,1)).map(kk=>`${esc(kk.name)} ${ageOn(kk,sat)} år`).join(" · ");
+  const bds=S.kids.map(kk=>{const a=birthdayInWeek(kk,sat);return a&&a<=18?`🎂 ${esc(kk.name)} fyller ${a} den här veckan`:null}).filter(Boolean);
+  let idx=0; for(let s=now; s<sat; s=add(s,7)) idx++;
+  const label = past? "Har varit" : (idx===0? "Den här helgen" : `Om ${idx} ${idx===1?"helg":"helger"}`);
+  const {el,close}=sheet(`
+    <div class="shh"><div><h2>${range(sat)} ${sat.getFullYear()}</h2><div class="meta">${label}${ages?` · ${ages}`:""}</div></div>
+      <button class="ibtn" id="x" aria-label="Stäng">✕</button></div>
+    ${bds.map(b=>`<div class="bdnote">${b}</div>`).join("")}
+    ${past? `
+      <div><div class="lbl">Bild</div><div id="ph"></div>
+        <div class="row" style="margin-top:8px"><label class="btn" style="display:flex;align-items:center;justify-content:center">${w.photo?"Byt bild":"Lägg till bild"}<input type="file" accept="image/*" id="file" hidden></label>
+        ${w.photo?`<button class="btn" id="delph">Ta bort</button>`:""}</div></div>
+      <div><div class="lbl">Vad hände?</div><textarea id="note" placeholder="En mening räcker.">${esc(w.note||w.plan)}</textarea></div>
+    ` : `
+      <button class="toggle ${w.prot?"on":""}" id="prot"><span class="tt">Skydda helgen<small>Inget annat får ta den här helgen.</small></span><span class="sw"></span></button>
+      <div><div class="lbl">Plan</div><textarea id="plan" placeholder="T.ex. bada i Norrtälje, pannkakor och film">${esc(w.plan)}</textarea></div>
+      ${S.kids.length>1?`<div><div class="lbl">Med vem?</div><div class="chips">${S.kids.filter(kk=>eighteen(kk)>sat).map(kk=>`<button class="chipk ${w.kids.includes(kk.id)?"on":""}" data-k="${kk.id}"><span class="dot" style="background:${kk.color}"></span>${esc(kk.name)}</button>`).join("")}</div></div>`:""}
+    `}
+    <button class="btn pri" id="done">Klar</button>`);
+  const commit=()=>{
+    if(past){ w.note=el.querySelector("#note").value.trim(); }
+    else { w.plan=el.querySelector("#plan").value.trim(); }
+    const empty=!w.prot&&!w.plan&&!w.note&&!w.photo&&!w.kids.length;
+    if(empty) delete S.weeks[k]; else S.weeks[k]=w; save();
+  };
+  el.querySelector("#x").onclick=()=>{commit();close();};
+  el.querySelector("#done").onclick=()=>{commit();close();};
+  el.parentElement.addEventListener("click",e=>{ if(e.target===el.parentElement) commit(); },{capture:true});
+  if(!past){
+    el.querySelector("#prot").onclick=e=>{ w.prot=!w.prot; e.currentTarget.classList.toggle("on",w.prot); };
+    el.querySelectorAll("[data-k]").forEach(b=>b.onclick=()=>{ const id=b.dataset.k;
+      w.kids=w.kids.includes(id)? w.kids.filter(x=>x!==id) : [...w.kids,id]; b.classList.toggle("on"); });
+  } else {
+    const ph=el.querySelector("#ph");
+    if(w.photo){ try{ const v=await pGet(k); if(v&&v.full){ const img=document.createElement("img"); img.className="photo"; img.src=URL.createObjectURL(v.full); ph.appendChild(img);} }catch(e){} }
+    else ph.innerHTML=`<div class="hint">Ingen bild än. En bild per helg räcker.</div>`;
+    el.querySelector("#file").onchange=async e=>{
+      const f=e.target.files[0]; if(!f) return;
+      try{ const [full,thumb]=await Promise.all([resize(f,1200,.82),resize(f,160,.7)]);
+        await pPut(k,{full,thumb}); if(DB.urls[k]) URL.revokeObjectURL(DB.urls[k]); DB.urls[k]=URL.createObjectURL(thumb);
+        w.photo=true; commit(); close(); openWeek(k);
+      }catch(err){ ph.innerHTML=`<div class="hint">Bilden gick inte att läsa.</div>`; }
+    };
+    const d=el.querySelector("#delph");
+    if(d) d.onclick=async()=>{ await pDel(k); if(DB.urls[k]){URL.revokeObjectURL(DB.urls[k]);delete DB.urls[k];} w.photo=false; commit(); close(); openWeek(k); };
+  }
+}
+
+function openSettings(){
+  const {el,close}=sheet(`
+    <div class="shh"><h2>Inställningar</h2><button class="ibtn" id="x">✕</button></div>
+    <div><div class="lbl">Barnen</div><div id="ke" style="display:flex;flex-direction:column;gap:10px"></div>
+      <button class="btn" id="addk" style="width:100%;margin-top:10px">+ Lägg till barn</button></div>
+    <button class="toggle ${S.showPast?"on":""}" id="past"><span class="tt">Visa åren som gått<small>Rutnätet börjar vid födseln i stället för idag.</small></span><span class="sw"></span></button>
+    <div><div class="lbl">Säkerhetskopia</div>
+      <div class="hint" style="margin-bottom:8px">Planer och anteckningar sparas bara i den här webbläsaren. Bilder ingår inte i kopian.</div>
+      <div class="row"><button class="btn" id="exp">Exportera</button><label class="btn" style="display:flex;align-items:center;justify-content:center">Importera<input type="file" accept="application/json,.json" id="imp" hidden></label></div></div>
+    <button class="btn danger" id="reset">Börja om</button>
+    <div class="hint">Idén: Oliver Burkeman räknar med ungefär 4000 veckor i ett liv. Med barn hemma är det färre helger än man tror, och det ändrar hur man planerar en lördag.</div>
+    <button class="btn pri" id="done">Klar</button>`);
+  const ke=el.querySelector("#ke");
+  const paint=()=>{ ke.innerHTML=S.kids.map((k,i)=>`<div class="kidedit">
+      <input type="color" class="c" value="${k.color}" data-i="${i}" data-f="color" aria-label="Färg">
+      <input type="text" value="${esc(k.name)}" data-i="${i}" data-f="name">
+      <input type="date" value="${k.birth}" data-i="${i}" data-f="birth" max="${key(today())}">
+      <button class="x" data-del="${i}" aria-label="Ta bort">✕</button></div>`).join("");
+    ke.querySelectorAll("input").forEach(inp=>inp.onchange=()=>{ const k=S.kids[inp.dataset.i];
+      if(inp.dataset.f==="birth" && (!inp.value || eighteen({birth:inp.value})<=today())){ inp.value=k.birth; return; }
+      if(inp.dataset.f==="name" && !inp.value.trim()){ inp.value=k.name; return; }
+      k[inp.dataset.f]=inp.value.trim?inp.value.trim():inp.value; save(); });
+    ke.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{ if(S.kids.length<2) return;
+      if(!confirmInline(b)) return; S.kids.splice(+b.dataset.del,1); save(); paint(); }); };
+  paint();
+  el.querySelector("#addk").onclick=()=>{ if(S.kids.length>=4) return;
+    const y=today().getFullYear()-5; S.kids.push({id:"k"+Date.now().toString(36),name:"Barn "+(S.kids.length+1),birth:`${y}-01-01`,color:COLORS[S.kids.length%4]}); save(); paint(); };
+  el.querySelector("#past").onclick=e=>{ S.showPast=!S.showPast; save(); e.currentTarget.classList.toggle("on",S.showPast); };
+  el.querySelector("#exp").onclick=()=>{ const b=new Blob([JSON.stringify(S,null,1)],{type:"application/json"});
+    const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download=`4000-helger-${key(today())}.json`; a.click(); };
+  el.querySelector("#imp").onchange=async e=>{ const f=e.target.files[0]; if(!f) return;
+    try{ const d=JSON.parse(await f.text()); if(!Array.isArray(d.kids)) throw 0; S=Object.assign(structuredClone(DEF),d); save(); close(); }
+    catch(err){ e.target.closest(".row").insertAdjacentHTML("afterend",`<div class="hint" style="color:#9b2f17">Filen gick inte att läsa.</div>`); } };
+  el.querySelector("#reset").onclick=e=>{ if(!confirmInline(e.currentTarget,"Tryck igen för att radera allt")) return;
+    localStorage.removeItem(KEY); try{indexedDB.deleteDatabase("helger-photos")}catch(_){}; S=structuredClone(DEF); DB.urls={}; DB.db=null; close(); };
+  el.querySelector("#x").onclick=close; el.querySelector("#done").onclick=close;
+}
+// two-tap confirm without browser dialogs
+function confirmInline(btn,msg){ if(btn.dataset.armed){ return true; }
+  btn.dataset.armed="1"; const old=btn.textContent; btn.textContent=msg||"Säker?";
+  setTimeout(()=>{ delete btn.dataset.armed; btn.textContent=old; },2500); return false; }
+
+/* ---------- share image ---------- */
+async function share(){
+  const ks=viewKids(), now=satOfWeekend(today()), end=viewEnd();
+  const W=1080,H=1350,c=document.createElement("canvas"); c.width=W; c.height=H; const g=c.getContext("2d");
+  const F='"Nunito",system-ui,-apple-system,sans-serif';
+  g.fillStyle="#fff8ef"; g.fillRect(0,0,W,H);
+  const n=S.view==="all"? Math.max(...ks.map(weekendsLeft)) : weekendsLeft(ks[0]);
+  g.fillStyle="#1d6f5c"; g.font=`900 150px ${F}`; g.fillText(String(n),80,220);
+  const nw=g.measureText(String(n)).width;
+  g.fillStyle="#2b2d42"; g.font=`900 52px ${F}`; g.fillText("helger kvar",100+nw,215);
+  g.fillStyle="#5a6072"; g.font=`700 40px ${F}`;
+  g.fillText(ks.map(k=>`${k.name} ${weekendsLeft(k)}`).join("  ·  "),82,290);
+  // dots
+  const cols=26, gap=6, x0=80, y0=350, cell=(W-160-gap*(cols-1))/cols; let i=0;
+  for(let s=now; s<end; s=add(s,7), i++){
+    const w=S.weeks[key(s)]||{}; const x=x0+(i%cols)*(cell+gap), y=y0+Math.floor(i/cols)*(cell+gap);
+    if(y+cell>H-110) break;
+    g.fillStyle = w.prot? "#1d6f5c" : w.plan? "#d9efe8" : isSummer(s)? "#fdf0c8" : "#ffffff";
+    g.strokeStyle = w.prot||w.plan? "#1d6f5c" : isSummer(s)? "#ecd99a" : "#ddd6ca"; g.lineWidth=3;
+    roundRect(g,x,y,cell,cell,7); g.fill(); g.stroke();
+  }
+  g.fillStyle="#5a6072"; g.font=`800 36px ${F}`; g.fillText("4000 helger · varje ruta är en helg",80,H-60);
+  const blob=await new Promise(r=>c.toBlob(r,"image/png"));
+  const file=new File([blob],"4000-helger.png",{type:"image/png"});
+  try{ if(navigator.canShare && navigator.canShare({files:[file]})){ await navigator.share({files:[file],title:"4000 helger"}); return; } }catch(e){ if(e.name==="AbortError") return; }
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="4000-helger.png"; a.click();
+}
+function roundRect(g,x,y,w,h,r){ g.beginPath(); g.moveTo(x+r,y); g.arcTo(x+w,y,x+w,y+h,r); g.arcTo(x+w,y+h,x,y+h,r); g.arcTo(x,y+h,x,y,r); g.arcTo(x,y,x+w,y,r); g.closePath(); }
+
+/* ---------- start ---------- */
+render();
+loadThumbs().then(()=>{ if(Object.keys(DB.urls).length) render(); });
+</script>
+</body>
+</html>
